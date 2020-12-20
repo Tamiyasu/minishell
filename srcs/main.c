@@ -8,4 +8,5 @@ int main(int argc, char **argv, char **envv)
 	{
 		printf("%s\n", *(envv + i++));
 	}
+	return (0);
 }
