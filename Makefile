@@ -3,49 +3,53 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/10/26 20:34:32 by tmurakam          #+#    #+#              #
-#    Updated: 2020/12/20 21:14:54 by tmurakam         ###   ########.fr        #
+#    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
+#    Updated: 2020/12/25 17:52:49 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-RM = rm -f
-SRCS_DIR = srcs
-SRCS = ${SRCS_DIR}/main.c
-SRCS += ${SRCS_DIR}/utils.c
+NAME	:=	minishell
+SRC_DIR	:=	./srcs
+SRC_FILE	:=	main.c \
+				get_next_line.c \
+				msh_cd.c \
+				msh_echo.c \
+				msh_env.c \
+				msh_exit.c \
+				msh_pwd.c
 
-LIBFT_DIR = libft
-LIBFT = ${LIBFT_DIR}/libft.a
+INC_DIR	:=	./include
+SRCS	:=	$(addprefix $(SRC_DIR)/,$(SRC_FILE))
+OBJS	:=	$(SRCS:.c=.o)
+CC		:=	gcc
+AR		:=	ar rc
+RM		:=	rm -f
 
-INCLUDE = -I./includes -I./${LIBFT_DIR}
+LIBS_NAME	:=	libft.a
+LIBS_DIR	:=	./srcs/libft
 
-LIBS  = -lbsd -L${LIBFT_DIR} -lft
+CFLAGS	:=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
+#CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(MLX_DIR)
 
-OBJS = ${SRCS:.c=.o}
-all: ${NAME}
-bonus: ${NAME}
+$(NAME):	$(OBJS)
+			$(MAKE) -C $(LIBS_DIR)
+			cp $(LIBS_DIR)/$(LIBS_NAME) .
+			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS_NAME)
 
-${NAME}: ${OBJS} ${LIBFT}
-	${CC} ${CFLAGS} ${INCLUDE} ${OBJS} ${LIBS} -o ${NAME}
+all:		$(NAME)
 
-${LIBFT}: ${LIBFT_DIR}/*.c
-	${MAKE} -C ${LIBFT_DIR}
-
-.c.o:
-	${CC} ${CFLAGS} ${INCLUDE} -c $< -o $@
+bonus:		all
 
 clean:
-	${RM} ${OBJS}
-	${MAKE} -C ${LIBFT_DIR}	clean
+			$(MAKE) -C $(LIBS_DIR) clean
+			$(RM) $(OBJS)
 
-fclean: clean
-	${RM} ${NAME}
-	${MAKE} -C ${LIBFT_DIR} fclean
+fclean:		clean
+			$(RM) $(LIBS_NAME)
+			$(RM) $(NAME)
 
-re:	fclean all
+re:			fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY:		all bonus clean fclean re
