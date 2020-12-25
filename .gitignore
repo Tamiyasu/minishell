@@ -4,3 +4,5 @@
 !.gitignore
 !.editorconfig
 !libft/*
+!srcs/*
+!includes/*
