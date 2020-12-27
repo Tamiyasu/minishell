@@ -6,37 +6,35 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2020/12/25 17:52:49 by ysaito           ###   ########.fr        #
+#    Updated: 2020/12/27 21:08:51 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	:=	minishell
-SRC_DIR	:=	./srcs
-SRC_FILE	:=	main.c \
-				get_next_line.c \
-				msh_cd.c \
-				msh_echo.c \
-				msh_env.c \
-				msh_exit.c \
-				msh_pwd.c
+NAME		= minishell
+SRC_DIR		= ./srcs
+SRC_FILE	= main.c
+SRC_FILE	+= get_next_line.c
+SRC_FILE	+= msh_cd.c
+SRC_FILE	+= msh_echo.c
+SRC_FILE	+= msh_env.c
+SRC_FILE	+= msh_exit.c
+SRC_FILE	+= msh_pwd.c
 
-INC_DIR	:=	./include
-SRCS	:=	$(addprefix $(SRC_DIR)/,$(SRC_FILE))
-OBJS	:=	$(SRCS:.c=.o)
-CC		:=	gcc
-AR		:=	ar rc
-RM		:=	rm -f
+INC_DIR	= ./includes
+SRCS	= $(addprefix $(SRC_DIR)/,$(SRC_FILE))
+OBJS	= $(SRCS:.c=.o)
+CC		= gcc
+RM		= rm -f
 
-LIBS_NAME	:=	libft.a
-LIBS_DIR	:=	./srcs/libft
+LIBS_NAME	=	libft.a
+LIBS_DIR	=	./libft
 
-CFLAGS	:=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
+CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
 #CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(MLX_DIR)
 
 $(NAME):	$(OBJS)
 			$(MAKE) -C $(LIBS_DIR)
-			cp $(LIBS_DIR)/$(LIBS_NAME) .
-			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS_NAME)
+			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBS_DIR) -lft
 
 all:		$(NAME)
 
@@ -47,7 +45,7 @@ clean:
 			$(RM) $(OBJS)
 
 fclean:		clean
-			$(RM) $(LIBS_NAME)
+			$(MAKE) -C $(LIBS_DIR) fclean
 			$(RM) $(NAME)
 
 re:			fclean all
