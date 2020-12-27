@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2020/12/25 18:13:18 by ysaito           ###   ########.fr       */
+/*   Updated: 2020/12/27 21:32:55 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	free_args(char **args)
 int		msh_launch(char **args, char **envp)
 {
 	pid_t	pid;
-	// pid_t	wait_pid;
+	pid_t	wait_pid;
 	char	*command_path;
-	// int		status;
+	int		status;
 
 	envp = NULL;//del;
 
@@ -60,19 +60,20 @@ int		msh_launch(char **args, char **envp)
 			strerror(errno);//perror("msh_launch");//execve()のerror処理 strerror(errno);//もし実装していないコマンドが入力されたら、ここで適当なエラー分出力するべきでは。
 			// return (1);
 		}
+		exit(1);
 		// exit(EXIT_FAILURE);//leak check!!! //ここでexit使っているのはなんで？要確認
 	}
 	// else//親はコマンドの実行が終了するのを待つ。
 	// {
 	// 	while (1)
 	// 	{
-	// 		wait_pid = waitpid(pid, &status, WUNTRACED);//WUNTRACED:子プロセスが停止した場合にも復帰する。
+	 		wait_pid = waitpid(pid, &status, WUNTRACED);//WUNTRACED:子プロセスが停止した場合にも復帰する。
 	// 		if (WIFEXITED(status) && WIFSIGNALED(status))
 	// 		{
 	// 			break;
 	// 		}
 	// 		printf("msh_launch\n");//del
-	// 	}
+//	 	}
 	// }
 	return (1);
 }
