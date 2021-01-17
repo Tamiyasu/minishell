@@ -3,4 +3,7 @@
 !*/
 !.gitignore
 !.editorconfig
-!libft/*
+!Makefile
+!libft/*.c
+!srcs/*.c
+!includes/*.h
