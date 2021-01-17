@@ -4,6 +4,6 @@
 !.gitignore
 !.editorconfig
 !Makefile
-!libft/*
-!srcs/*
-!includes/*
+!libft/*.c
+!srcs/*.c
+!includes/*.h
