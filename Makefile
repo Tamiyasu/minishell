@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2020/12/27 21:08:51 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/01/17 21:14:42 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SRC_FILE	+= msh_echo.c
 SRC_FILE	+= msh_env.c
 SRC_FILE	+= msh_exit.c
 SRC_FILE	+= msh_pwd.c
+SRC_FILE	+= msh_lexer.c
 
 INC_DIR	= ./includes
 SRCS	= $(addprefix $(SRC_DIR)/,$(SRC_FILE))
