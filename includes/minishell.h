@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2020/12/25 17:53:40 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/01/16 17:59:11 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,50 @@ cdコマンド
 */
 # include <unistd.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <string.h>//strerror
 # include <errno.h>//errno
 
+typedef struct		s_lsttoken
+{
+	char				*data;
+	//int			flag;
+	struct s_lsttoken	*next;
+}					t_lsttoken;
+
+enum flags
+{
+	CHAR_PIPE = '|',
+	CHAR_SEMICOLON = ';',
+	CHAR_LESSSIGN = '<',
+	CHAR_GREATERSIGN = '>',
+	//CHAR_DOLLAR = '$',
+	CHAR_SQUOTE = '\'',
+	CHAR_DQUOTE = '\"',
+	CHAR_ESCAPESEQ = '\\',
+	CHAR_SPACE = ' ',
+	CHAR_TAB = '\t',
+	CHAR_NEWLINE = '\n',
+	//CHAR_QUESTION_MARK = '?'
+	CHAR_NULL = 0,
+};
+
+enum
+{
+	STATE_GENERAL,
+	STATE_IN_SQUOTE,
+	STATE_IN_DQUOTE,
+	STATE_IN_ESCAPESEQ,
+};
+
+char	*ft_strjoin_msh(char *top, char *str, char *bottom);
 void	free_args(char **args);
+t_lsttoken	*msh_lexer(char *input);
+int		msh_execute(char **args, char **envp);
 int		msh_cd(char **args);
 int		msh_env(char **envp);
 int		msh_exit(char **args);
+int		msh_export(char **args, char **envp);
 int		msh_pwd(char **args);
 
 #endif
