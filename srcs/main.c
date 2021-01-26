@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/01/24 19:18:00 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/01/26 22:46:48 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include <unistd.h>
 
-void	lst_free(t_lsttoken *token)
+void	free_lst(t_lsttoken *token)
 {
 	t_lsttoken *temp;
 
@@ -67,7 +67,7 @@ void	minish_loop(/*char *envp[]*/)
 		// // free(line);
 		// // line = NULL;
 		// free_args(args);
-		lst_free(token);
+		free_lst(token);
 		free(line);
 		line = NULL;
 		// status = 0;//del
