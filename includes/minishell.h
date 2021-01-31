@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/01/23 15:46:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/01/26 22:46:29 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,9 +152,8 @@ typedef struct		s_lsttoken
 	struct s_lsttoken	*next;
 }					t_lsttoken;
 
-
 /*
-** lexer
+** msh_lexer
 */
 typedef struct	s_lexer
 {
@@ -192,6 +191,7 @@ enum
 
 char	*ft_strjoin_msh(char *top, char *str, char *bottom);
 void	free_args(char **args);
+void	free_lst(t_lsttoken *token);
 t_lsttoken	*msh_lexer(char *input);
 int		msh_execute(char **args, char **envp);
 int		msh_cd(char **args);
