@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/01/26 22:46:29 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/01 16:50:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,15 +189,18 @@ enum
 	STATE_IN_ESCAPESEQ,
 };
 
+typedef struct	s_env
+{
+	char		**data;
+	int			num;
+}				t_env;
+
 char	*ft_strjoin_msh(char *top, char *str, char *bottom);
 void	free_args(char **args);
 void	free_lst(t_lsttoken *token);
 t_lsttoken	*msh_lexer(char *input);
-int		msh_execute(char **args, char **envp);
-int		msh_cd(char **args);
 int		msh_env(char **envp);
 int		msh_exit(char **args);
 int		msh_export(char **args, char **envp);
-int		msh_pwd(char **args);
 
 #endif

@@ -6,15 +6,30 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/01/26 22:46:48 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/01 16:45:54 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 #include "libft.h"
 #include "get_next_line.h"
 
 #include <unistd.h>
+
+void	free_args(char **args)
+{
+	int	idx;
+
+	idx = 0;
+	while (args[idx] != NULL)
+	{
+		free(args[idx]);
+		idx++;
+	}
+	free(args);
+	args = NULL;
+}
 
 void	free_lst(t_lsttoken *token)
 {
@@ -30,10 +45,9 @@ void	free_lst(t_lsttoken *token)
 	token = NULL;
 }
 
-void	minish_loop(/*char *envp[]*/)
+void	minish_loop(t_env *env)
 {
 	char	*line;
-	// char	**args;
 	int		status;
 	t_lsttoken *token;
 
@@ -52,21 +66,23 @@ void	minish_loop(/*char *envp[]*/)
 		token = msh_lexer(line);
 		if (token == NULL)
 			return ;
-		/////////////
-		for (int count = 0; token != NULL; count++)
+
+		//////////////* msh_lexer出力確認 */
+		t_lsttoken *copy_token = token;
+		for (int count = 0; copy_token != NULL; count++)
 		{
-			printf("count[%d]=[%s]\n", count, token->data);
-			token = token->next;
+			printf("count[%d]=[%s]\n", count, copy_token->data);
+			copy_token = copy_token->next;
 		}
-		/////////////
+		printf("------------------------------\n");
+		free_lst(copy_token);
+		//////////////* msh_lexer出力確認 後で消す */
 
 		/* parse（トークンを、コマンド・オプション・環境変数等に分ける。*/
 		//args = ft_split(line, ' ');
+
 		/* execute（解析されたコマンドを実行）*/
-		//status = msh_execute(args, envp);
-		// // free(line);
-		// // line = NULL;
-		// free_args(args);
+		status = msh_execute(token, env);
 		free_lst(token);
 		free(line);
 		line = NULL;
@@ -77,24 +93,39 @@ void	minish_loop(/*char *envp[]*/)
 	//終了
 }
 
-int	main(/*int argc, char *argv[], char *envp[]*/)
+int	main(int argc, char *argv[], char *envp[])
 {
-	//printf("argc=[%d] argv[0]=[%s]\n", argc, argv[0]);
-	////////////
-	// for (int x = 0; envp[x] != NULL; x++)
-	// {
-	// 	printf("%s\n", envp[x]);
-	// }
-	/*
-	** envpを配列からリスト構造に移す。
-	*/
-	////////////
+	t_env	env;
+	int		idx;
+
+	argc = 0;//del
+	argv  = NULL;//del
+
+	/* envpお試し実装 */
+	env.num = 0;
+	while (envp[env.num] != NULL)
+	{
+		env.num++;
+	}
+	env.data = malloc(sizeof(char *) * (env.num + 1));
+	if (env.data == NULL)
+		return (EXIT_FAILURE);
+	idx = 0;
+	while (envp[idx] != NULL)
+	{
+		env.data[idx] = ft_strdup(envp[idx]);
+		idx++;
+	}
+	env.data[idx] = NULL;
+	/* envpお試し実装 */
+
 	/////////////////
 	//	shellの流れ	//
 	/////////////////
 	//1.初期化
 	//2.解釈
-	minish_loop(/*envp*/);
+	minish_loop(&env);//(envp);
+	free_args(env.data);
 	////(1)read（標準入力からコマンドを読み取る）
 	////(2)parse（コマンド文字列をプログラムと引数に分割）
 	////(3)execute（解析されたコマンドを実行）
