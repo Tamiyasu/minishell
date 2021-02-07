@@ -1,36 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_pwd.c                                          :+:      :+:    :+:   */
+/*   msh_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2020/12/24 17:33:48 by ysaito           ###   ########.fr       */
+/*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
+/*   Updated: 2021/02/01 19:52:31 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 #include "libft.h"
 
-int	msh_pwd(char **args)
+/*
+** コマンドを実行する　returnで終了ステータスを返す.
+*/
+int	msh_execute(t_lsttoken *token, t_env *env)
 {
-	char	*cwdir;
+	int	data_len;
 
-	//unused parameter 'args'の応急処置
-	printf("in msh_pwd[%s]\n", args[0]);//del
-	// if (args != NULL)
-	// {
-	// 	free_args(args);
-	// }
+	data_len = ft_strlen(token->data);
 
-	cwdir = getcwd(NULL, 0);//このように引数を指定してあげると、getcwdの方で、buf[1024]で取ってくれる。
-	if (cwdir == NULL)
+	if (ft_strncmp(token->data, "cd", (data_len + 1)) == 0)
 	{
-		strerror(errno);
-		return (1);
+		execute_cd(token, env->data);
 	}
-	ft_putendl_fd(cwdir, 1);
-	free(cwdir);
+	else if (ft_strncmp(token->data, "pwd", (data_len + 1)) == 0)
+	{
+		execute_pwd();
+	}
 	return (1);
 }
+
