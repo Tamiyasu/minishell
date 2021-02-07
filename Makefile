@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/02/01 16:49:08 by ysaito           ###   ########.fr        #
+#    Updated: 2021/02/07 20:44:40 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,13 +14,16 @@ NAME		= minishell
 SRC_DIR		= ./srcs
 SRC_FILE	= main.c
 SRC_FILE	+= get_next_line.c
-SRC_FILE	+= msh_echo.c
-SRC_FILE	+= msh_env.c
-SRC_FILE	+= msh_exit.c
 SRC_FILE	+= msh_lexer.c
 SRC_FILE	+= execute/msh_execute.c
+SRC_FILE	+= execute/execute_echo.c
 SRC_FILE	+= execute/execute_cd.c
+SRC_FILE	+= execute/execute_env.c
+SRC_FILE	+= execute/execute_export.c
 SRC_FILE	+= execute/execute_pwd.c
+SRC_FILE	+= execute/execute_unset.c
+SRC_FILE	+= execute/export_putenv.c
+SRC_FILE	+= execute/execute_split_env.c
 
 INC_DIR	= ./includes
 SRCS	= $(addprefix $(SRC_DIR)/,$(SRC_FILE))

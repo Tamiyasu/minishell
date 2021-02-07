@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/01/26 22:46:58 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/07 21:05:41 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void			lexer_lstinit(t_lsttoken *token, int input_len)
 	if (token->data == NULL)
 		return ;
 	ft_bzero(token->data, input_len);
+	token->flag = 0;
 	token->next = NULL;
 }
 
@@ -180,7 +181,7 @@ static void	lexer_evaluate_input(t_lsttoken *token, t_lexer *lexer, char *input,
 			{
 				token = lexer_evaluate_redirect(token, lexer, input, &idx);
 			}
-			else if (input[idx] == '|' || input[idx] == ';' || input[idx] == '=')
+			else if (input[idx] == '|' || input[idx] == ';'/* || input[idx] == '='*/)
 			{
 				token = lexer_evaluate_unique(token, lexer, input[idx], input_len);
 			}
