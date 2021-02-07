@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/01 16:48:46 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/07 20:52:31 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,4 +14,18 @@
 
 int		msh_execute(t_lsttoken *token, t_env *env);
 void	execute_cd(t_lsttoken *token, char **env_data);
+void	execute_echo(t_lsttoken *token);
+void	execute_export(t_lsttoken *token, t_env *env);
+void	execute_env(char **env_data);
 void	execute_pwd(void);
+void	execute_unset(t_lsttoken *token, t_env *env);
+
+/*
+** unset, export
+*/
+char	**execute_split_env(t_env *env);
+
+/*
+** export
+*/
+void	export_putenv(t_env *env);

@@ -6,11 +6,10 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/01 19:52:31 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/07 20:46:56 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "execute.h"
 #include "libft.h"
 
@@ -23,14 +22,33 @@ int	msh_execute(t_lsttoken *token, t_env *env)
 
 	data_len = ft_strlen(token->data);
 
-	if (ft_strncmp(token->data, "cd", (data_len + 1)) == 0)
+	if (ft_strcmp(token->data, "cd") == 0)
 	{
 		execute_cd(token, env->data);
 	}
-	else if (ft_strncmp(token->data, "pwd", (data_len + 1)) == 0)
+	else if (ft_strcmp(token->data, "echo") == 0)
+	{
+		execute_echo(token);
+	}
+	else if (ft_strcmp(token->data, "env") == 0)
+	{
+		execute_env(env->data);
+	}
+	else if (ft_strcmp(token->data, "exit") == 0)
+	{
+		return (0);
+	}
+	else if (ft_strcmp(token->data, "export") == 0)
+	{
+		execute_export(token, env);
+	}
+	else if (ft_strcmp(token->data, "pwd") == 0)
 	{
 		execute_pwd();
 	}
+	else if (ft_strcmp(token->data, "unset") == 0)
+	{
+		execute_unset(token, env);
+	}
 	return (1);
 }
-

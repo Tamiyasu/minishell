@@ -1,28 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_env.c                                          :+:      :+:    :+:   */
+/*   execute_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/25 17:11:47 by ysaito            #+#    #+#             */
-/*   Updated: 2020/12/25 17:57:47 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/07 20:45:40 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execute.h"
 #include "libft.h"
 
-int	msh_env(char **envp)
+void	execute_env(char **env_data)
 {
-	printf("in msh_env\n");//del
-	int	idx;
+	int		idx;
 
 	idx = 0;
-	while (envp[idx] != NULL)
+	while  (env_data[idx] != NULL)
 	{
-		ft_putendl_fd(envp[idx], 1);
+		int x = 0;
+		while (env_data[idx][x] != '\0')
+		{
+			if (env_data[idx][x] == '=')
+				break ;
+			x++;
+		}
+		if (env_data[idx][x] != '\0')
+		{
+			ft_putendl_fd(env_data[idx], 1);
+		}
 		idx++;
 	}
-	return (1);
 }
