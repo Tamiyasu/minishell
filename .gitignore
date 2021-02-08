@@ -6,4 +6,5 @@
 !Makefile
 !libft/*.c
 !srcs/*.c
+!srcs/*/*.c
 !includes/*.h

@@ -6,11 +6,12 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/01 16:45:54 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/08 17:33:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "lexer.h"
 #include "execute.h"
 #include "libft.h"
 #include "get_next_line.h"
@@ -67,7 +68,8 @@ void	minish_loop(t_env *env)
 		if (token == NULL)
 			return ;
 
-		//////////////* msh_lexer出力確認 */
+		//////////////* msh_lexer機能確認 */
+		printf("------[msh_lexer 機能確認]-------\n");
 		t_lsttoken *copy_token = token;
 		for (int count = 0; copy_token != NULL; count++)
 		{

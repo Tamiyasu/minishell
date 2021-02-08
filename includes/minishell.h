@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/07 20:53:04 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/08 17:26:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,15 +155,6 @@ typedef struct		s_lsttoken
 /*
 ** msh_lexer
 */
-typedef struct	s_lexer
-{
-	int			data_idx;
-	//char		judge_quote;
-	int			squote;
-	int			dquote;
-	int			state;
-}				t_lexer;
-
 enum flags
 {
 	CHAR_PIPE = '|',
