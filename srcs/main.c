@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/08 17:33:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/09 16:02:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,16 @@ void	free_lst(t_lsttoken *token)
 	token = NULL;
 }
 
-void	minish_loop(t_env *env)
+void	msh_loop(t_env *env, int *exit_status)
 {
 	char	*line;
-	int		status;
+	int		loop_status;
 	t_lsttoken *token;
 
 	line = NULL;
-	status = 1;
+	loop_status = 1;
 	token =  NULL;
-	while (status)
+	while (loop_status)
 	{
 		ft_putstr_fd("minishell>> ", 1);
 		/* read（標準入力からコマンドを読み取る) コマンドラインが複数行になる場合、EOFが来るまで読み続ける（cub3dみたいに）。 */
@@ -84,55 +84,51 @@ void	minish_loop(t_env *env)
 		//args = ft_split(line, ' ');
 
 		/* execute（解析されたコマンドを実行）*/
-		status = msh_execute(token, env);
+		loop_status = msh_execute(token, env, exit_status); //exitコマンド実行時にreturn(0)がくる
 		free_lst(token);
 		free(line);
 		line = NULL;
-		// status = 0;//del
 	}
-	//status != 1　になる == 何かしらのエラー
-	//error出力
-	//終了
+}
+
+void	msh_make_envstrct(t_env *env, char **envp)
+{
+	int	idx;
+
+	env->num = 0;
+	while (envp[env->num] != NULL)
+	{
+		env->num++;
+	}
+	env->data = malloc(sizeof(char *) * (env->num + 1));
+	if (env->data == NULL)
+		return ;
+	idx = 0;
+	while (envp[idx] != NULL)
+	{
+		env->data[idx] = ft_strdup(envp[idx]);
+		idx++;
+	}
+	env->data[idx] = NULL;
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_env	env;
-	int		idx;
+	int		exit_status;
 
 	argc = 0;//del
 	argv  = NULL;//del
+	exit_status = 0;//de;
 
-	/* envpお試し実装 */
-	env.num = 0;
-	while (envp[env.num] != NULL)
-	{
-		env.num++;
-	}
-	env.data = malloc(sizeof(char *) * (env.num + 1));
+	msh_make_envstrct(&env, envp);
 	if (env.data == NULL)
-		return (EXIT_FAILURE);
-	idx = 0;
-	while (envp[idx] != NULL)
 	{
-		env.data[idx] = ft_strdup(envp[idx]);
-		idx++;
+		return (EXIT_FAILURE);
 	}
-	env.data[idx] = NULL;
-	/* envpお試し実装 */
-
-	/////////////////
-	//	shellの流れ	//
-	/////////////////
-	//1.初期化
-	//2.解釈
-	minish_loop(&env);//(envp);
+	msh_loop(&env, &exit_status);
 	free_args(env.data);
-	////(1)read（標準入力からコマンドを読み取る）
-	////(2)parse（コマンド文字列をプログラムと引数に分割）
-	////(3)execute（解析されたコマンドを実行）
-	//3.終了
-	return (EXIT_SUCCESS);
+	return (exit_status);
 }
 
 
