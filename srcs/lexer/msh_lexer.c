@@ -6,11 +6,11 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/07 21:05:41 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/08 17:33:53 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "lexer.h"
 #include "libft.h"
 #include "get_next_line.h"
 
@@ -20,54 +20,6 @@ static void			lexer_structinit(t_lexer *lexer)
 	lexer->squote = 0;
 	lexer->dquote = 0;
 	lexer->state = STATE_GENERAL;
-}
-
-static void			lexer_lstinit(t_lsttoken *token, int input_len)
-{
-	token->data = malloc(sizeof(char *) * (input_len + 1));
-	if (token->data == NULL)
-		return ;
-	ft_bzero(token->data, input_len);
-	token->flag = 0;
-	token->next = NULL;
-}
-
-static t_lsttoken	*lexer_lstnew(int input_len)
-{
-	t_lsttoken	*return_p;
-
-	return_p = malloc(sizeof(t_lsttoken));
-	if (return_p == NULL)
-		return (NULL);
-	lexer_lstinit(return_p, input_len);
-	if  (return_p->data == NULL)
-	{
-		free(return_p);
-		return (NULL);
-	}
-	return (return_p);
-}
-
-static t_lsttoken	*lexer_lstadd(t_lsttoken *token, int input_len)
-{
-	token->next = malloc(sizeof(t_lsttoken));
-	if (token->next == NULL)
-		return (NULL);
-	token = token->next;
-	lexer_lstinit(token, input_len);
-	return (token);
-}
-
-static t_lsttoken *lexer_lstlast(t_lsttoken *token)
-{
-	t_lsttoken *return_p;
-
-	return_p = token;
-	while (return_p && return_p->next)
-	{
-		return_p = return_p->next;
-	}
-	return (return_p);
 }
 
 /*
@@ -174,14 +126,23 @@ static void	lexer_evaluate_input(t_lsttoken *token, t_lexer *lexer, char *input,
 			{
 				if (lexer->data_idx != 0)
 				{
-					token = lexer_evaluate_next(token, lexer, input_len);
+					int copy_idx = idx;
+					while (input[copy_idx] == ' ' || input[copy_idx] == '\t')
+					{
+						copy_idx++;
+					}
+					if (input[copy_idx] == '\0')
+					{
+						break ;
+					}
+					token = lexer_evaluate_next(token, lexer, input_len);/*この関数内で、いったん文字列終わらせて、新しくlstaddしてる→次input[idx]が'\0'ならカラ文字入った意味ないリストがくっついてくる事になる*/
 				}
 			}
 			else if (input[idx] == '<' || input[idx]  == '>')
 			{
 				token = lexer_evaluate_redirect(token, lexer, input, &idx);
 			}
-			else if (input[idx] == '|' || input[idx] == ';'/* || input[idx] == '='*/)
+			else if (input[idx] == '|' || input[idx] == ';')
 			{
 				token = lexer_evaluate_unique(token, lexer, input[idx], input_len);
 			}
