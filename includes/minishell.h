@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/08 17:26:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/18 20:15:03 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ strerror, errno
 //	以下は、シェルがどのような仕組みで動いているのか知ってからの方が理解しやすいかな...	//
 ////////////////////////////////////////////////////////////////////////////
 
-pid_tデータ型
+[
+
+]
 	--	プロセスIDを表すことが可能な符号付き整数型です。GNU Cライブラリでは、これはintです。
 	OSによって、プロセスID を格納する型の種類が異なる。shortを使うOSがあれば、intを使うOSもある。
 	pid_tは必ずOSが使う型に設定される。
@@ -184,10 +186,22 @@ typedef struct	s_env
 {
 	char		**data;
 	int			num;
+	char		*pwd_data; //PWD存在しようがしないが、cdされるごとに常に更新される。
+	int			oldpwd_flag; //存在しない時は-1となる.
+	int			pwd_flag; //存在しない時は-1となる.
 }				t_env;
 
 void		free_args(char **args);
 void		free_lst(t_lsttoken *token);
 t_lsttoken	*msh_lexer(char *input);
+
+/*
+** msh_env.c
+*/
+void	msh_env_init(t_env *env);
+void	msh_env_make_data(t_env *env, char **envp);
+int		msh_env_search(char **env_data, char *variable_name);
+void	msh_env_update_pwddata(t_env *env);
+void	msh_env_free(t_env *env);
 
 #endif

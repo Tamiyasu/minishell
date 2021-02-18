@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/09 16:02:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/17 18:00:35 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ void	free_args(char **args)
 	int	idx;
 
 	idx = 0;
+	if (args == NULL)
+	{
+		return ;
+	}
 	while (args[idx] != NULL)
 	{
 		free(args[idx]);
@@ -68,8 +72,8 @@ void	msh_loop(t_env *env, int *exit_status)
 		if (token == NULL)
 			return ;
 
-		//////////////* msh_lexer機能確認 */
-		printf("------[msh_lexer 機能確認]-------\n");
+		//////////////* check msh_lexer */
+		printf("------[check msh_lexer]-------------\n");
 		t_lsttoken *copy_token = token;
 		for (int count = 0; copy_token != NULL; count++)
 		{
@@ -78,7 +82,7 @@ void	msh_loop(t_env *env, int *exit_status)
 		}
 		printf("------------------------------\n");
 		free_lst(copy_token);
-		//////////////* msh_lexer出力確認 後で消す */
+		//////////////* check msh_lexer del*/
 
 		/* parse（トークンを、コマンド・オプション・環境変数等に分ける。*/
 		//args = ft_split(line, ' ');
@@ -91,27 +95,6 @@ void	msh_loop(t_env *env, int *exit_status)
 	}
 }
 
-void	msh_make_envstrct(t_env *env, char **envp)
-{
-	int	idx;
-
-	env->num = 0;
-	while (envp[env->num] != NULL)
-	{
-		env->num++;
-	}
-	env->data = malloc(sizeof(char *) * (env->num + 1));
-	if (env->data == NULL)
-		return ;
-	idx = 0;
-	while (envp[idx] != NULL)
-	{
-		env->data[idx] = ft_strdup(envp[idx]);
-		idx++;
-	}
-	env->data[idx] = NULL;
-}
-
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_env	env;
@@ -121,13 +104,14 @@ int	main(int argc, char *argv[], char *envp[])
 	argv  = NULL;//del
 	exit_status = 0;//de;
 
-	msh_make_envstrct(&env, envp);
+	msh_env_init(&env);
+	msh_env_make_data(&env, envp);
 	if (env.data == NULL)
 	{
 		return (EXIT_FAILURE);
 	}
 	msh_loop(&env, &exit_status);
-	free_args(env.data);
+	msh_env_free(&env);
 	return (exit_status);
 }
 
