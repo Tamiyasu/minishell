@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/02/09 15:55:54 by ysaito           ###   ########.fr        #
+#    Updated: 2021/02/15 13:34:53 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,12 +14,14 @@ NAME		= minishell
 SRC_DIR		= ./srcs
 SRC_FILE	= main.c
 SRC_FILE	+= get_next_line.c
+SRC_FILE	+= msh_env.c
 SRC_FILE	+= lexer/msh_lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
 SRC_FILE	+= execute/msh_execute.c
 SRC_FILE	+= execute/execute_cd.c
 SRC_FILE	+= execute/execute_echo.c
 SRC_FILE	+= execute/execute_env.c
+SRC_FILE	+= execute/execute_execve.c
 SRC_FILE	+= execute/execute_exit.c
 SRC_FILE	+= execute/execute_export.c
 SRC_FILE	+= execute/execute_pwd.c
@@ -36,8 +38,8 @@ RM		= rm -f
 LIBS_NAME	=	libft.a
 LIBS_DIR	=	./libft
 
-CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
-#CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(MLX_DIR)
+#CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
+CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(LIBS_DIR)
 
 $(NAME):	$(OBJS)
 			$(MAKE) -C $(LIBS_DIR)
