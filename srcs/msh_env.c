@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/18 20:18:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/21 20:53:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ void	msh_env_free(t_env *env)
 	{
 		free(env->pwd_data);
 	}
+	if (env->unset_pwd != NULL)
+	{
+		free(env->unset_pwd);
+	}
 }
 
 void	msh_env_init(t_env *env)
@@ -28,8 +32,12 @@ void	msh_env_init(t_env *env)
 	env->oldpwd_flag = 0;
 	env->pwd_flag = 0;
 	env->pwd_data = NULL;
+	env->unset_pwd=  NULL;
 }
 
+/*
+** env->dataを現在のカレントディレクトリに更新する
+*/
 void	msh_env_update_pwddata(t_env *env)
 {
 	char *cwdir;
@@ -51,7 +59,7 @@ void	msh_env_update_pwddata(t_env *env)
 
 /*
 ** 環境変数一覧(env_data)からvariable_nameに一致した環境変数が格納されているindexを探す
-** [return]variable_nameが格納されているindex.見つからなかったら-1
+** [return]variable_nameが格納されているindex。見つからなかったら-1
 */
 int		msh_env_search(char **env_data, char *variable_name)
 {
@@ -72,12 +80,17 @@ int		msh_env_search(char **env_data, char *variable_name)
 	return (-1);
 }
 
-int	msh_env_check_num(t_env *env, char **envp)
+/*
+** 環境変数(envp)の数を数える かつ OLDPWD と PWDの有無チェック
+** OLDPWD/PWDなし
+** 	-> env->oldpwd_flag/env->pwd_flagに-1を入れ、環境変数num++;//後で追加するため
+*/
+int	msh_env_check_data(t_env *env, char **envp)
 {
 	int	env_num;
 
 	env_num = 0;
-	while (envp[env_num] != NULL) //envのnum count かつ oldpwd と pwdの有無チェック
+	while (envp[env_num] != NULL)
 	{
 		env_num++;
 	}
@@ -101,7 +114,7 @@ void	msh_env_make_data(t_env *env, char **envp)
 {
 	int	idx;
 
-	env->num = msh_env_check_num(env, envp);
+	env->num = msh_env_check_data(env, envp);
 	env->data = malloc(sizeof(char *) * (env->num + 1));
 	if (env->data == NULL)
 		return ;

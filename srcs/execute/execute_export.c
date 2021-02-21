@@ -6,13 +6,20 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/07 20:24:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/21 20:57:55 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execute.h"
 #include "libft.h"
+
+static void	execute_output_error(char *token_data)
+{
+	ft_putstr_fd("minishell: unset: `",  1);
+	ft_putstr_fd(token_data, 1);
+	ft_putendl_fd("': not a valid identifier", 1);
+}
 
 static int	msh_lstsize(t_lsttoken *token)
 {
@@ -28,7 +35,7 @@ static int	msh_lstsize(t_lsttoken *token)
 }
 
 
-static char	**execute_split_and_classify_tokend(t_lsttoken *token)
+static char	**execute_split_and_classify_tokend(t_lsttoken *token,  t_env *env)
 {
 	char	**split_tokend;
 	char	**tmp_split;
@@ -59,6 +66,15 @@ static char	**execute_split_and_classify_tokend(t_lsttoken *token)
 			free_args(tmp_split);
 			token->flag = 2;
 		}
+		/* env->pwd_flag && oldpwd_flagの更新 */
+		if (ft_strcmp(split_tokend[i], "PWD")== 0)
+		{
+			env->pwd_flag = 1;
+		}
+		if (ft_strcmp(split_tokend[i], "OLDPWD")== 0)
+		{
+			env->oldpwd_flag = 1;
+		}
 		i++;
 		token = token->next;
 	}
@@ -79,9 +95,7 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend)
 		{
 			if (token->flag == -1)
 			{
-				ft_putstr_fd("minishell: unset: `",  1);
-				ft_putstr_fd(token->data, 1);
-				ft_putendl_fd("': not a valid identifier", 1);
+				execute_output_error(token->data);
 				break ;
 			}
 			else if (j == 0)
@@ -89,9 +103,7 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend)
 				if (ft_isalpha(split_tokend[i][j]) == 0 && split_tokend[i][j] != '_')
 				{
 					token->flag = -1;
-					ft_putstr_fd("minishell: unset: `",  1);
-					ft_putstr_fd(token->data, 1);
-					ft_putendl_fd("': not a valid identifier", 1);
+					execute_output_error(token->data);
 					break ;
 				}
 			}
@@ -100,9 +112,7 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend)
 				if (ft_isalnum(split_tokend[i][j]) == 0 && split_tokend[i][j] != '_')
 				{
 					token->flag = -1;
-					ft_putstr_fd("minishell: unset: `",  1);
-					ft_putstr_fd(token->data, 1);
-					ft_putendl_fd("': not a valid identifier", 1);
+					execute_output_error(token->data);
 					break ;
 				}
 			}
@@ -173,7 +183,7 @@ static void	export_compare_args_with_env(t_lsttoken *token, char **split_tokend,
 				}
 				envidx++;
 			}
-			if (split_env[envidx] ==  NULL)
+			if (split_env[envidx] ==  NULL) /* 同じ名前の環境変数がなかったので、新しく追加される*/
 			{
 				env->num++;
 			}
@@ -191,7 +201,7 @@ static void	export_compare_args_with_env(t_lsttoken *token, char **split_tokend,
 				}
 				envidx++;
 			}
-			if (split_env[envidx] ==  NULL)
+			if (split_env[envidx] ==  NULL) /* 同じ名前の環境変数がなかったので、新しく追加される*/
 			{
 				env->num++;
 			}
@@ -219,7 +229,15 @@ static void	export_make_new_envdata(t_lsttoken *token, t_env *env)
 	}
 	while(token != NULL)
 	{
-		if (token->flag > 0)
+		if (ft_strncmp(token->data, "PWD", 3) == 0 && token->data[3] == '\0' && token->flag == 1)
+		{
+			if (ft_strcmp(env->pwd_data,  env->unset_pwd) != 0) //PWD -> PWD=cwdirにする
+			{
+				free(token->data);
+				token->data = ft_strjoin("PWD=", env->pwd_data);
+			}
+		}
+		if (token->flag > 0)/* 新しく追加されるやつ */
 		{
 			new_env[idx] = ft_strdup(token->data);
 			idx++;
@@ -242,7 +260,7 @@ void	execute_export(t_lsttoken *token, t_env *env)
 		export_putenv(env);
 		return ;
 	}
-	split_tokend = execute_split_and_classify_tokend(token);
+	split_tokend = execute_split_and_classify_tokend(token, env);
 	export_check_args(token, split_tokend);
 	export_check_duplication_of_token(token, split_tokend);
 	split_env = execute_split_env(env);

@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/18 20:15:03 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/21 20:48:24 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,16 +131,6 @@ pipe(2)
 			成功した場合は 0 が返される。エラーの場合は -1 が返され、 errno が適切に設定される。
 */
 
-/////////////////////
-///	エラー時の対応	///
-////////////////////
-/*
-
-cdコマンド
-	//引数が指定されなかった時->strerror(errno);
-	//cddirが失敗した時		->ft_putendl("error_str", 1);
-
-*/
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -186,7 +176,8 @@ typedef struct	s_env
 {
 	char		**data;
 	int			num;
-	char		*pwd_data; //PWD存在しようがしないが、cdされるごとに常に更新される。
+	char		*pwd_data; //PWD存在しようがしないが、cdされるごとに常にcwdirに更新される。unset PWDされた際は、空文字が入る
+	char		*unset_pwd; //unset PWD が実行されたcwdirを保存する
 	int			oldpwd_flag; //存在しない時は-1となる.
 	int			pwd_flag; //存在しない時は-1となる.
 }				t_env;
