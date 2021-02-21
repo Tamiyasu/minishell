@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/21 19:43:10 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/21 22:11:38 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	cd_update_envpwd(t_env *env)
 
 int	execute_cd(t_lsttoken *token, t_env *env)
 {
-	char	**split_env;
+	char	*env_home;
 	int		idx;
 
 	token = token->next;
@@ -62,14 +62,15 @@ int	execute_cd(t_lsttoken *token, t_env *env)
 			ft_putendl_fd("minishell: cd: HOME not set", 1);
 			return (1);
 		}
-		split_env = ft_split(env->data[idx], '=');
-		if (chdir(split_env[1]) == -1) /* 環境変数HOMEの値が存在しないpathだった時 */
+		//env_home = ft_split(env->data[idx], '=');
+		env_home = ft_strdup(&env->data[idx][5]);
+		if (chdir(env_home) == -1) /* 環境変数HOMEの値が存在しないpathだった時 */
 		{
-			cd_output_error(split_env[1]);
-			free_args(split_env);
+			cd_output_error(env_home);
+			free(env_home);
 			return (1);
 		}
-		free_args(split_env);
+		free(env_home);
 	}
 	else if (chdir(token->data) == -1)
 	{
