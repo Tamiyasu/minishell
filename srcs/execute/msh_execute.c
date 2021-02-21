@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/10 13:20:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/14 15:58:51 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	msh_execute(t_lsttoken *token, t_env *env, int *exit_status)
 
 	if (ft_strcmp(token->data, "cd") == 0)
 	{
-		execute_cd(token, env->data);
+		execute_cd(token, env);
 	}
 	else if (ft_strcmp(token->data, "echo") == 0)
 	{
@@ -49,6 +49,10 @@ int	msh_execute(t_lsttoken *token, t_env *env, int *exit_status)
 	else if (ft_strcmp(token->data, "unset") == 0)
 	{
 		execute_unset(token, env);
+	}
+	else
+	{
+		*exit_status = execute_execve(token, env);
 	}
 	return (1);
 }
