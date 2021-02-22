@@ -6,14 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/01 16:47:58 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/22 15:10:30 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
-void	execute_pwd(void)
+int	execute_pwd(void)
 {
 	char	*cwdir;
 
@@ -21,9 +21,9 @@ void	execute_pwd(void)
 	if (cwdir == NULL)
 	{
 		strerror(errno);
-		return ;
+		return (1);
 	}
 	ft_putendl_fd(cwdir, 1);
 	free(cwdir);
-	return ;
+	return (0);
 }
