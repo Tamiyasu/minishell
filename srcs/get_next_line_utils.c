@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:57:55 by ysaito            #+#    #+#             */
-/*   Updated: 2020/12/16 11:58:22 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/23 20:43:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/*
 int				ft_strlen(char *str)
 {
 	int			len;
@@ -45,6 +46,7 @@ char			*ft_strdup(char *str)
 	newstr[i] = '\0';
 	return (newstr);
 }
+*/
 
 char			*ft_strjoin_and_free(char *s1, char *s2)
 {
@@ -76,6 +78,7 @@ char			*ft_strjoin_and_free(char *s1, char *s2)
 	return (newstr);
 }
 
+/* 二重定義? 未使用の様子。いったん削除
 int				ft_strchr(char *str, char c)
 {
 	int			i;
@@ -111,3 +114,4 @@ char			*ft_substr(char *str, int start, int end)
 	newstr[start] = '\0';
 	return (newstr);
 }
+*/

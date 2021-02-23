@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2020/12/16 15:46:41 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/23 20:30:24 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/*
 static int				ft_strlen(char *str)
 {
 	int			len;
@@ -23,7 +24,9 @@ static int				ft_strlen(char *str)
 	}
 	return (len);
 }
+*/
 
+/*
 static char			*ft_strdup(char *str)
 {
 	char		*newstr;
@@ -45,6 +48,7 @@ static char			*ft_strdup(char *str)
 	newstr[i] = '\0';
 	return (newstr);
 }
+*/
 
 static char			*ft_strjoin_and_free(char *s1, char *s2)
 {
@@ -76,6 +80,7 @@ static char			*ft_strjoin_and_free(char *s1, char *s2)
 	return (newstr);
 }
 
+/*
 int				ft_strchr(char *str, char c)
 {
 	int			i;
@@ -89,7 +94,9 @@ int				ft_strchr(char *str, char c)
 	}
 	return (0);
 }
+*/
 
+/*
 static char			*ft_substr(char *str, int start, int end)
 {
 	char		*newstr;
@@ -111,7 +118,7 @@ static char			*ft_substr(char *str, int start, int end)
 	newstr[start] = '\0';
 	return (newstr);
 }
-
+*/
 
 static int				ft_make_one_line(char *buf_join, char **save, char **line)
 {
