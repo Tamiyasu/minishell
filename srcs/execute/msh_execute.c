@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/14 15:58:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/23 18:18:11 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	msh_execute(t_lsttoken *token, t_env *env, int *exit_status)
 	int	data_len;
 
 	data_len = ft_strlen(token->data);
+	printf("data_len: %d\n", data_len);
 
 	if (ft_strcmp(token->data, "cd") == 0)
 	{

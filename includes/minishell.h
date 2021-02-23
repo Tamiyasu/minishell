@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/21 20:48:24 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/23 18:20:09 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ pipe(2)
 # include <stdlib.h>
 # include <string.h>//strerror
 # include <errno.h>//errno
+# include <sys/wait.h>
 
 typedef struct		s_lsttoken
 {
