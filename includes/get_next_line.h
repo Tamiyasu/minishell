@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:36 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/23 20:28:35 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/24 00:34:25 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,8 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-# include "../libft/libft.h"
+# include "libft.h"
 
 int		get_next_line(char **line);
-// int		ft_strchr(char *str, char c);
-// char	*ft_strdup(char *str);
-// char	*ft_strjoin_and_free(char *s1, char *s2);
-// int		ft_strlen(char *str);
-// char	*ft_substr(char *str, int start, int end);
 
 #endif
