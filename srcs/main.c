@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/17 18:00:35 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/23 18:17:18 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,8 @@ int	main(int argc, char *argv[], char *envp[])
 	t_env	env;
 	int		exit_status;
 
-	argc = 0;//del
-	argv  = NULL;//del
+	argc -= argc;//del
+	argv -= (long)argv;//del
 	exit_status = 0;//de;
 
 	msh_env_init(&env);
