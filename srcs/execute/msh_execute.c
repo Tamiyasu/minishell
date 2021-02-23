@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 20:48:44 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/23 18:18:11 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,19 @@ int	msh_execute(t_lsttoken *token, t_env *env, int *exit_status)
 	int	data_len;
 
 	data_len = ft_strlen(token->data);
+	printf("data_len: %d\n", data_len);
 
 	if (ft_strcmp(token->data, "cd") == 0)
 	{
-		*exit_status = execute_cd(token, env);
+		execute_cd(token, env);
 	}
 	else if (ft_strcmp(token->data, "echo") == 0)
 	{
-		*exit_status = execute_echo(token);
+		execute_echo(token);
 	}
 	else if (ft_strcmp(token->data, "env") == 0)
 	{
-		*exit_status = execute_env(env->data);
+		execute_env(env->data);
 	}
 	else if (ft_strcmp(token->data, "exit") == 0)
 	{
@@ -40,15 +41,15 @@ int	msh_execute(t_lsttoken *token, t_env *env, int *exit_status)
 	}
 	else if (ft_strcmp(token->data, "export") == 0)
 	{
-		*exit_status = execute_export(token, env);
+		execute_export(token, env);
 	}
 	else if (ft_strcmp(token->data, "pwd") == 0)
 	{
-		*exit_status = execute_pwd();
+		execute_pwd();
 	}
 	else if (ft_strcmp(token->data, "unset") == 0)
 	{
-		*exit_status = execute_unset(token, env);
+		execute_unset(token, env);
 	}
 	else
 	{

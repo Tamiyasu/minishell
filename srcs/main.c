@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 20:54:07 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/23 18:17:18 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "lexer.h"
-#include "expansion.h"
 #include "execute.h"
 #include "libft.h"
 #include "get_next_line.h"
@@ -66,30 +65,27 @@ void	msh_loop(t_env *env, int *exit_status)
 		/* read（標準入力からコマンドを読み取る) コマンドラインが複数行になる場合、EOFが来るまで読み続ける（cub3dみたいに）。 */
 		if (get_next_line(&line) == GNL_ERR)
 		{
-			return ;//error処理(free, exit_status)してexit。
+			return ;//error処理(free等)してexit。
 		}
 		/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
 		token = msh_lexer(line);
 		if (token == NULL)
-			return ;//error処理(free, exit_status)してexit。
+			return ;
 
 		//////////////* check msh_lexer */
-		// printf("------[check msh_lexer]-------------\n");
-		// t_lsttoken *copy_token = token;
-		// for (int count = 0; copy_token != NULL; count++)
-		// {
-		// 	printf("count[%d]=[%s]\n", count, copy_token->data);
-		// 	copy_token = copy_token->next;
-		// }
-		// printf("------------------------------\n");
-		// free_lst(copy_token);
+		printf("------[check msh_lexer]-------------\n");
+		t_lsttoken *copy_token = token;
+		for (int count = 0; copy_token != NULL; count++)
+		{
+			printf("count[%d]=[%s]\n", count, copy_token->data);
+			copy_token = copy_token->next;
+		}
+		printf("------------------------------\n");
+		free_lst(copy_token);
 		//////////////* check msh_lexer del*/
 
-
 		/* parse（トークンを、コマンド・オプション・環境変数等に分ける。*/
-
-		/* expansion（変数の展開）*/
-		msh_expansion(token, /*env,*/ exit_status);
+		//args = ft_split(line, ' ');
 
 		/* execute（解析されたコマンドを実行）*/
 		loop_status = msh_execute(token, env, exit_status); //exitコマンド実行時にreturn(0)がくる
@@ -104,8 +100,8 @@ int	main(int argc, char *argv[], char *envp[])
 	t_env	env;
 	int		exit_status;
 
-	argc = 0;//del
-	argv  = NULL;//del
+	argc -= argc;//del
+	argv -= (long)argv;//del
 	exit_status = 0;//de;
 
 	msh_env_init(&env);
