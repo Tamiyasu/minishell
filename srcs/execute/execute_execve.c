@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/21 16:38:38 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/22 21:31:11 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ static int	execve_execute_command(char *command, char **args, t_env *env)
 			ft_putendl_fd(strerror(errno), 1);
 			return (errno);
 		}
-		//printf("the child pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", pid, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
+		// printf("the child pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", pid, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
 	}
 	return (WEXITSTATUS(pid_status));
 }
@@ -210,7 +210,8 @@ int			execute_execve(t_lsttoken *token, t_env *env)
 		else/* 今は errno==2 以外のエラーはここの条件分岐に入りエラー文出力して終了。*/
 		{
 			free_args(env_path);
-			return (execve_output_error(token, strerror(execve_rc), errno));
+			//return (execve_output_error(token, strerror(execve_rc), execve_rc));
+			return (execve_rc);
 		}
 	}
 }

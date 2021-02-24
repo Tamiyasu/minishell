@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/08 17:33:53 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/24 20:03:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ static t_lsttoken	*lexer_evaluate_next(t_lsttoken *token, t_lexer *lexer, int in
 	return (lexer_lstadd(token, input_len));//mallocで失敗した時return(NULL)くる
 }
 
-
+/*
+** token->dataに何かしら文字が入っていたら、'\0'を入れる。
+** 新しいリスト構造体にinput_cを入れて、その後ろに新しいリスト構造体を加えて戻す。
+*/
 static t_lsttoken	*lexer_evaluate_unique(t_lsttoken *token, t_lexer *lexer, char input_c, int input_len)
 {
 	if (lexer->data_idx != 0)
@@ -58,17 +61,41 @@ static t_lsttoken	*lexer_evaluate_redirect(t_lsttoken *token, t_lexer *lexer, ch
 			count++;
 			copy_idx++;
 		}
-		if (count == 2)
+		if (lexer->data_idx == 0)//token->data[0]>入れて終了
 		{
-			if (lexer->data_idx != 0)
+			if (count == 2)
+			{
+				ft_memcpy(token->data, ">>", 3);
+				*idx = *idx + 1;
+				return (lexer_lstadd(token, ft_strlen(input)));
+			}
+			return (lexer_evaluate_unique(token, lexer, input[*idx], ft_strlen(input)));
+		}
+		int i  =  0; //>の前の文字列と分離させるかくっつけるか評価
+		while (i < lexer->data_idx)
+		{
+			if (ft_isdigit(token->data[i]) != 1)
 			{
 				token = lexer_evaluate_next(token, lexer, ft_strlen(input));
+				if (count == 2)
+				{
+					ft_memcpy(token->data, ">>", 3);
+					*idx = *idx + 1;
+					return (lexer_lstadd(token, ft_strlen(input)));
+				}
+				return (lexer_evaluate_unique(token, lexer, input[*idx], ft_strlen(input)));
 			}
-			ft_memcpy(token->data, ">>", 3);
-			*idx = *idx + 1;
-			return (lexer_lstadd(token, ft_strlen(input)));
+			i++;
 		}
-		return (lexer_evaluate_unique(token, lexer, input[*idx], ft_strlen(input)));
+		if (count == 2)
+		{
+			token->data[lexer->data_idx++] = '>';
+			token->data[lexer->data_idx++] = '>';
+			*idx = *idx + 1;
+			return (lexer_evaluate_next(token, lexer, ft_strlen(input)));
+		}
+		token->data[lexer->data_idx++] = '>';
+		return (lexer_evaluate_next(token, lexer, ft_strlen(input)));
 	}
 	return (lexer_evaluate_unique(token, lexer, input[*idx], ft_strlen(input)));
 }
@@ -135,7 +162,7 @@ static void	lexer_evaluate_input(t_lsttoken *token, t_lexer *lexer, char *input,
 					{
 						break ;
 					}
-					token = lexer_evaluate_next(token, lexer, input_len);/*この関数内で、いったん文字列終わらせて、新しくlstaddしてる→次input[idx]が'\0'ならカラ文字入った意味ないリストがくっついてくる事になる*/
+					token = lexer_evaluate_next(token, lexer, input_len);
 				}
 			}
 			else if (input[idx] == '<' || input[idx]  == '>')

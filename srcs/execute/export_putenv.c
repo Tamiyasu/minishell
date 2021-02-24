@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 18:11:32 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/07 20:57:11 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/22 11:15:39 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	putenv_sort(char **envp, int *idx, int num)
 	}
 }
 
-static char **putenv_shape(char *env)
+static char	**putenv_shape(char *env)
 {
 	char	**shape_env;
 	char	*tmp;
@@ -107,7 +107,7 @@ static char **putenv_shape(char *env)
 	return (shape_env);
 }
 
-void		export_putenv(t_env *env)
+int		export_putenv(t_env *env)
 {
 	char	**shape_env;
 	int		*idx_array;
@@ -116,8 +116,8 @@ void		export_putenv(t_env *env)
 	idx_array = malloc(sizeof(int *) * (env->num + 1));
 	if (idx_array == NULL)
 	{
-		//mallocのエラー出力して?return(最初の入力待ち)に
-		return ;
+		ft_putendl_fd(strerror(errno), 1);//mallocのエラー出力して?return(最初の入力待ち)に
+		return (1);
 	}
 	i = 0;
 	while (i < env->num)
@@ -149,5 +149,5 @@ void		export_putenv(t_env *env)
 	}
 	free(idx_array);
 	idx_array = NULL;
-	return ;
+	return (0);
 }

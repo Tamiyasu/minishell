@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/21 20:57:55 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/22 11:19:35 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static char	**execute_split_and_classify_tokend(t_lsttoken *token,  t_env *env)
 	return (split_tokend);
 }
 
-static void	export_check_args(t_lsttoken *token, char **split_tokend)
+static void	export_check_args(t_lsttoken *token, char **split_tokend, int *exit_status)
 {
 	int	i;
 	int	j;
@@ -96,6 +96,7 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend)
 			if (token->flag == -1)
 			{
 				execute_output_error(token->data);
+				*exit_status = 1;
 				break ;
 			}
 			else if (j == 0)
@@ -104,6 +105,7 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend)
 				{
 					token->flag = -1;
 					execute_output_error(token->data);
+					*exit_status = 1;
 					break ;
 				}
 			}
@@ -113,6 +115,7 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend)
 				{
 					token->flag = -1;
 					execute_output_error(token->data);
+					*exit_status = 1;
 					break ;
 				}
 			}
@@ -249,27 +252,32 @@ static void	export_make_new_envdata(t_lsttoken *token, t_env *env)
 	env->data = new_env;
 }
 
-void	execute_export(t_lsttoken *token, t_env *env)
+int			execute_export(t_lsttoken *token, t_env *env)
 {
 	char	**split_tokend;
 	char	**split_env;
+	int		exit_status;
 
+	exit_status = 0;
 	token = token->next;
 	if (token == NULL) /* exportのみ --->ascii順に環境変数表示*/
 	{
-		export_putenv(env);
-		return ;
+		exit_status = export_putenv(env);
+		return (exit_status);
 	}
 	split_tokend = execute_split_and_classify_tokend(token, env);
-	export_check_args(token, split_tokend);
+	export_check_args(token, split_tokend, &exit_status);
 	export_check_duplication_of_token(token, split_tokend);
 	split_env = execute_split_env(env);
-	if (split_env == NULL)
+	if (split_env == NULL)//execute_split_env()内でmallocエラー
 	{
-		return ;
+		ft_putendl_fd(strerror(errno), 1);
+		exit_status = 1;
+		return (exit_status);
 	}
 	export_compare_args_with_env(token, split_tokend, env, split_env);
 	export_make_new_envdata(token, env);
 	free_args(split_tokend);
 	free_args(split_env);
+	return (exit_status);
 }
