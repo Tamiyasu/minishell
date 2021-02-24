@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/23 18:17:18 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/24 23:57:36 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "execute.h"
 #include "libft.h"
 #include "get_next_line.h"
+#include "parser.h"
 
 #include <unistd.h>
 
@@ -55,6 +56,7 @@ void	msh_loop(t_env *env, int *exit_status)
 	char	*line;
 	int		loop_status;
 	t_lsttoken *token;
+	t_parser_node *node;
 
 	line = NULL;
 	loop_status = 1;
@@ -71,10 +73,14 @@ void	msh_loop(t_env *env, int *exit_status)
 		token = msh_lexer(line);
 		if (token == NULL)
 			return ;
+		node = parser(token);
+		printf("node * : %p\n", node);
 
 		//////////////* check msh_lexer */
 		printf("------[check msh_lexer]-------------\n");
 		t_lsttoken *copy_token = token;
+		
+
 		for (int count = 0; copy_token != NULL; count++)
 		{
 			printf("count[%d]=[%s]\n", count, copy_token->data);

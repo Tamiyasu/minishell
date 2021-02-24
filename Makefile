@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
+#    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/02/22 10:20:40 by ysaito           ###   ########.fr        #
+#    Updated: 2021/02/24 23:49:49 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRC_FILE	+= get_next_line.c
 SRC_FILE	+= msh_env.c
 SRC_FILE	+= lexer/msh_lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
+SRC_FILE    += parser/parser.c
 SRC_FILE	+= expansion/msh_expansion.c
 SRC_FILE	+= execute/msh_execute.c
 SRC_FILE	+= execute/execute_cd.c
