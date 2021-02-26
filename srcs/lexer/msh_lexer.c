@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/24 20:03:23 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/26 20:37:56 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,109 +17,25 @@
 static void			lexer_structinit(t_lexer *lexer)
 {
 	lexer->data_idx = 0;
-	lexer->squote = 0;
-	lexer->dquote = 0;
 	lexer->state = STATE_GENERAL;
 }
 
-/*
-** token->dataに終端文字を入れて、新しいリストをくっつける
-*/
-static t_lsttoken	*lexer_evaluate_next(t_lsttoken *token, t_lexer *lexer, int input_len)
+static t_lsttoken *lexer_skip_space(t_lsttoken *token, t_lexer *lexer, char *input, int *idx, int input_len)
 {
-	token->data[lexer->data_idx] = '\0';
-	lexer->data_idx = 0;
-	return (lexer_lstadd(token, input_len));//mallocで失敗した時return(NULL)くる
-}
-
-/*
-** token->dataに何かしら文字が入っていたら、'\0'を入れる。
-** 新しいリスト構造体にinput_cを入れて、その後ろに新しいリスト構造体を加えて戻す。
-*/
-static t_lsttoken	*lexer_evaluate_unique(t_lsttoken *token, t_lexer *lexer, char input_c, int input_len)
-{
+	while (input[*idx] == ' ' || input[*idx] == '\t')
+	{
+		*idx = *idx + 1;
+	}
+	if (input[*idx] == '\0')
+	{
+		//break ;
+		return (token);
+	}
 	if (lexer->data_idx != 0)
 	{
-		token = lexer_evaluate_next(token, lexer, input_len);
+		token = lexer_setchr_and_next(token, lexer, 0, input_len);
 	}
-	token->data[0] = input_c;
-	token->data[1] = '\0';
-	return (lexer_lstadd(token, input_len));
-}
-
-static t_lsttoken	*lexer_evaluate_redirect(t_lsttoken *token, t_lexer *lexer, char *input, int *idx)
-{
-	int	copy_idx;
-	int	count;
-
-	copy_idx = *idx;
-	count = 0;
-	if (input[copy_idx] == '>')
-	{
-		while (input[copy_idx] == '>')
-		{
-			count++;
-			copy_idx++;
-		}
-		if (lexer->data_idx == 0)//token->data[0]>入れて終了
-		{
-			if (count == 2)
-			{
-				ft_memcpy(token->data, ">>", 3);
-				*idx = *idx + 1;
-				return (lexer_lstadd(token, ft_strlen(input)));
-			}
-			return (lexer_evaluate_unique(token, lexer, input[*idx], ft_strlen(input)));
-		}
-		int i  =  0; //>の前の文字列と分離させるかくっつけるか評価
-		while (i < lexer->data_idx)
-		{
-			if (ft_isdigit(token->data[i]) != 1)
-			{
-				token = lexer_evaluate_next(token, lexer, ft_strlen(input));
-				if (count == 2)
-				{
-					ft_memcpy(token->data, ">>", 3);
-					*idx = *idx + 1;
-					return (lexer_lstadd(token, ft_strlen(input)));
-				}
-				return (lexer_evaluate_unique(token, lexer, input[*idx], ft_strlen(input)));
-			}
-			i++;
-		}
-		if (count == 2)
-		{
-			token->data[lexer->data_idx++] = '>';
-			token->data[lexer->data_idx++] = '>';
-			*idx = *idx + 1;
-			return (lexer_evaluate_next(token, lexer, ft_strlen(input)));
-		}
-		token->data[lexer->data_idx++] = '>';
-		return (lexer_evaluate_next(token, lexer, ft_strlen(input)));
-	}
-	return (lexer_evaluate_unique(token, lexer, input[*idx], ft_strlen(input)));
-}
-
-static void	lexer_evaluate_dquote(t_lsttoken *token, t_lexer *lexer, char input_c)
-{
-	if (input_c == CHAR_DQUOTE)
-	{
-		lexer->state = STATE_GENERAL;
-		lexer->dquote = 0;
-		return ;
-	}
-	token->data[lexer->data_idx++] = input_c;
-}
-
-static void	lexer_evaluate_squote(t_lsttoken *token, t_lexer *lexer, char input_c)
-{
-	if (input_c == CHAR_SQUOTE)
-	{
-		lexer->state = STATE_GENERAL;
-		lexer->squote = 0;
-		return ;
-	}
-	token->data[lexer->data_idx++] = input_c;
+	return (token);
 }
 
 /*
@@ -127,93 +43,58 @@ static void	lexer_evaluate_squote(t_lsttoken *token, t_lexer *lexer, char input_
 */
 static void	lexer_evaluate_input(t_lsttoken *token, t_lexer *lexer, char *input, int input_len)
 {
-	int	idx =  0;
+	int	idx;
 
 	token = lexer_lstlast(token);
+	idx = 0;
 	while (input[idx] != '\0')
 	{
 		if (lexer->state == STATE_GENERAL)
 		{
-			if (input[idx] == '\'')
+			if (input[idx] == '\'' || input[idx] == '\"')
 			{
-				lexer->state = STATE_IN_SQUOTE;
-				lexer->squote++;
-			}
-			else if (input[idx] == '\"')/* '$', '\\'以外は文字列リテラルとされる */
-			{
-				lexer->state = STATE_IN_DQUOTE;
-				lexer->dquote++;
-			}
-			else if (input[idx] == '\\')
-			{
-				idx++;
-				token->data[lexer->data_idx++] = input[idx];
+				token = lexer_set_quote(token, lexer, input[idx]);
 			}
 			else if (input[idx] == ' ' || input[idx] == '\t')
 			{
-				if (lexer->data_idx != 0)
-				{
-					int copy_idx = idx;
-					while (input[copy_idx] == ' ' || input[copy_idx] == '\t')
-					{
-						copy_idx++;
-					}
-					if (input[copy_idx] == '\0')
-					{
-						break ;
-					}
-					token = lexer_evaluate_next(token, lexer, input_len);
-				}
+				token = lexer_skip_space(token, lexer, input, &idx, input_len);
+				continue ;
 			}
 			else if (input[idx] == '<' || input[idx]  == '>')
+			// {
+			// 	if (input[idx] == '>' && input[idx + 1] == '>')
+			// 	{
+			// 		idx++;
+			// 		token = lexer_set_redirect(token, lexer, input[idx], 2, input_len);
+			// 	}
+			// 	else
+			// 	{
+			// 		token = lexer_set_redirect(token, lexer, input[idx], 1, input_len);
+			// 	}
+			// }
 			{
-				token = lexer_evaluate_redirect(token, lexer, input, &idx);
+				token = lexer_set_redirect(token, lexer, input, &idx, input_len);
 			}
 			else if (input[idx] == '|' || input[idx] == ';')
 			{
-				token = lexer_evaluate_unique(token, lexer, input[idx], input_len);
+				token = lexer_setchr_and_next(token, lexer, input[idx], input_len);
 			}
-			else /* それ以外の文字 */
+			else
 			{
 				token->data[lexer->data_idx++] = input[idx];
 			}
 		}
 		else if (lexer->state == STATE_IN_DQUOTE)
 		{
-			lexer_evaluate_dquote(token, lexer, input[idx]);
+			lexer_in_dquote(token, lexer, input[idx]);
 		}
 		else if (lexer->state == STATE_IN_SQUOTE)
 		{
-			lexer_evaluate_squote(token, lexer, input[idx]);
+			lexer_in_squote(token, lexer, input[idx]);
 		}
 		idx++;
 	}
 	token->data[lexer->data_idx] = '\0';
-}
-
-/*
-** 2回目以降の入力後、lexer_evaluate_input()が実行される前に構造体tokenのdataを整える
-*/
-static void	lexer_prepare_next(t_lsttoken *token, t_lexer *lexer, int next_len)
-{
-	int	data_len;
-
-	token = lexer_lstlast(token);
-	token->data[lexer->data_idx++] = '\n';
-	data_len = ft_strlen(token->data);
-	next_len += data_len;
-	char *tmp = ft_strdup(token->data);
-	free(token->data);
-	token->data = malloc(sizeof(char *) * (next_len + 1));
-	if (token->data == NULL)
-	{
-		free(tmp);
-		tmp = NULL;
-		return ;
-	}
-	ft_memcpy(token->data, tmp, data_len);
-	free(tmp);
-	tmp = NULL;
 }
 
 /*
@@ -224,40 +105,19 @@ t_lsttoken	*msh_lexer(char *input)
 	t_lsttoken *token;
 	t_lexer		lexer;
 	size_t	input_len;
-	char	*nextinput;
-	int		nextinput_len;
 
-	/* inputの長さを求める */
-	input_len = ft_strlen(input);
-	/* t_lsttoken　mallocして初期化 */
-	token = lexer_lstnew(input_len);
+	input_len = ft_strlen(input); /* inputの長さを求める */
+	token = lexer_lstnew(input_len); /* t_lsttoken　mallocして初期化 */
 	if (token == NULL)//lexer_lstnew内のmallocで失敗した時
 	{
 		return (NULL);
 	}
 	lexer_structinit(&lexer); /*msh_lexer.c内で使う構造体の初期化 */
-
-	/* 1回目の入力評価 */
 	lexer_evaluate_input(token, &lexer, input, input_len);
 	if (token == NULL)
 	{
 		free_lst(token);
 		return (NULL);
-	}
-	/* single quoteが入力されて、閉じられていない時(2回目以降の入力催促 & 評価) */
-	while (lexer.squote != 0 || lexer.dquote != 0)
-	{
-		nextinput = NULL;
-		ft_putstr_fd("> ", 1);
-		if (get_next_line(&nextinput) == GNL_ERR)
-		{
-			return (NULL);
-		}
-		nextinput_len = ft_strlen(nextinput);
-		lexer_prepare_next(token, &lexer, nextinput_len);
-		lexer_evaluate_input(token, &lexer, nextinput, nextinput_len);
-		free(nextinput);
-		nextinput = NULL;
 	}
 	return (token);
 }
