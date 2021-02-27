@@ -6,7 +6,11 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2021/02/24 23:49:49 by tmurakam         ###   ########.fr        #
+=======
+#    Updated: 2021/02/26 17:54:26 by ysaito           ###   ########.fr        #
+>>>>>>> master
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +21,13 @@ SRC_FILE	+= get_next_line.c
 SRC_FILE	+= msh_env.c
 SRC_FILE	+= lexer/msh_lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
+<<<<<<< HEAD
 SRC_FILE    += parser/parser.c
+=======
+SRC_FILE	+= lexer/lexer_set_redirect.c
+SRC_FILE	+= lexer/lexer_quote.c
+SRC_FILE	+= lexer/lexer_setchr_and_next.c
+>>>>>>> master
 SRC_FILE	+= expansion/msh_expansion.c
 SRC_FILE	+= execute/msh_execute.c
 SRC_FILE	+= execute/execute_cd.c
