@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/23 18:17:18 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 17:37:09 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,11 @@ void	msh_loop(t_env *env, int *exit_status)
 	while (loop_status)
 	{
 		ft_putstr_fd("minishell>> ", 1);
-		/* read（標準入力からコマンドを読み取る) コマンドラインが複数行になる場合、EOFが来るまで読み続ける（cub3dみたいに）。 */
-		if (get_next_line(&line) == GNL_ERR)
+		if (get_next_line(&line) == GNL_ERR)/* read（標準入力からコマンドを読み取る) */
 		{
 			return ;//error処理(free等)してexit。
 		}
-		/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
-		token = msh_lexer(line);
+		token = msh_lexer(line);/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
 		if (token == NULL)
 			return ;
 
@@ -88,7 +86,8 @@ void	msh_loop(t_env *env, int *exit_status)
 		//args = ft_split(line, ' ');
 
 		/* execute（解析されたコマンドを実行）*/
-		loop_status = msh_execute(token, env, exit_status); //exitコマンド実行時にreturn(0)がくる
+		//loop_status = msh_execute(token, env, exit_status); //exitコマンド実行時にreturn(0)がくる
+		loop_status = execute(token, env, exit_status); //exitコマンド実行時にreturn(0)がくる
 		free_lst(token);
 		free(line);
 		line = NULL;
