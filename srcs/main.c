@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/24 23:57:36 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 18:13:16 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,17 @@ void	free_lst(t_lsttoken *token)
 	token = NULL;
 }
 
+t_lsttoken *find_first_commnd_node(t_parser_node *node)
+{
+	printf("node : %p\n", node);
+	printf("content : %p\n", node->content);
+	printf("flag : %d\n", node->content->flag);
+	while (node->content->flag != FT_COMMAND_F)
+		node = node->l_node;
+	return (node->content);
+}
+
+
 void	msh_loop(t_env *env, int *exit_status)
 {
 	char	*line;
@@ -74,6 +85,8 @@ void	msh_loop(t_env *env, int *exit_status)
 		if (token == NULL)
 			return ;
 		node = parser(token);
+		token = find_first_commnd_node(node);
+
 		printf("node * : %p\n", node);
 
 		//////////////* check msh_lexer */

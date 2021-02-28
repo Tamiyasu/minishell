@@ -6,23 +6,29 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/25 01:04:41 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 18:18:23 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "libft.h"
 
-enum input_type
+t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
 {
-    FT_EMPTY_F,
-    FT_FILENAME_F,
-    FT_REDIRECT_F,
-    FT_COMMAND_F,
-    FT_PIPE_F,
-};
+    t_lsttoken *token_i;
 
-
+    if (!(*token))
+    {
+        return(new);
+    }
+    token_i = *token;
+    while (token_i->next)
+    {
+        token_i = token_i->next;
+    }
+	token_i->next = new;
+	return (*token);
+}
 
 int check_token_type(t_lsttoken *token, int last_type)
 {
@@ -31,16 +37,46 @@ int check_token_type(t_lsttoken *token, int last_type)
 
     token_length = ft_strlen(token->data);
     if(token->data[token_length - 1] == '>')
-        type_i = FT_REDIRECT_F;
+        {
+            if(token_length == 1 || token->data[token_length - 1] != '>')
+                type_i = FT_REDIRECT_O_F;
+            else
+                type_i = FT_REDIRECT_A_F;
+        }
     else if(token->data[token_length - 1] == '|')
         type_i = FT_PIPE_F;
-    else if(last_type == FT_REDIRECT_F)
+    else if(token->data[token_length - 1] == '<')
+        type_i = FT_REDIRECT_I_F;
+    else if(last_type == FT_REDIRECT_O_F || last_type == FT_REDIRECT_A_F || last_type == FT_REDIRECT_I_F)
         type_i = FT_FILENAME_F;
     else 
         type_i = FT_COMMAND_F;
     return(type_i);
 }
+t_parser_node   *find_command_node(t_parser_node *node)
+{
+    t_parser_node *ret_node;
+    ret_node = NULL;
 
+    if(node->content == NULL || node->content->flag == FT_COMMAND_F)
+    {
+        ret_node = node;
+    }
+    else if (node->content->flag == FT_PIPE_F)
+    {
+        node->r_node = malloc(sizeof(t_parser_node));
+        ret_node = node->r_node;
+    }
+    else if (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_I_F || node->content->flag == FT_REDIRECT_O_F)
+    {
+        while(node->content->flag != FT_COMMAND_F)
+        {
+            node = node->l_node;
+        }
+        ret_node = node;
+    }
+    return (ret_node);
+}
 
 t_parser_node   *parser(t_lsttoken *token_list)
 {
@@ -50,13 +86,13 @@ t_parser_node   *parser(t_lsttoken *token_list)
     int last_type;
     int c_type;
 
-
     last_type = FT_EMPTY_F;
     c_type = FT_EMPTY_F;
 
     printf("in parser\n");    
     token = token_list;
     node = malloc(sizeof(t_parser_node));
+    node->content = NULL;
     while(token)
     {
         next = token->next;
@@ -68,16 +104,28 @@ t_parser_node   *parser(t_lsttoken *token_list)
 
         c_type = check_token_type(token, last_type);
         printf("last_type : %d\n", c_type);
+        token->flag = c_type;
         if(c_type == FT_COMMAND_F)
         {
-            if(last_type == FT_COMMAND_F)
-            {
-                ft_lstadd_back(node->content);
-            }
+            printf("token: %s\n", token->data);
+            t_parser_node *command_node;
+            command_node = find_command_node(node);
+            printf("node: %p\n", node);
+            printf("command_node: %p\n", command_node);
+            command_node->content = lexer_lstadd_back(&command_node->content, token);
+        }
+        else if(c_type == FT_PIPE_F || c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F){
+            t_parser_node *new_node = malloc(sizeof(t_parser_node));
+            new_node->l_node = node;
+            new_node->content = token;
+            node = new_node;
+        }
+        else if(c_type == FT_FILENAME_F)
+        {
+            node->r_node = malloc(sizeof(t_parser_node));
+            node->r_node->content = token;
         }
         token = next;
     } 
-
-    node = NULL;
     return (node);
 }

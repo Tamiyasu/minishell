@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/24 01:36:57 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 18:10:10 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,17 @@
 
 # include "minishell.h"
 # include "lexer.h"
+
+enum input_type
+{
+    FT_EMPTY_F,
+    FT_FILENAME_F,
+    FT_REDIRECT_I_F, // <
+    FT_REDIRECT_O_F, // >  "254>"
+    FT_REDIRECT_A_F, // >> "3>>"
+    FT_COMMAND_F,
+    FT_PIPE_F,
+};
 
 typedef struct	s_parser_node
 {
