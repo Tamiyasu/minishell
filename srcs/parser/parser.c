@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/28 18:18:23 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 19:13:11 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,12 @@ t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
 {
     t_lsttoken *token_i;
 
+    printf("in add_back new : %s\n", new->data);
     if (!(*token))
     {
         return(new);
     }
+    printf("in add_back *token : %s\n", (*token)->data);
     token_i = *token;
     while (token_i->next)
     {
@@ -45,6 +47,8 @@ int check_token_type(t_lsttoken *token, int last_type)
         }
     else if(token->data[token_length - 1] == '|')
         type_i = FT_PIPE_F;
+    else if(token->data[token_length - 1] == ';')
+        type_i = FT_SEMICOLON_F;
     else if(token->data[token_length - 1] == '<')
         type_i = FT_REDIRECT_I_F;
     else if(last_type == FT_REDIRECT_O_F || last_type == FT_REDIRECT_A_F || last_type == FT_REDIRECT_I_F)
@@ -62,9 +66,10 @@ t_parser_node   *find_command_node(t_parser_node *node)
     {
         ret_node = node;
     }
-    else if (node->content->flag == FT_PIPE_F)
+    else if (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F)
     {
         node->r_node = malloc(sizeof(t_parser_node));
+        node->r_node->content = NULL;
         ret_node = node->r_node;
     }
     else if (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_I_F || node->content->flag == FT_REDIRECT_O_F)
@@ -114,7 +119,7 @@ t_parser_node   *parser(t_lsttoken *token_list)
             printf("command_node: %p\n", command_node);
             command_node->content = lexer_lstadd_back(&command_node->content, token);
         }
-        else if(c_type == FT_PIPE_F || c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F){
+        else if(c_type == FT_PIPE_F || c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F || c_type == FT_SEMICOLON_F){
             t_parser_node *new_node = malloc(sizeof(t_parser_node));
             new_node->l_node = node;
             new_node->content = token;

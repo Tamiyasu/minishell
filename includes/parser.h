@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/28 18:10:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 18:52:27 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ enum input_type
     FT_REDIRECT_A_F, // >> "3>>"
     FT_COMMAND_F,
     FT_PIPE_F,
+    FT_SEMICOLON_F
 };
 
 typedef struct	s_parser_node
