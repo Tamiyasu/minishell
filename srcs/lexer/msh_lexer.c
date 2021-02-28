@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_lexer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/26 20:37:56 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/02/28 20:20:17 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ t_lsttoken	*msh_lexer(char *input)
 	lexer_evaluate_input(token, &lexer, input, input_len);
 	if (token == NULL)
 	{
-		free_lst(token);
+		free_lst(&token);
 		return (NULL);
 	}
 	return (token);

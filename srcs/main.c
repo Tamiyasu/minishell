@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/28 18:13:16 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 19:49:55 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,20 @@ void	free_args(char **args)
 	args = NULL;
 }
 
-void	free_lst(t_lsttoken *token)
+void	free_lst(t_lsttoken **token)
 {
 	t_lsttoken *temp;
+	t_lsttoken *temp_next;
 
-	while (token != NULL)
+	temp = *token;
+	while (temp != NULL)
 	{
-		temp = token->next;
-		free(token->data);
-		free(token);
-		token = temp;
+		temp_next = temp->next;
+		free(temp->data);
+		free(temp);
+		temp = temp_next;
 	}
-	token = NULL;
+	*token = NULL;
 }
 
 t_lsttoken *find_first_commnd_node(t_parser_node *node)
@@ -100,7 +102,7 @@ void	msh_loop(t_env *env, int *exit_status)
 			copy_token = copy_token->next;
 		}
 		printf("------------------------------\n");
-		free_lst(copy_token);
+		//free_lst(copy_token);
 		//////////////* check msh_lexer del*/
 
 		/* parse（トークンを、コマンド・オプション・環境変数等に分ける。*/
@@ -108,7 +110,8 @@ void	msh_loop(t_env *env, int *exit_status)
 
 		/* execute（解析されたコマンドを実行）*/
 		loop_status = msh_execute(token, env, exit_status); //exitコマンド実行時にreturn(0)がくる
-		free_lst(token);
+		free_tree(&node);
+//		free_lst(&token);
 		free(line);
 		line = NULL;
 	}

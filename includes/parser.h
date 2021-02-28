@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/28 18:52:27 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 19:31:26 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ typedef struct	s_parser_node
 }				t_parser_node;
 
 t_parser_node   *parser(t_lsttoken *token_list);
+t_parser_node   *free_tree(t_parser_node **node);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/28 19:13:11 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 20:21:04 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,20 @@ t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
     }
 	token_i->next = new;
 	return (*token);
+}
+
+t_parser_node *free_tree(t_parser_node **node)
+{
+    printf("--- : %p\n", (*node));
+    if((*node))
+        free_lst(&((*node)->content));
+    if((*node) && (*node)->l_node)
+        free_tree(&((*node)->l_node));
+    if((*node) && (*node)->r_node)
+        free_tree(&((*node)->l_node));
+    free(*node);
+    *node = NULL;
+    return (*node);
 }
 
 int check_token_type(t_lsttoken *token, int last_type)
@@ -70,6 +84,8 @@ t_parser_node   *find_command_node(t_parser_node *node)
     {
         node->r_node = malloc(sizeof(t_parser_node));
         node->r_node->content = NULL;
+        node->r_node->r_node = NULL;
+        node->r_node->l_node = NULL;
         ret_node = node->r_node;
     }
     else if (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_I_F || node->content->flag == FT_REDIRECT_O_F)
@@ -98,6 +114,8 @@ t_parser_node   *parser(t_lsttoken *token_list)
     token = token_list;
     node = malloc(sizeof(t_parser_node));
     node->content = NULL;
+    node->r_node = NULL;
+    node->l_node = NULL;
     while(token)
     {
         next = token->next;
@@ -123,12 +141,15 @@ t_parser_node   *parser(t_lsttoken *token_list)
             t_parser_node *new_node = malloc(sizeof(t_parser_node));
             new_node->l_node = node;
             new_node->content = token;
+            new_node->r_node = NULL;
             node = new_node;
         }
         else if(c_type == FT_FILENAME_F)
         {
             node->r_node = malloc(sizeof(t_parser_node));
             node->r_node->content = token;
+            node->r_node->l_node = NULL;
+            node->r_node->r_node = NULL;
         }
         token = next;
     } 
