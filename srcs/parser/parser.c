@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/28 20:21:04 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/02/28 21:46:21 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int check_token_type(t_lsttoken *token, int last_type)
     token_length = ft_strlen(token->data);
     if(token->data[token_length - 1] == '>')
         {
-            if(token_length == 1 || token->data[token_length - 1] != '>')
+            if(token_length == 1 || token->data[token_length - 2] != '>')
                 type_i = FT_REDIRECT_O_F;
             else
                 type_i = FT_REDIRECT_A_F;
@@ -152,6 +152,8 @@ t_parser_node   *parser(t_lsttoken *token_list)
             node->r_node->r_node = NULL;
         }
         token = next;
+        last_type = c_type;
+
     } 
     return (node);
 }
