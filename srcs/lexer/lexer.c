@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_lexer.c                                        :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/26 20:37:56 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/01 15:43:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ static void	lexer_evaluate_input(t_lsttoken *token, t_lexer *lexer, char *input,
 /*
 ** トークン(意味のある単語)に分ける
 */
-t_lsttoken	*msh_lexer(char *input)
+t_lsttoken	*lexer(char *input)
 {
 	t_lsttoken *token;
 	t_lexer		lexer;
@@ -116,7 +116,7 @@ t_lsttoken	*msh_lexer(char *input)
 	lexer_evaluate_input(token, &lexer, input, input_len);
 	if (token == NULL)
 	{
-		free_lst(token);
+		free_lst(&token);
 		return (NULL);
 	}
 	return (token);

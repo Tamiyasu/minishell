@@ -6,13 +6,13 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 20:48:58 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/01 15:48:42 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		msh_execute(t_lsttoken *token, t_env *env, int *exit_status);
+int		execute(t_lsttoken *token, t_env *env, int *exit_status);
 int		execute_cd(t_lsttoken *token, t_env *env);
 int		execute_echo(t_lsttoken *token);
 int		execute_execve(t_lsttoken *token, t_env *env);

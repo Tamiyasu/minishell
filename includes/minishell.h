@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/24 15:27:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/01 15:39:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ typedef struct	s_env
 }				t_env;
 
 void		free_args(char **args);
-void		free_lst(t_lsttoken *token);
 t_lsttoken	*msh_lexer(char *input);
 
 /*
