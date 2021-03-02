@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:47:54 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/02 22:57:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	msh_loop(t_env *env, int *exit_status)
 		token = find_first_commnd_node(node);
 
 		printf("node * : %p\n", node);
-
+		node_print(node, 0);
 		//////////////* check msh_lexer */
 		// t_lsttoken *copy_token = token;
 

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:47:43 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/02 21:22:24 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	execute(t_lsttoken *token, t_env *env, int *exit_status)
 	else
 	{
 		*exit_status = execute_execve(token, env);
+		printf("reterund\n");
 	}
 	return (1);
 }

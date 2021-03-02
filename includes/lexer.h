@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 16:59:25 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/01 15:43:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 23:04:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,6 @@ t_lsttoken	*lexer_set_redirect(t_lsttoken *token, t_lexer *lexer, char *input, i
 t_lsttoken	*lexer_in_dquote(t_lsttoken *token, t_lexer *lexer, char input_c);
 t_lsttoken	*lexer_in_squote(t_lsttoken *token, t_lexer *lexer, char input_c);
 t_lsttoken	*lexer_set_quote(t_lsttoken *token, t_lexer *lexer, char input_c);
-
+void print_token(t_lsttoken *token, char *header);
 
 #endif

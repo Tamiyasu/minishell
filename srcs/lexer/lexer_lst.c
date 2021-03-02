@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:29:51 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:47:36 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/02 23:04:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,19 @@ void	free_lst(t_lsttoken **token)
 		temp = temp_next;
 	}
 	*token = NULL;
+}
+
+void print_token(t_lsttoken *token, char *header)
+{
+	if (header)
+		printf("%s", header);
+	while (token)
+	{
+		printf("[%s(%d)]", token->data, token->flag);
+		if (token->next)
+			printf("->");
+		else
+			printf("\n");
+		token = token->next;
+	}
 }

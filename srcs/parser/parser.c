@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/02/28 21:46:21 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/02 23:20:05 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
     printf("in add_back new : %s\n", new->data);
     if (!(*token))
     {
+        printf("it ________________________new!");
+        *token = new;
         return(new);
     }
     printf("in add_back *token : %s\n", (*token)->data);
@@ -36,15 +38,41 @@ t_parser_node *free_tree(t_parser_node **node)
 {
     printf("--- : %p\n", (*node));
     if((*node))
+    {
+        printf("##################### %s\n", (*node)->content->data);
+        printf("--------------------------\n");
         free_lst(&((*node)->content));
-    if((*node) && (*node)->l_node)
         free_tree(&((*node)->l_node));
-    if((*node) && (*node)->r_node)
-        free_tree(&((*node)->l_node));
+        free_tree(&((*node)->r_node));
+    }
     free(*node);
     *node = NULL;
     return (*node);
 }
+
+void indent(int i)
+{
+    while(i--)
+        printf("  ");
+}
+
+void    node_print(t_parser_node *node, int deepness)
+{
+    indent(deepness);
+    printf("pointer : %p\n", node);
+    if(node)
+    {
+        indent(deepness);
+        print_token(node->content, "token_list : ");
+        indent(deepness);
+        printf("r_node : %p\n", node->r_node);
+        node_print(node->r_node, deepness + 1);
+        indent(deepness);
+        printf("l_node : %p\n", node->l_node);
+        node_print(node->l_node, deepness + 1);
+    }
+}
+
 
 int check_token_type(t_lsttoken *token, int last_type)
 {
@@ -82,11 +110,18 @@ t_parser_node   *find_command_node(t_parser_node *node)
     }
     else if (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F)
     {
-        node->r_node = malloc(sizeof(t_parser_node));
-        node->r_node->content = NULL;
-        node->r_node->r_node = NULL;
-        node->r_node->l_node = NULL;
-        ret_node = node->r_node;
+        if(node->r_node)
+        {
+            ret_node = find_command_node(node->r_node);    
+        }
+        else
+        {
+            node->r_node = malloc(sizeof(t_parser_node));
+            node->r_node->content = NULL;
+            node->r_node->r_node = NULL;
+            node->r_node->l_node = NULL;
+            ret_node = node->r_node;
+        }
     }
     else if (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_I_F || node->content->flag == FT_REDIRECT_O_F)
     {
@@ -120,10 +155,6 @@ t_parser_node   *parser(t_lsttoken *token_list)
     {
         next = token->next;
         token->next = NULL;
-
-        printf("token->data : %s, ", token->data);
-        printf("token->flag : %d, ", token->flag);
-        printf("token->next : %p, ", token->next);
 
         c_type = check_token_type(token, last_type);
         printf("last_type : %d\n", c_type);
