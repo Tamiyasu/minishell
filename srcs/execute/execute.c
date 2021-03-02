@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 15:53:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 22:30:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 /*
 ** コマンドを実行する　returnで終了ステータスを返す.
 */
-int	exec_command(t_lexer_token *token, t_env *env, int *exit_status)
+int	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
 {
 	printf("in exex_command\n");
 	if (ft_strcmp(token->data, "cd") == 0)
@@ -63,7 +63,7 @@ int	exec_command(t_lexer_token *token, t_env *env, int *exit_status)
 	return (*exit_status);
 }
 
-int	execute(/*t_lsttoken *token*/t_parser_node *node, t_env *env, int *exit_status)
+int	execute(t_lsttoken *token/*t_parser_node *node*/, t_env *env, int *exit_status)
 {
 	if (node->content->flag == FT_SEMICOLON_F)
 	{

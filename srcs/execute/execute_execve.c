@@ -6,14 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 15:53:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "libft.h"
 
-static int	execve_count_lst(t_lexer_token *token)
+static int	execve_count_lst(t_lsttoken *token)
 {
 	int	num;
 
@@ -73,7 +73,7 @@ static char	**execve_keep_envpath(t_env *env, int *token_flag)
 ** execve()の第一引数commandを作成する。
 ** [return]char *command。
 */
-static char *execve_format_command(t_lexer_token *token, char **env_path, int path_idx)
+static char *execve_format_command(t_lsttoken *token, char **env_path, int path_idx)
 {
 	char	*command;
 	char	*tmp;
@@ -93,7 +93,7 @@ static char *execve_format_command(t_lexer_token *token, char **env_path, int pa
 ** execve()の第二引数argsを作成する。
 ** [return]char **args コマンドの引数を格納した配列。
 */
-static char	**execve_format_args(t_lexer_token *token, char *command)
+static char	**execve_format_args(t_lsttoken *token, char *command)
 {
 	char	**args;
 	int		lst_num;
@@ -155,7 +155,7 @@ static int	execve_execute_command(char *command, char **args, t_env *env)
 	return (WEXITSTATUS(pid_status));
 }
 
-int	execve_output_error(t_lexer_token *token, char *error_str, int exit_status)
+int	execve_output_error(t_lsttoken *token, char *error_str, int exit_status)
 {
 	ft_putstr_fd("minishell: ", 1);
 	ft_putstr_fd(token->data, 1);
@@ -164,7 +164,7 @@ int	execve_output_error(t_lexer_token *token, char *error_str, int exit_status)
 	return (exit_status);
 }
 
-int			execute_execve(t_lexer_token *token, t_env *env)
+int			execute_execve(t_lsttoken *token, t_env *env)
 {
 	char	*command;
 	char	**args;

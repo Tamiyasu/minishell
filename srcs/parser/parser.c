@@ -6,16 +6,16 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/02 15:53:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "libft.h"
 
-t_lexer_token	*lexer_lstadd_back(t_lexer_token **token, t_lexer_token *new)
+t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
 {
-    t_lexer_token *token_i;
+    t_lsttoken *token_i;
 
     // printf("in add_back new : %s\n", new->data);
     if (!(*token))
@@ -46,7 +46,7 @@ t_parser_node *free_tree(t_parser_node **node)
     return (*node);
 }
 
-int check_token_type(t_lexer_token *token, int last_type)
+int check_token_type(t_lsttoken *token, int last_type)
 {
     int type_i;
     int token_length;
@@ -99,11 +99,11 @@ t_parser_node   *find_command_node(t_parser_node *node)
     return (ret_node);
 }
 
-t_parser_node   *parser(t_lexer_token *token_list)
+t_parser_node   *parser(t_lsttoken *token_list)
 {
     t_parser_node *node;
-    t_lexer_token *token;
-    t_lexer_token *next;
+    t_lsttoken *token;
+    t_lsttoken *next;
     int last_type;
     int c_type;
 

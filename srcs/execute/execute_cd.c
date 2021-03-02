@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 15:53:27 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	cd_update_envpwd(t_env *env)
 	}
 }
 
-int	execute_cd(t_lexer_token *token, t_env *env)
+int	execute_cd(t_lsttoken *token, t_env *env)
 {
 	char	*env_home;
 	int		idx;

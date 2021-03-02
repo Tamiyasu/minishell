@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 16:14:16 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 20:54:51 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	msh_loop(t_env *env, int *exit_status)
 {
 	char	*line;
 	int		loop_status;
-	t_lexer_token *token_list;
+	t_lsttoken *token_list;
 	t_parser_node *node;
 
 
@@ -83,14 +83,14 @@ void	msh_loop(t_env *env, int *exit_status)
 		{
 			return ;//error処理(free等)してexit。
 		}
-		token_list = lexer(line);/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
+		token_list = msh_lexer(line);/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
 		if (token_list == NULL)
 		{
 			return ;
 		}
 		////////////* check msh_lexer */
 		printf("------[check msh_lexer]-------------\n");
-		t_lexer_token *copy_token = token_list;
+		t_lsttoken *copy_token = token_list;
 		for (int count = 0; copy_token != NULL; count++)
 		{
 			printf("count[%d]=[%s]\n", count, copy_token->data);
@@ -105,7 +105,7 @@ void	msh_loop(t_env *env, int *exit_status)
 		printf("after parser node root=[%s]\n", node->content->data);
 
 
-	//	expansion(node, exit_status);
+		expansion(node, exit_status);
 
 
 		/* execute（解析されたコマンドを実行）*/

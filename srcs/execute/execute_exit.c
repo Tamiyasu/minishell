@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 15:53:34 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	exit_check_integer(char *args)
 	return (1);
 }
 
-static int	exit_check_argsnum(t_lexer_token *token)
+static int	exit_check_argsnum(t_lsttoken *token)
 {
 	int	num;
 
@@ -51,7 +51,7 @@ static int	exit_check_argsnum(t_lexer_token *token)
 	return (num);
 }
 
-static long long exit_atoi(t_lexer_token *token)
+static long long exit_atoi(t_lsttoken *token)
 {
 	long long	num;
 	int		sign;
@@ -89,7 +89,7 @@ static int	exit_num_arg_err(char *data, int *exit_status)
 	return (EXIT_SUCCESS);
 }
 
-int	execute_exit(t_lexer_token *token, int *exit_status)
+int	execute_exit(t_lsttoken *token, int *exit_status)
 {
 	long long  num;
 

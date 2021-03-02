@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/02 15:53:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ typedef struct	s_parser_node
 {
     struct	s_parser_node *l_node;
     struct	s_parser_node *r_node;
-    t_lexer_token *content;
+    t_lsttoken *content;
 }				t_parser_node;
 
-t_parser_node   *parser(t_lexer_token *token_list);
+t_parser_node   *parser(t_lsttoken *token_list);
 t_parser_node   *free_tree(t_parser_node **node);
 
 #endif
