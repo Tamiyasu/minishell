@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 21:31:11 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/01 16:37:46 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,34 +28,33 @@ static int	execve_count_lst(t_lsttoken *token)
 
 /*
 ** コマンド部分のtoken->dataが、絶対パスか相対パスか判断する
-** [return]なし。先頭が'.'または、'/'が含まれる時token->flagに1を入れる
+** [return]先頭が'.'または、'/'が含まれる時0を返す。なし→1
 */
-static void	execve_check_command(t_lsttoken *token)
+static int	execve_check_command(char *command)
 {
 	int	idx;
 
 	idx = 0;
-	while (token->data[idx] != '\0')
+	while (command[idx] != '\0')
 	{
-		if (token->data[0] == '.')
+		if (command[0] == '.')
 		{
-			token->flag = 1;
-			break ;
+			return (0);
 		}
-		if (token->data[idx] == '/')
+		if (command[idx] == '/')
 		{
-			token->flag = 1;
-			break ;
+			return (0);
 		}
 		idx++;
 	}
+	return (1);
 }
 
 /*
 ** 環境変数PATHを見つけて、PATHの値を返す。
 ** [return]PATHの格納されたpathの配列。環境変数PATHが見つからなかったらNULL。
 */
-static char	**execve_keep_envpath(t_env *env, int *token_flag)
+static char	**execve_keep_envpath(t_env *env, int *relative_path)
 {
 	char	**env_path;
 	int	idx;
@@ -63,7 +62,7 @@ static char	**execve_keep_envpath(t_env *env, int *token_flag)
 	idx = msh_env_search(env->data, "PATH");
 	if (idx == -1)
 	{
-		*token_flag = 1;
+		*relative_path = 1;
 		return(NULL);
 	}
 	env_path = ft_split(&env->data[idx][5], ':');
@@ -130,7 +129,7 @@ static int	execve_execute_command(char *command, char **args, t_env *env)
 	int		pid_status;
 
 	pid = fork();
-	if (pid == -1) /* forkのエラー(プロセス複製失敗) */
+	if (pid == -1)
 	{
 		ft_putendl_fd(strerror(errno), 1);
 		return(errno);
@@ -151,7 +150,7 @@ static int	execve_execute_command(char *command, char **args, t_env *env)
 			ft_putendl_fd(strerror(errno), 1);
 			return (errno);
 		}
-		// printf("the child pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", pid, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
+		//printf("the child pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", pid, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
 	}
 	return (WEXITSTATUS(pid_status));
 }
@@ -170,15 +169,16 @@ int			execute_execve(t_lsttoken *token, t_env *env)
 	char	*command;
 	char	**args;
 	char	**env_path;
+	int		relative_path;
 	int		path_idx;
 	int		execve_rc;
 
 	env_path = NULL;
 	path_idx = 0;
-	execve_check_command(token);
-	if (token->flag == 0)
+	relative_path = execve_check_command(token->data);
+	if (relative_path == 1)
 	{
-		env_path = execve_keep_envpath(env, &token->flag);//PATH変数なし→NULL;
+		env_path = execve_keep_envpath(env, &relative_path);
 	}
 	while (1)
 	{
@@ -187,31 +187,28 @@ int			execute_execve(t_lsttoken *token, t_env *env)
 		execve_rc = execve_execute_command(command, args, env);
 		free(command);
 		free_args(args);
-		if (execve_rc == 0)/* 正常終了 */
+		if (execve_rc == 0)
 		{
 			free_args(env_path);
 			return (0);
 		}
-		if (execve_rc == 2)/* No such file or directory */
-		{
-			if (token->flag == 1)
-			{
-				free_args(env_path);
-				return (execve_output_error(token, strerror(execve_rc), 127));
-			}
-			path_idx++;
-			if (env_path[path_idx] == NULL)
-			{
-				free_args(env_path);
-				return (execve_output_error(token, "command not found", 127));
-			}
-			//もう一度、whileの先頭から
-		}
-		else/* 今は errno==2 以外のエラーはここの条件分岐に入りエラー文出力して終了。*/
+		if (execve_rc != 2)
 		{
 			free_args(env_path);
 			//return (execve_output_error(token, strerror(execve_rc), execve_rc));
 			return (execve_rc);
+		}
+		/* No such file or directory */
+		if (relative_path == 0)
+		{
+			free_args(env_path);
+			return (execve_output_error(token, strerror(execve_rc), 127));
+		}
+		path_idx++;
+		if (env_path[path_idx] == NULL)
+		{
+			free_args(env_path);
+			return (execve_output_error(token, "command not found", 127));
 		}
 	}
 }

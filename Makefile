@@ -6,7 +6,7 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/02/27 20:20:30 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/03/02 20:46:26 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,14 +15,15 @@ SRC_DIR		= ./srcs
 SRC_FILE	= main.c
 SRC_FILE	+= get_next_line.c
 SRC_FILE	+= msh_env.c
-SRC_FILE	+= lexer/msh_lexer.c
+SRC_FILE	+= lexer/lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
 SRC_FILE    += parser/parser.c
 SRC_FILE	+= lexer/lexer_set_redirect.c
 SRC_FILE	+= lexer/lexer_quote.c
 SRC_FILE	+= lexer/lexer_setchr_and_next.c
+SRC_FILE    += parser/parser.c
 SRC_FILE	+= expansion/msh_expansion.c
-SRC_FILE	+= execute/msh_execute.c
+SRC_FILE	+= execute/execute.c
 SRC_FILE	+= execute/execute_cd.c
 SRC_FILE	+= execute/execute_echo.c
 SRC_FILE	+= execute/execute_env.c

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:29:51 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/27 20:29:33 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/02 20:47:36 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,20 @@ t_lsttoken	*lexer_lstlast(t_lsttoken *token)
 		return_p = return_p->next;
 	}
 	return (return_p);
+}
+
+void	free_lst(t_lsttoken **token)
+{
+	t_lsttoken *temp;
+	t_lsttoken *temp_next;
+
+	temp = *token;
+	while (temp != NULL)
+	{
+		temp_next = temp->next;
+		free(temp->data);
+		free(temp);
+		temp = temp_next;
+	}
+	*token = NULL;
 }
