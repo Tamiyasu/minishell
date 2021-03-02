@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/24 15:27:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 15:52:51 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,40 +20,12 @@
 # include <errno.h>
 # include <sys/wait.h>
 
-typedef struct		s_lsttoken
-{
-	char				*data;
-	int			flag;
-	struct s_lsttoken	*next;
-}					t_lsttoken;
-
-/*
-** msh_lexer
-*/
-enum flags
-{
-	CHAR_PIPE = '|',
-	CHAR_SEMICOLON = ';',
-	CHAR_LESSSIGN = '<',
-	CHAR_GREATERSIGN = '>',
-	//CHAR_DOLLAR = '$',
-	CHAR_SQUOTE = '\'',
-	CHAR_DQUOTE = '\"',
-	CHAR_ESCAPESEQ = '\\',
-	CHAR_SPACE = ' ',
-	CHAR_TAB = '\t',
-	CHAR_NEWLINE = '\n',
-	//CHAR_QUESTION_MARK = '?'
-	CHAR_NULL = 0,
-};
-
-enum
-{
-	STATE_GENERAL,
-	STATE_IN_SQUOTE,
-	STATE_IN_DQUOTE,
-	STATE_IN_ESCAPESEQ,
-};
+// typedef struct		s_lsttoken
+// {
+// 	char				*data;
+// 	int			flag;
+// 	struct s_lsttoken	*next;
+// }					t_lexer_token;
 
 typedef struct	s_env
 {
@@ -66,8 +38,7 @@ typedef struct	s_env
 }				t_env;
 
 void		free_args(char **args);
-void		free_lst(t_lsttoken *token);
-t_lsttoken	*msh_lexer(char *input);
+//t_lexer_token	*msh_lexer(char *input);
 
 /*
 ** msh_env.c

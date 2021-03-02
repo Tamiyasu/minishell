@@ -6,14 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:35:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 10:38:59 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 15:53:31 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "libft.h"
 
-static void	echo_with_options(t_lsttoken *token)
+static void	echo_with_options(t_lexer_token *token)
 {
 	token = token->next;
 	while (token != NULL)
@@ -29,7 +29,7 @@ static void	echo_with_options(t_lsttoken *token)
 	return ;
 }
 
-int			execute_echo(t_lsttoken *token)
+int			execute_echo(t_lexer_token *token)
 {
 	token = token->next;
 	if (token == NULL)

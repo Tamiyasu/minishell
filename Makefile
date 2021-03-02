@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/02/28 19:48:29 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/02 14:44:35 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ SRC_FILE	+= lexer/lexer_lst.c
 SRC_FILE	+= lexer/lexer_set_redirect.c
 SRC_FILE	+= lexer/lexer_quote.c
 SRC_FILE	+= lexer/lexer_setchr_and_next.c
-SRC_FILE	+= expansion/msh_expansion.c
+SRC_FILE	+= parser/parser.c
+SRC_FILE	+= expansion/expansion.c
 SRC_FILE	+= execute/execute.c
 SRC_FILE	+= execute/execute_cd.c
 SRC_FILE	+= execute/execute_echo.c

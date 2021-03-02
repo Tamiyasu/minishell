@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/28 19:55:05 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/02 15:53:43 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@
 /*
 ** コマンドを実行する　returnで終了ステータスを返す.
 */
-int	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
+int	exec_command(t_lexer_token *token, t_env *env, int *exit_status)
 {
+	printf("in exex_command\n");
 	if (ft_strcmp(token->data, "cd") == 0)
 	{
 		*exit_status = execute_cd(token, env);
@@ -59,63 +60,68 @@ int	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
 	{
 		*exit_status = execute_execve(token, env);
 	}
-	return (1);
+	return (*exit_status);
 }
 
-int	execute(t_lsttoken *token, t_env *env, int *exit_status)
+int	execute(/*t_lsttoken *token*/t_parser_node *node, t_env *env, int *exit_status)
 {
-/*
-	[env] [|] [grep] [PATH]
-	 	  [|]
-(l_node) /	 \ (r_node)
-	[env]	  [grep][PATH]
-*/
-
-	//if (セミコロン)
-		// 前回のpipe_fdをリセット（使わない）
-		//node = node->l_node;
-	//if (pipe)
-		//パイプライン作成
-		//fork()
-		//子プロセスでl_nodeのcommand実行
-		//親プロセスでr_nodeのcommand実行
-
-	int		pipe_fd[2];
-	pid_t	pid;
-	int		pid_status;
-
-	if (pipe(pipe_fd) == -1)
+	if (node->content->flag == FT_SEMICOLON_F)
 	{
-		ft_putendl_fd(strerror(errno), 1);
+		printf("root[%s]\n", node->content->data);
+	//	t_parser_node	*copy_node_root = node;
+		//まず左
+		node = node->l_node;
+		printf("root->left->node[%s]\n", node->content->data);
 	}
-	pid = fork();
-	if (pid == -1) /* forkのエラー(プロセス複製失敗) */
+	if (node->content->flag == FT_PIPE_F)
 	{
-		ft_putendl_fd(strerror(errno), 1);
-		return(errno);
-	}
-	if (pid == 0) /* 以下のコードが子プロセスで実行される */
-	{
-		printf("in child pid=[%d]\n", getpid());//del
-		close(pipe_fd[0]);
-		dup2(pipe_fd[1], 1);
-		close(pipe_fd[1]);
-		*exit_status = execute_env(env->data);//exec_command();
-	}
-	else /* 以下のコードが親プロセスで実行される  */
-	{
-		printf("in parent pid=[%d]\n", getpid());//del
-		if((waitpid(pid, &pid_status, 0) == -1))
+		t_parser_node	*copy_node = node;
+		printf("copy_node[%s]\n", copy_node->content->data);
+		copy_node = copy_node->r_node;
+		printf("copy_node(pipe)->r_node[%s]\n", copy_node->content->data);
+		int	pipe_fd[2];
+		pipe(pipe_fd);
+		int	pid_status;
+		pid_t child_p1 = fork();
+		if  (child_p1 == 0)
 		{
-			// printf("in parent pid=[%d]\n", getpid());//del
-			ft_putendl_fd(strerror(errno), 1);
-			return (errno);
+			node = node->l_node;
+			printf("child1[%s]\n", node->content->data);
+			close(pipe_fd[0]);
+			printf("before dup2\n");
+			int rc = dup2(pipe_fd[1], 1);
+			if (rc == -1)
+			{
+				printf("%s\n", strerror(errno));
+			}
+			printf("after dup2\n");
+			close(pipe_fd[1]);
+			*exit_status = exec_command(node->content, env, exit_status);
 		}
-		close(pipe_fd[1]);
-		dup2(pipe_fd[0], 0);
-		close(pipe_fd[0]);
-		execute_execve(token, env);//exec_command();
+		pid_t child_p2 = fork();
+		if (child_p2 == 0)
+		{
+			copy_node = copy_node->r_node;
+			printf("child2[%s]\n", copy_node->content->data);
+			close(pipe_fd[1]);
+			dup2(pipe_fd[0], 0);
+			close(pipe_fd[0]);
+			*exit_status = exec_command(copy_node->content, env, exit_status);
+		}
+		else
+		{
+			close(pipe_fd[0]);
+			close(pipe_fd[1]);
+			waitpid(child_p1, &pid_status, 0);
+			waitpid(child_p2, &pid_status, 0);
+			*exit_status = WEXITSTATUS(pid_status);
+		}
 	}
-	printf("out parent pid=[%d]\n", getpid());//del
-	return (WEXITSTATUS(pid_status));
+// 	node = node->l_node;
+// 	if (node == NULL)
+// 	{
+// 		//右枝実行
+// 	}
+// 	//終端確認
+	return (1);
 }
