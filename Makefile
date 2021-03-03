@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/02 20:55:09 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/03 13:47:35 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SRC_DIR		= ./srcs
 SRC_FILE	= main.c
 SRC_FILE	+= get_next_line.c
 SRC_FILE	+= msh_env.c
-SRC_FILE	+= lexer/msh_lexer.c
+SRC_FILE	+= lexer/lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
 SRC_FILE	+= parser/parser.c
 SRC_FILE	+= expansion/expansion.c
