@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 15:52:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/03 20:57:07 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <errno.h>
 # include <sys/wait.h>
+# include <dirent.h>
 
 // typedef struct		s_lsttoken
 // {

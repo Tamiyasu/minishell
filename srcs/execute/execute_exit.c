@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/03 14:56:36 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,17 @@ static long long exit_atoi(t_lsttoken *token)
 	return (num);
 }
 
-static int	exit_num_arg_err(char *data, int *exit_status)
+void	exit_num_arg_err(char *data)
 {
 	ft_putendl_fd("exit", 1);
 	ft_putstr_fd("minishell: exit: ", 1);
 	ft_putstr_fd(data, 1);
 	ft_putendl_fd(": numeric argument required", 1);
-	*exit_status = 255;
-	return (EXIT_SUCCESS);
+	// *exit_status = 255;
+	// return (EXIT_SUCCESS);
 }
 
-int	execute_exit(t_lsttoken *token, int *exit_status)
+void	execute_exit(t_lsttoken *token, int *exit_status)
 {
 	long long  num;
 
@@ -97,23 +97,32 @@ int	execute_exit(t_lsttoken *token, int *exit_status)
 	if (token == NULL)
 	{
 		ft_putendl_fd("exit", 1);
-		return (EXIT_SUCCESS);
+		//すべてのfree処理
+		exit(EXIT_SUCCESS);
 	}
 	if (exit_check_integer(token->data) != 1)
-		return (exit_num_arg_err(token->data, exit_status));
+	{
+		exit_num_arg_err(token->data);
+		//すべてのfree処理
+		exit(255);
+	}
 	if (exit_check_argsnum(token) != 1)
 	{
 		ft_putendl_fd("exit", 1);
 		ft_putendl_fd("bash: exit: too many arguments", 1);
 		*exit_status = 1;
-		return (EXIT_FAILURE);
+		exit (*exit_status);
 	}
 	num = exit_atoi(token);
 	if (token->flag == -1)
-		return (exit_num_arg_err(token->data, exit_status));
+	{
+		exit_num_arg_err(token->data);
+		//すべてのfree処理
+		exit(255);
+	}
 	*exit_status = num % 256;
 	if (*exit_status < 0)
 		*exit_status += 256;
 	ft_putendl_fd("exit", 1);
-	return (EXIT_SUCCESS);
+	exit (*exit_status);
 }

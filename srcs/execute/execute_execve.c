@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/03 19:52:25 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,37 +123,44 @@ static char	**execve_format_args(t_lsttoken *token, char *command)
 ** forkでプロセス作成、execveでコマンド実行する。
 ** fork(), waitpid()のエラーはここで出力。
 */
-static int	execve_execute_command(char *command, char **args, t_env *env)
-{
-	pid_t	pid;
-	int		pid_status;
+// static int	execve_execute_command(char *command, char **args, t_env *env)
+// {
+// 	pid_t	pid;
+// 	int		pid_status;
+// 	int		rc;
 
-	pid = fork();
-	if (pid == -1) /* forkのエラー(プロセス複製失敗) */
-	{
-		ft_putendl_fd(strerror(errno), 1);
-		return(errno);
-	}
-	if (pid == 0) /* 以下のコードが子プロセスで実行される */
-	{
-		// printf("in child pid=[%d]\n", getpid());//del
-		if (execve(command, args, env->data) == -1)//コマンドの実行エラー
-		{
-			exit(errno);
-		}
-	}
-	else /* 以下のコードが親プロセスで実行される  */
-	{
-		if((waitpid(pid, &pid_status, 0) == -1))
-		{
-			// printf("in parent pid=[%d]\n", getpid());//del
-			ft_putendl_fd(strerror(errno), 1);
-			return (errno);
-		}
-		// printf("the child pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", pid, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
-	}
-	return (WEXITSTATUS(pid_status));
-}
+// 	pid = fork();
+// 	if (pid == -1)
+// 	{
+// 		ft_putendl_fd(strerror(errno), 1);
+// 		return(errno);
+// 	}
+// 	if (pid == 0)
+// 	{
+// 		// printf("in child pid=[%d]\n", getpid());//del
+// 		rc = execve(command, args, env->data);
+// 		printf("execve return code=[%d]\n", rc);
+// 		if (rc == -1)
+// 		{
+// 			exit(errno);
+// 		}
+// 	}
+// 	else /* 以下のコードが親プロセスで実行される  */
+// 	{
+// 		rc = waitpid(pid, &pid_status, 0);
+// 		if (rc == -1)
+// 		{
+// 			// printf("in parent pid=[%d]\n", getpid());//del
+// 			ft_putendl_fd(strerror(errno), 1);
+// 			return (errno);
+// 		}
+// 		// printf("the child pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", pid, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
+// 	// printf("in execve_execute_command  end[%d]\n", WEXITSTATUS(pid_status));
+// 	// return (WEXITSTATUS(pid_status));
+// 	}
+// 	printf("in execve_execute_command  end[%d]\n", WEXITSTATUS(pid_status));
+// 	return (WEXITSTATUS(pid_status));
+// }
 
 int	execve_output_error(t_lsttoken *token, char *error_str, int exit_status)
 {
@@ -164,14 +171,14 @@ int	execve_output_error(t_lsttoken *token, char *error_str, int exit_status)
 	return (exit_status);
 }
 
-int			execute_execve(t_lsttoken *token, t_env *env)
+void			execute_execve(t_lsttoken *token, t_env *env)
 {
 	char	*command;
 	char	**args;
 	char	**env_path;
 	int		relative_path;
 	int		path_idx;
-	int		execve_rc;
+	int		rc;
 
 	env_path = NULL;
 	path_idx = 0;
@@ -180,35 +187,41 @@ int			execute_execve(t_lsttoken *token, t_env *env)
 	{
 		env_path = execve_keep_envpath(env, &relative_path);
 	}
-	while (1)
-	{
+	// while (1)
+	// {
 		command = execve_format_command(token, env_path, path_idx);
 		args = execve_format_args(token, command);
-		execve_rc = execve_execute_command(command, args, env);
+		//execve_rc = execve_execute_command(command, args, env);
+		rc = execve(command, args, env->data);
+		if (rc == -1)
+		{
+			ft_putendl_fd(strerror(errno), 1);
+			exit(errno);
+		}
 		free(command);
 		free_args(args);
-		if (execve_rc == 0)
-		{
-			free_args(env_path);
-			return (0);
-		}
-		if (execve_rc != 2)
-		{
-			free_args(env_path);
-			//return (execve_output_error(token, strerror(execve_rc), execve_rc));
-			return (execve_rc);
-		}
-		/* No such file or directory */
-		if (relative_path == 0)
-		{
-			free_args(env_path);
-			return (execve_output_error(token, strerror(execve_rc), 127));
-		}
-		path_idx++;
-		if (env_path[path_idx] == NULL)
-		{
-			free_args(env_path);
-			return (execve_output_error(token, "command not found", 127));
-		}
-	}
+		// if (execve_rc == 0)
+		// {
+		// 	free_args(env_path);
+		//	return (0);
+		// }
+		// if (execve_rc != 2)
+		// {
+		// 	free_args(env_path);
+		// 	//return (execve_output_error(token, strerror(execve_rc), execve_rc));
+		// 	return (execve_rc);
+		// }
+		// /* No such file or directory */
+		// if (relative_path == 0)
+		// {
+		// 	free_args(env_path);
+		// 	return (execve_output_error(token, strerror(execve_rc), 127));
+		// }
+		// path_idx++;
+		// if (env_path[path_idx] == NULL)
+		// {
+		// 	free_args(env_path);
+		// 	return (execve_output_error(token, "command not found", 127));
+		// }
+	// }
 }

@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/03 16:53:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
 {
     t_lsttoken *token_i;
 
-    // printf("in add_back new : %s\n", new->data);
+    //printf("in add_back new : %s\n", new->data);
     if (!(*token))
     {
+       // printf("it ________________________new!");
+        *token = new;
         return(new);
     }
-    // printf("in add_back *token : %s\n", (*token)->data);
+    //printf("in add_back *token : %s\n", (*token)->data);
     token_i = *token;
     while (token_i->next)
     {
@@ -34,17 +36,44 @@ t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
 
 t_parser_node *free_tree(t_parser_node **node)
 {
-   // printf("--- : %p\n", (*node));
+    //printf("--- : %p\n", (*node));
     if((*node))
+    {
+       // printf("##################### %s\n", (*node)->content->data);
+        //printf("--------------------------\n");
         free_lst(&((*node)->content));
-    if((*node) && (*node)->l_node)
         free_tree(&((*node)->l_node));
-    if((*node) && (*node)->r_node)
-        free_tree(&((*node)->l_node));
+        free_tree(&((*node)->r_node));
+    }
     free(*node);
     *node = NULL;
     return (*node);
 }
+
+void indent(int i)
+{
+    while(i--)
+        printf("  ");
+}
+
+void    node_print(t_parser_node *node, int deepness)
+{
+    indent(deepness);
+    printf("pointer : %p\n", node);
+    if(node)
+    {
+        indent(deepness);
+        //print_token(node->content, "token_list : ");
+        token_print(node->content);
+        indent(deepness);
+        printf("r_node : %p\n", node->r_node);
+        node_print(node->r_node, deepness + 1);
+        indent(deepness);
+        printf("l_node : %p\n", node->l_node);
+        node_print(node->l_node, deepness + 1);
+    }
+}
+
 
 int check_token_type(t_lsttoken *token, int last_type)
 {
@@ -54,7 +83,7 @@ int check_token_type(t_lsttoken *token, int last_type)
     token_length = ft_strlen(token->data);
     if(token->data[token_length - 1] == '>')
         {
-            if(token_length == 1 || token->data[token_length - 1] != '>')
+            if(token_length == 1 || token->data[token_length - 2] != '>')
                 type_i = FT_REDIRECT_O_F;
             else
                 type_i = FT_REDIRECT_A_F;
@@ -82,11 +111,18 @@ t_parser_node   *find_command_node(t_parser_node *node)
     }
     else if (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F)
     {
-        node->r_node = malloc(sizeof(t_parser_node));
-        node->r_node->content = NULL;
-        node->r_node->r_node = NULL;
-        node->r_node->l_node = NULL;
-        ret_node = node->r_node;
+        if(node->r_node)
+        {
+            ret_node = find_command_node(node->r_node);
+        }
+        else
+        {
+            node->r_node = malloc(sizeof(t_parser_node));
+            node->r_node->content = NULL;
+            node->r_node->r_node = NULL;
+            node->r_node->l_node = NULL;
+            ret_node = node->r_node;
+        }
     }
     else if (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_I_F || node->content->flag == FT_REDIRECT_O_F)
     {
@@ -110,7 +146,7 @@ t_parser_node   *parser(t_lsttoken *token_list)
     last_type = FT_EMPTY_F;
     c_type = FT_EMPTY_F;
 
-   // printf("in parser\n");
+    printf("in parser\n");
     token = token_list;
     node = malloc(sizeof(t_parser_node));
     node->content = NULL;
@@ -121,20 +157,16 @@ t_parser_node   *parser(t_lsttoken *token_list)
         next = token->next;
         token->next = NULL;
 
-        // printf("token->data : %s, ", token->data);
-        // printf("token->flag : %d, ", token->flag);
-        // printf("token->next : %p, ", token->next);
-
         c_type = check_token_type(token, last_type);
-        // printf("last_type : %d\n", c_type);
+        printf("last_type : %d\n", c_type);
         token->flag = c_type;
         if(c_type == FT_COMMAND_F)
         {
-            // printf("token: %s\n", token->data);
+            printf("token: %s\n", token->data);
             t_parser_node *command_node;
             command_node = find_command_node(node);
-            // printf("node: %p\n", node);
-            // printf("command_node: %p\n", command_node);
+            printf("node: %p\n", node);
+            printf("command_node: %p\n", command_node);
             command_node->content = lexer_lstadd_back(&command_node->content, token);
         }
         else if(c_type == FT_PIPE_F || c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F || c_type == FT_SEMICOLON_F){
@@ -152,6 +184,8 @@ t_parser_node   *parser(t_lsttoken *token_list)
             node->r_node->r_node = NULL;
         }
         token = next;
+        last_type = c_type;
+
     }
     return (node);
 }
