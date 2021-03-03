@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 13:47:12 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/03 14:01:50 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,6 @@ t_lsttoken	*lexer_set_stdout(t_lsttoken *token_list, char *input, int *token_len
 	return (token_list);
 }
 
-/*
-** トークン(意味のある単語)に分ける
-*/
 t_lsttoken		*lexer(char *input)
 {
 	t_lsttoken	*token_list;
