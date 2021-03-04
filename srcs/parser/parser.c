@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/02 23:20:05 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/05 01:08:27 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,11 +134,49 @@ t_parser_node   *find_command_node(t_parser_node *node)
     return (ret_node);
 }
 
+t_parser_node   *find_parent_node(t_parser_node   *node)
+{
+    t_parser_node *ret_node;
+    ret_node = NULL;
+
+    if  (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F)
+    {
+        if(node->r_node)
+        {
+            ret_node = find_parent_node(node->r_node);    
+        }
+        if(!ret_node)
+        {
+            ret_node = node;
+        }
+    }
+    return (ret_node);
+}
+
+t_parser_node   *find_redirect_node(t_parser_node   *node)
+{
+    t_parser_node *ret_node;
+    ret_node = NULL;
+    if (node && (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_I_F))
+    {
+        ret_node = node;
+    }
+    else if (node && (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F))
+    {
+        if(node->r_node)
+        {
+            ret_node = find_redirect_node(node->r_node);    
+        }
+    }
+    return (ret_node);
+}
+
 t_parser_node   *parser(t_lsttoken *token_list)
 {
     t_parser_node *node;
     t_lsttoken *token;
     t_lsttoken *next;
+    t_parser_node *command_node;
     int last_type;
     int c_type;
 
@@ -162,29 +200,47 @@ t_parser_node   *parser(t_lsttoken *token_list)
         if(c_type == FT_COMMAND_F)
         {
             printf("token: %s\n", token->data);
-            t_parser_node *command_node;
             command_node = find_command_node(node);
             printf("node: %p\n", node);
             printf("command_node: %p\n", command_node);
             command_node->content = lexer_lstadd_back(&command_node->content, token);
         }
-        else if(c_type == FT_PIPE_F || c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F || c_type == FT_SEMICOLON_F){
+        else if(c_type == FT_PIPE_F || c_type == FT_SEMICOLON_F){
             t_parser_node *new_node = malloc(sizeof(t_parser_node));
             new_node->l_node = node;
             new_node->content = token;
             new_node->r_node = NULL;
             node = new_node;
         }
+        else if(c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F)
+        {
+            t_parser_node *new_node = malloc(sizeof(t_parser_node));
+            new_node->content = token;
+            new_node->r_node = NULL;
+            command_node = find_parent_node(node);
+            if(command_node)
+            {
+                printf(" --------------------------------------- A : %s\n", token->data);
+                new_node->l_node = command_node->r_node;
+                command_node->r_node = new_node;
+            }
+            else
+            {
+                printf(" --------------------------------------- B : %s\n", token->data);
+                new_node->l_node = node;
+                node = new_node;
+            }
+        }
         else if(c_type == FT_FILENAME_F)
         {
-            node->r_node = malloc(sizeof(t_parser_node));
-            node->r_node->content = token;
-            node->r_node->l_node = NULL;
-            node->r_node->r_node = NULL;
+            command_node = find_redirect_node(node);
+            command_node->r_node = malloc(sizeof(t_parser_node));
+            command_node->r_node->content = token;
+            command_node->r_node->l_node = NULL;
+            command_node->r_node->r_node = NULL;
         }
         token = next;
         last_type = c_type;
-
     } 
     return (node);
 }
