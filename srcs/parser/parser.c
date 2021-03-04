@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/05 01:08:27 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/05 01:21:03 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,14 @@ void    node_print(t_parser_node *node, int deepness)
     }
 }
 
+int is_redirect(int flag)
+{
+    return (
+        flag == FT_REDIRECT_O_F ||
+        flag == FT_REDIRECT_A_F ||
+        flag == FT_REDIRECT_I_F 
+    );
+}
 
 int check_token_type(t_lsttoken *token, int last_type)
 {
@@ -93,7 +101,7 @@ int check_token_type(t_lsttoken *token, int last_type)
         type_i = FT_SEMICOLON_F;
     else if(token->data[token_length - 1] == '<')
         type_i = FT_REDIRECT_I_F;
-    else if(last_type == FT_REDIRECT_O_F || last_type == FT_REDIRECT_A_F || last_type == FT_REDIRECT_I_F)
+    else if(is_redirect(last_type))
         type_i = FT_FILENAME_F;
     else 
         type_i = FT_COMMAND_F;
@@ -123,7 +131,7 @@ t_parser_node   *find_command_node(t_parser_node *node)
             ret_node = node->r_node;
         }
     }
-    else if (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_I_F || node->content->flag == FT_REDIRECT_O_F)
+    else if (is_redirect(node->content->flag))
     {
         while(node->content->flag != FT_COMMAND_F)
         {
@@ -157,7 +165,7 @@ t_parser_node   *find_redirect_node(t_parser_node   *node)
 {
     t_parser_node *ret_node;
     ret_node = NULL;
-    if (node && (node->content->flag == FT_REDIRECT_A_F || node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_I_F))
+    if (node && is_redirect(node->content->flag))
     {
         ret_node = node;
     }
@@ -212,7 +220,7 @@ t_parser_node   *parser(t_lsttoken *token_list)
             new_node->r_node = NULL;
             node = new_node;
         }
-        else if(c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F)
+        else if(is_redirect(c_type))
         {
             t_parser_node *new_node = malloc(sizeof(t_parser_node));
             new_node->content = token;
@@ -220,13 +228,11 @@ t_parser_node   *parser(t_lsttoken *token_list)
             command_node = find_parent_node(node);
             if(command_node)
             {
-                printf(" --------------------------------------- A : %s\n", token->data);
                 new_node->l_node = command_node->r_node;
                 command_node->r_node = new_node;
             }
             else
             {
-                printf(" --------------------------------------- B : %s\n", token->data);
                 new_node->l_node = node;
                 node = new_node;
             }
