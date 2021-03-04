@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_lexer.c                                        :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 14:01:50 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/04 17:25:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,11 @@ t_lsttoken	*lexer_check_tokenlen(t_lsttoken *token_list, char *input, int *start
 
 t_lsttoken	*lexer_set_stdout(t_lsttoken *token_list, char *input, int *token_len, int start, int *idx)
 {
+	int	i;
+
+	i = 0;
 	if (token_len)//check isdigit
 	{
-		int i = 0;
 		while (i  < *token_len)
 		{
 			if (ft_isdigit(input[start + i]) != 1)

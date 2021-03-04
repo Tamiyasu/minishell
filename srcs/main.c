@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:54:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/04 17:21:33 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ void	msh_loop(t_env *env, int *exit_status)
 		{
 			return ;//error処理(free等)してexit。
 		}
-		token_list = msh_lexer(line);/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
+		token_list = lexer(line);/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
 		if (token_list == NULL)
 		{
-			return ;
+			continue ;
 		}
 		////////////* check msh_lexer */
 		printf("------[check msh_lexer]-------------\n");
