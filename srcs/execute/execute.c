@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 22:30:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/04 17:19:44 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
 	return (*exit_status);
 }
 
-int	execute(t_lsttoken *token/*t_parser_node *node*/, t_env *env, int *exit_status)
+int	execute(t_parser_node *node, t_env *env, int *exit_status)
 {
 	if (node->content->flag == FT_SEMICOLON_F)
 	{
