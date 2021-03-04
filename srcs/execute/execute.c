@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 21:05:35 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/04 16:45:11 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,20 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
 void	execute(t_parser_node *node, t_env *env, int *exit_status)
 {
 	t_parser_node	*copy_node = node;
+	int				l_pipe_fd[2];
+	int				r_pipe_fd[2];
+	int				save_pipe_fd[2];
+	int				pid_status;
+	pid_t			child_p1;
+	pid_t			child_p2;
 
-	printf("---in exexute.c----------------------------------\n");
+	//printf("---in exexute.c----------------------------------\n");
+	l_pipe_fd[P_READ] = -1;
+	l_pipe_fd[P_WRITE] = -1;
+	r_pipe_fd[P_READ] = -1;
+	r_pipe_fd[P_WRITE] = -1;
+	save_pipe_fd[P_READ] = -1;
+	save_pipe_fd[P_WRITE] = -1;
 
 	// if (!(exec_check_builtin(node->content->data)))
 	// {
@@ -136,44 +148,92 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 
 	if (node->content->flag == FT_PIPE_F)
 	{
-		int		pipe_fd[2];
-		int		pid_status;
-		pid_t	child_p1;
-		pid_t	child_p2;
-		//int		rc;
+		printf("root->node->content=[%s]\n1::in parent pid=[%d]\n", node->content->data, getpid());
 
-		printf("1::in parent pid=[%d]\n", getpid());
+		copy_node = node;
 
-		pipe(pipe_fd);
-		child_p1 = fork();
-		if  (child_p1 == 0)
+		//l_node
+		node = node->l_node;
+		if (node->content->flag == FT_COMMAND_F)//以下左枝を実行
 		{
-			node = node->l_node;
-			printf("------------------------------in child1[%s]\n", node->content->data);
-			close(pipe_fd[0]);
-			dup2(pipe_fd[1], 1);
-			close(pipe_fd[1]);
-			exec_command(node->content, env, exit_status);
-			exit(*exit_status);
+			pipe(l_pipe_fd);
+			child_p1 = fork();
+			if  (child_p1 == 0)
+			{
+				printf("------------------------------in child1[%s]\n", node->content->data);
+
+				if (save_pipe_fd[P_READ])
+				{
+					close(save_pipe_fd[P_WRITE]);
+					dup2(save_pipe_fd[P_READ], 0);
+					close(save_pipe_fd[P_READ]);
+				}
+				close(l_pipe_fd[P_READ]);
+				dup2(l_pipe_fd[P_WRITE], 1);
+				close(l_pipe_fd[P_WRITE]);
+				exec_command(node->content, env, exit_status);
+				exit(*exit_status);
+			}
+			if (save_pipe_fd[P_READ])
+			{
+				close(save_pipe_fd[P_READ]);
+				close(save_pipe_fd[P_WRITE]);
+			}
+			save_pipe_fd[P_READ] = dup(l_pipe_fd[P_READ]);
+			save_pipe_fd[P_WRITE] = dup(l_pipe_fd[P_WRITE]);
+			close(l_pipe_fd[P_READ]);
+			close(l_pipe_fd[P_WRITE]);
+			waitpid(child_p1, &pid_status, 0);
+			printf("the child1 pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", child_p1, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
 		}
-		child_p2 = fork();
-		if (child_p2 == 0)
+		//r_node
+		node = copy_node->r_node;
+		if (node->content->flag == FT_COMMAND_F)
 		{
-			copy_node = copy_node->r_node;
-			printf("------------------------------in child2[%s]\n", copy_node->content->data);
-			close(pipe_fd[1]);
-			dup2(pipe_fd[0], 0);
-			close(pipe_fd[0]);
-			exec_command(copy_node->content, env, exit_status);
-			exit(*exit_status);
+			pipe(r_pipe_fd);
+			child_p2 = fork();
+			if (child_p2 == 0)
+			{
+				printf("------------------------------in child2[%s]\n", node->content->data);
+
+				if (save_pipe_fd[P_READ])
+				{
+					close(save_pipe_fd[P_WRITE]);
+					dup2(save_pipe_fd[P_READ], 0);
+					close(save_pipe_fd[P_READ]);
+				}
+				close(r_pipe_fd[P_READ]);
+				dup2(r_pipe_fd[P_WRITE], 1);
+				close(r_pipe_fd[P_WRITE]);
+				exec_command(node->content, env, exit_status);
+				exit(*exit_status);
+			}
+			if (save_pipe_fd[P_READ])
+			{
+				close(save_pipe_fd[P_READ]);
+				close(save_pipe_fd[P_WRITE]);
+			}
+			save_pipe_fd[P_READ] = dup(r_pipe_fd[P_READ]);
+			save_pipe_fd[P_WRITE] = dup(r_pipe_fd[P_WRITE]);
+			close(r_pipe_fd[P_WRITE]);
+			close(r_pipe_fd[P_READ]);
+			waitpid(child_p2, &pid_status, 0);
+			printf("the child2 pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", child_p2, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
 		}
 		printf("2::in parent pid=[%d]\n", getpid());
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		waitpid(child_p1, &pid_status, 0);
-		printf("the child1 pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", child_p1, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
-		waitpid(child_p2, &pid_status, 0);
-		printf("the child2 pid=[%d]::pid_status=[%d][%d][%d][%d][%d][%d][%d][%d]\n", child_p2, WIFEXITED(pid_status), WEXITSTATUS(pid_status), WIFSIGNALED(pid_status), WTERMSIG(pid_status), WCOREDUMP(pid_status),  WIFSTOPPED(pid_status), WSTOPSIG(pid_status), WIFCONTINUED(pid_status));//del
+
+		// close(save_pipe_fd[P_READ]);
+		// close(save_pipe_fd[P_WRITE]);
+
+		// save_pipe_fd[P_READ] = dup(r_pipe_fd[P_READ]);
+		// save_pipe_fd[P_WRITE] = dup(r_pipe_fd[P_WRITE]);
+		// close(r_pipe_fd[P_WRITE]);
+		// close(r_pipe_fd[P_READ]);
+
+		close(save_pipe_fd[P_WRITE]);
+		dup2(save_pipe_fd[P_READ], 0);
+		close(save_pipe_fd[P_READ]);
+
 		*exit_status = WEXITSTATUS(pid_status);
 		printf("end all child process:exit status=[%d]\n", *exit_status);
 	}
