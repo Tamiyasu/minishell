@@ -6,25 +6,18 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/04 16:45:11 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 15:21:57 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "libft.h"
 
-typedef struct	s_command
-{
-	char	*command;
-	char	**args;
-}				t_command;
-
-// typedef struct	s_parser_node
+// typedef struct	s_command
 // {
-//     struct	s_parser_node *l_node;
-//     struct	s_parser_node *r_node;
-//     t_lsttoken *content;
-// }				t_parser_node;
+// 	char	*command;
+// 	char	**args;
+// }				t_command;
 
 int	exec_check_builtin(char *token_data)
 {
@@ -41,46 +34,62 @@ int	exec_check_builtin(char *token_data)
 	return (0);
 }
 
-// void	exec_search_command_path(t_lsttoken *token, t_env *env)
-// {
-// 	//envからPATH変数のvariableを取得
-// 		//while (path_variable[idx] != NULL)
-// 			//opendir(path_variable[idx]);
-// 				//if (token->data == derent->d_name)//ディレクトリ内に一致するファイル名あったら
-// 					//closedir;
-// 					//break;
-// 				//derent = derent->next;
-// 			//closedir();
-// 			//idx++;
-// 		//token->data[0] = ft_strjoin(path_variable[idx], token->data;
+void	exec_search_command_path(t_lsttoken *token, t_env *env)
+{
+	//envからPATH変数のvariableを取得
+		//while (path_variable[idx] != NULL)
+			//opendir(path_variable[idx]);
+				//if (token->data == derent->d_name)//ディレクトリ内に一致するファイル名あったら
+					//closedir;
+					//break;
+				//derent = derent->next;
+			//closedir();
+			//idx++;
+		//token->data[0] = ft_strjoin(path_variable[idx], token->data;
 
-// 	char	**path_value;
-// 	int		idx;
-// 	DIR		*dp;
+	char	**path_value;
+	int		idx;
+	DIR		*dp;
+	struct dirent	*dirp;
+	char	*tmp;
 
 
-// 	if (token->data[0] == '.' || token->data[0] == '/')
-// 	{
-// 		return ;
-// 	}
-// 	idx = msh_env_search(env->data, "PATH");//この関数、returnをchar *値にする
-// 	path_value = ft_split(&env->data[idx][5], ':');
-// 	idx= 0;
-// 	while (path_value[idx] != NULL)
-// 	{
-// 		printf("path_value[%d]=[%s]\n", idx, path_value[idx]);
-// 		dp = opendir(path_value[idx]);
-// 		if (dp == NULL)
-// 		{
-// 			ft_putendl_fd(strerror(errno), 1);
-// 		}
-// 		whlie (readdir(dp))
-// 		idx++;
-
-// 	}
-// 	free_args(path_value);
-
-// }
+	if (token->data[0] == '.' || token->data[0] == '/')
+	{
+		return ;
+	}
+	idx = msh_env_search(env->data, "PATH");//この関数、returnをchar *値にする
+	path_value = ft_split(&env->data[idx][5], ':');
+	idx= 0;
+	while (path_value[idx] != NULL)
+	{
+		printf("path_value[%d]=[%s]\n", idx, path_value[idx]);
+		dp = opendir(path_value[idx]);
+		if (dp == NULL)
+		{
+			ft_putendl_fd(strerror(errno), 1);
+			return ;
+		}
+		while ((dirp = readdir(dp)) != NULL)
+		{
+			printf("file name[%s]\n", dirp->d_name);
+			if (ft_strcmp(token->data, dirp->d_name) == 0)
+			{
+				tmp = ft_strjoin("/", token->data);
+				free(token->data);
+				token->data = ft_strjoin(path_value[idx],  tmp);
+				free(tmp);
+				tmp = NULL;
+				closedir(dp);
+				free_args(path_value);
+				return ;
+			}
+		}
+		closedir(dp);
+		idx++;
+	}
+	free_args(path_value);
+}
 
 /*
 ** コマンドを実行する　returnで終了ステータスを返す.
@@ -144,6 +153,15 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 	// {
 	// 	exec_search_command_path(node->content, env);
 	// }
+	if(node->content->flag == FT_COMMAND_F)
+	{
+		if (!(exec_check_builtin(node->content->data)))
+		{
+			printf("in search_comman_path[%s]\n", node->content->data);
+			exec_search_command_path(node->content, env);
+			printf("out search_comman_path[%s]\n", node->content->data);
+		}
+	}
 
 
 	if (node->content->flag == FT_PIPE_F)
