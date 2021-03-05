@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 20:01:16 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 20:13:03 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ void	msh_loop(t_env *env, int *exit_status)
 		node = parser(token);
 		//token = find_first_commnd_node(node);
 
-		printf("node * : %p\n", node);
-		//node_print(node, 0);
+		//printf("node * : %p\n", node);
+		node_print(node, 0);
 
 		execute(node, env, exit_status); //exitコマンド実行時にreturn(0)がくる
 		free_tree(&node);
