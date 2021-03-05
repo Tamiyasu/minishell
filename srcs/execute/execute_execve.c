@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 19:52:25 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 16:22:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,64 +30,64 @@ static int	execve_count_lst(t_lsttoken *token)
 ** コマンド部分のtoken->dataが、絶対パスか相対パスか判断する
 ** [return]先頭が'.'または、'/'が含まれる時0を返す。なし→1
 */
-static int	execve_check_command(char *command)
-{
-	int	idx;
+// static int	execve_check_command(char *command)
+// {
+// 	int	idx;
 
-	idx = 0;
-	while (command[idx] != '\0')
-	{
-		if (command[0] == '.')
-		{
-			return (0);
-		}
-		if (command[idx] == '/')
-		{
-			return (0);
-		}
-		idx++;
-	}
-	return (1);
-}
+// 	idx = 0;
+// 	while (command[idx] != '\0')
+// 	{
+// 		if (command[0] == '.')
+// 		{
+// 			return (0);
+// 		}
+// 		if (command[idx] == '/')
+// 		{
+// 			return (0);
+// 		}
+// 		idx++;
+// 	}
+// 	return (1);
+// }
 
 /*
 ** 環境変数PATHを見つけて、PATHの値を返す。
 ** [return]PATHの格納されたpathの配列。環境変数PATHが見つからなかったらNULL。
 */
-static char	**execve_keep_envpath(t_env *env, int *token_flag)
-{
-	char	**env_path;
-	int	idx;
+// static char	**execve_keep_envpath(t_env *env, int *token_flag)
+// {
+// 	char	**env_path;
+// 	int	idx;
 
-	idx = msh_env_search(env->data, "PATH");
-	if (idx == -1)
-	{
-		*token_flag = 1;
-		return(NULL);
-	}
-	env_path = ft_split(&env->data[idx][5], ':');
-	return (env_path);
-}
+// 	idx = msh_env_search(env->data, "PATH");
+// 	if (idx == -1)
+// 	{
+// 		*token_flag = 1;
+// 		return(NULL);
+// 	}
+// 	env_path = ft_split(&env->data[idx][5], ':');
+// 	return (env_path);
+// }
 
 /*
 ** execve()の第一引数commandを作成する。
 ** [return]char *command。
 */
-static char *execve_format_command(t_lsttoken *token, char **env_path, int path_idx)
-{
-	char	*command;
-	char	*tmp;
+// static char *execve_format_command(t_lsttoken *token, char **env_path, int path_idx)
+// {
+// 	char	*command;
+// 	char	*tmp;
 
-	if(token->flag == 1 || env_path == NULL)
-	{
-		command = ft_strdup(token->data);
-		return (command);
-	}
-	tmp = ft_strjoin(env_path[path_idx], "/");
-	command = ft_strjoin(tmp,  token->data);
-	free(tmp);
-	return (command);
-}
+// 	if(token->flag == 1 || env_path == NULL)
+// 	{
+// 		command = ft_strdup(token->data);
+// 		return (command);
+// 	}
+// 	tmp = ft_strjoin(env_path[path_idx], "/");
+// 	command = ft_strjoin(tmp,  token->data);
+// 	free(tmp);
+// 	return (command);
+// }
 
 /*
 ** execve()の第二引数argsを作成する。
@@ -173,55 +173,28 @@ int	execve_output_error(t_lsttoken *token, char *error_str, int exit_status)
 
 void			execute_execve(t_lsttoken *token, t_env *env)
 {
-	char	*command;
+	//char	*command;
 	char	**args;
-	char	**env_path;
-	int		relative_path;
-	int		path_idx;
+	//char	**env_path;
+	//int		relative_path;
+//	int		path_idx;
 	int		rc;
 
-	env_path = NULL;
-	path_idx = 0;
-	relative_path = execve_check_command(token->data);
-	if (relative_path == 1)
-	{
-		env_path = execve_keep_envpath(env, &relative_path);
-	}
-	// while (1)
+//	env_path = NULL;
+	// relative_path = execve_check_command(token->data);
+	// if (relative_path == 1)
 	// {
-		command = execve_format_command(token, env_path, path_idx);
-		args = execve_format_args(token, command);
-		//execve_rc = execve_execute_command(command, args, env);
-		rc = execve(command, args, env->data);
-		if (rc == -1)
-		{
-			ft_putendl_fd(strerror(errno), 1);
-			exit(errno);
-		}
-		free(command);
-		free_args(args);
-		// if (execve_rc == 0)
-		// {
-		// 	free_args(env_path);
-		//	return (0);
-		// }
-		// if (execve_rc != 2)
-		// {
-		// 	free_args(env_path);
-		// 	//return (execve_output_error(token, strerror(execve_rc), execve_rc));
-		// 	return (execve_rc);
-		// }
-		// /* No such file or directory */
-		// if (relative_path == 0)
-		// {
-		// 	free_args(env_path);
-		// 	return (execve_output_error(token, strerror(execve_rc), 127));
-		// }
-		// path_idx++;
-		// if (env_path[path_idx] == NULL)
-		// {
-		// 	free_args(env_path);
-		// 	return (execve_output_error(token, "command not found", 127));
-		// }
+	// 	env_path = execve_keep_envpath(env, &relative_path);
 	// }
+	// // while (1)
+	// // {
+	args = execve_format_args(token, token->data);
+		//execve_rc = execve_execute_command(command, args, env);
+	rc = execve(token->data, args, env->data);
+	if (rc == -1)
+	{
+		ft_putendl_fd(strerror(errno), 1);
+		exit(errno);
+	}
+	free_args(args);
 }

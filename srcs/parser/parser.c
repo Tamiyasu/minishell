@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/03 16:53:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 19:24:18 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ t_parser_node   *parser(t_lsttoken *token_list)
     last_type = FT_EMPTY_F;
     c_type = FT_EMPTY_F;
 
-    printf("in parser\n");
+   // printf("in parser\n");
     token = token_list;
     node = malloc(sizeof(t_parser_node));
     node->content = NULL;
@@ -158,15 +158,15 @@ t_parser_node   *parser(t_lsttoken *token_list)
         token->next = NULL;
 
         c_type = check_token_type(token, last_type);
-        printf("last_type : %d\n", c_type);
+     //   printf("last_type : %d\n", c_type);
         token->flag = c_type;
         if(c_type == FT_COMMAND_F)
         {
-            printf("token: %s\n", token->data);
+       //     printf("token: %s\n", token->data);
             t_parser_node *command_node;
             command_node = find_command_node(node);
-            printf("node: %p\n", node);
-            printf("command_node: %p\n", command_node);
+        //    printf("node: %p\n", node);
+       //     printf("command_node: %p\n", command_node);
             command_node->content = lexer_lstadd_back(&command_node->content, token);
         }
         else if(c_type == FT_PIPE_F || c_type == FT_REDIRECT_A_F || c_type == FT_REDIRECT_I_F || c_type == FT_REDIRECT_O_F || c_type == FT_SEMICOLON_F){
