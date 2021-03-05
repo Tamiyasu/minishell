@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/01 15:48:42 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 21:20:25 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "parser.h"
 
-int		execute(t_lsttoken *token, t_env *env, int *exit_status);
+int		execute(/*t_lsttoken *token*/t_parser_node *node, t_env *env, int *exit_status);
+int		execute_command(t_lsttoken *token, t_env *env, int *exit_status);
 int		execute_cd(t_lsttoken *token, t_env *env);
 int		execute_echo(t_lsttoken *token);
 int		execute_execve(t_lsttoken *token, t_env *env);

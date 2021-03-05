@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 23:26:57 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/05 21:24:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,17 +205,29 @@ int			execute_execve(t_lsttoken *token, t_env *env)
 		execve_rc = execve_execute_command(command, args, env);
 		free(command);
 		free_args(args);
-		if (execve_rc == 0) /*work fine*/
+		if (execve_rc == 0)
 		{
 			free_args(env_path);
 			return (0);
 		}
-		if (execve_rc != 2) /*error but return code is not 2*/
+		if (execve_rc != 2)
 		{
 			free_args(env_path);
 			//return (execve_output_error(token, strerror(execve_rc), execve_rc));
 			return (execve_rc);
 		} 
+		/* No such file or directory */
+		if (relative_path == 0)
+		{
+			free_args(env_path);
+			return (execve_output_error(token, strerror(execve_rc), 127));
+		}
+		path_idx++;
+		if (env_path[path_idx] == NULL)
+		{
+			free_args(env_path);
+			return (execve_output_error(token, "command not found", 127));
+		}
 		/* No such file or directory */
 		if (relative_path == 0)
 		{
