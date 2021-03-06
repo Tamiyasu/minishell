@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_lst.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:29:51 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 14:01:53 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 21:22:06 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,22 @@ t_lsttoken	*token_list_new(void *content)
 		return_p->flag = 0;
 	}
 	return (return_p);
+}
+
+
+void print_token(t_lsttoken *token, char *header)
+{
+	if (header)
+		printf("%s", header);
+	while (token)
+	{
+		printf("[%s(%d)]", token->data, token->flag);
+		if (token->next)
+			printf("->");
+		else
+			printf("\n");
+		token = token->next;
+	}
 }
 
 void	token_list_addback(t_lsttoken **token_list, t_lsttoken *new)
