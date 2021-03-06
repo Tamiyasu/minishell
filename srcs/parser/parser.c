@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/06 23:34:36 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/06 23:43:31 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,13 +221,13 @@ t_parser_node   *parser(t_lsttoken *token_list)
     node->l_node = NULL;
     while(token)
     {
-        printf("\n");
-        node_print(node, 0);
+        //printf("\n");
+        //node_print(node, 0);
         next = token->next;
         token->next = NULL;
 
         c_type = check_token_type(token, last_type);
-        printf("last_type : %d\n", c_type);
+        //printf("last_type : %d\n", c_type);
         token->flag = c_type;
         if(c_type == FT_COMMAND_F)
         {
@@ -249,10 +249,9 @@ t_parser_node   *parser(t_lsttoken *token_list)
             new_node = malloc(sizeof(t_parser_node));
             new_node->content = token;
             new_node->r_node = NULL;
-            command_node = node;
-            if(command_node)
+            if(node && node->content->flag == FT_SEMICOLON_F)
             {
-                print_token(command_node->content, "command_node->content : ");
+                command_node = node;
                 new_node->l_node = command_node->r_node;
                 command_node->r_node = new_node;
             }
