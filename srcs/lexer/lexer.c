@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:47:47 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/04 17:25:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,110 +14,129 @@
 #include "libft.h"
 #include "get_next_line.h"
 
-static void			lexer_structinit(t_lexer *lexer)
+static t_lsttoken	*lexer_set_token(t_lsttoken *token_list, char *content, int *token_len)
 {
-	lexer->data_idx = 0;
-	lexer->state = STATE_GENERAL;
+	if (token_list == NULL)
+	{
+		token_list = token_list_new(content);
+	}
+	else
+	{
+		t_lsttoken *new_token_list = token_list_new(content);
+		token_list_addback(&token_list, new_token_list);
+	}
+	*token_len = 0;
+	return (token_list);
 }
 
-static t_lsttoken *lexer_skip_space(t_lsttoken *token, t_lexer *lexer, char *input, int *idx, int input_len)
+t_lsttoken	*lexer_check_tokenlen(t_lsttoken *token_list, char *input, int *start, int *token_len, int *idx)
 {
-	while (input[*idx] == ' ' || input[*idx] == '\t')
+	if (*token_len)
 	{
-		*idx = *idx + 1;
+		token_list = lexer_set_token(token_list, ft_substr(&input[*start], 0, *token_len), token_len);
+		*start = *idx;
 	}
-	if (input[*idx] == '\0')
-	{
-		//break ;
-		return (token);
-	}
-	if (lexer->data_idx != 0)
-	{
-		token = lexer_setchr_and_next(token, lexer, 0, input_len);
-	}
-	return (token);
+	return (token_list);
 }
 
-/*
-** inputを１文字ずつ評価
-*/
-static void	lexer_evaluate_input(t_lsttoken *token, t_lexer *lexer, char *input, int input_len)
+t_lsttoken	*lexer_set_stdout(t_lsttoken *token_list, char *input, int *token_len, int start, int *idx)
 {
-	int	idx;
+	int	i;
 
-	token = lexer_lstlast(token);
+	i = 0;
+	if (token_len)//check isdigit
+	{
+		while (i  < *token_len)
+		{
+			if (ft_isdigit(input[start + i]) != 1)
+				break ;
+			i++;
+		}
+		if (i != *token_len)
+		{
+			token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, *token_len), token_len);
+			start = *idx;
+		}
+	}
+	*token_len = (*token_len + 1);//> or >>のcheck
+	if (input[*idx + 1] == '>')//さらに>分情報追加
+	{
+		*token_len = (*token_len + 1);
+		*idx = (*idx + 1);
+	}
+	token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, *token_len), token_len);
+	return (token_list);
+}
+
+t_lsttoken		*lexer(char *input)
+{
+	t_lsttoken	*token_list;
+	int			token_len;
+	int			start;
+	int			idx;
+
+	token_list = NULL;
+	token_len = 0;
+	start = 0;
 	idx = 0;
 	while (input[idx] != '\0')
 	{
-		if (lexer->state == STATE_GENERAL)
+		if (input[idx] == '|' || input[idx] == ';' || input[idx] == '<')
 		{
-			if (input[idx] == '\'' || input[idx] == '\"')
+			token_list = lexer_check_tokenlen(token_list, input, &start, &token_len, &idx);
+			token_len++;
+			token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, token_len), &token_len);
+			start = ++idx;
+		}
+		else if (input[idx] == '>')
+		{
+			token_list = lexer_set_stdout(token_list, input, &token_len, start, &idx);
+			start = ++idx;
+		}
+		else if (input[idx] == '\'')
+		{
+			token_list = lexer_check_tokenlen(token_list, input, &start, &token_len, &idx);
+			while (input[idx] != '\0')
 			{
-				token = lexer_set_quote(token, lexer, input[idx]);
-			}
-			else if (input[idx] == ' ' || input[idx] == '\t')
-			{
-				token = lexer_skip_space(token, lexer, input, &idx, input_len);
-				continue ;
-			}
-			else if (input[idx] == '<' || input[idx]  == '>')
-			// {
-			// 	if (input[idx] == '>' && input[idx + 1] == '>')
-			// 	{
-			// 		idx++;
-			// 		token = lexer_set_redirect(token, lexer, input[idx], 2, input_len);
-			// 	}
-			// 	else
-			// 	{
-			// 		token = lexer_set_redirect(token, lexer, input[idx], 1, input_len);
-			// 	}
-			// }
-			{
-				token = lexer_set_redirect(token, lexer, input, &idx, input_len);
-			}
-			else if (input[idx] == '|' || input[idx] == ';')
-			{
-				token = lexer_setchr_and_next(token, lexer, input[idx], input_len);
-			}
-			else
-			{
-				token->data[lexer->data_idx++] = input[idx];
+				idx++;
+				token_len++;
+				if (input[idx] == '\'')//ここまでをnew_listに追加
+				{
+					token_len++;
+					token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, token_len), &token_len);
+					start = ++idx;
+					break ;
+				}
 			}
 		}
-		else if (lexer->state == STATE_IN_DQUOTE)
+		else if (input[idx] == '\"')
 		{
-			lexer_in_dquote(token, lexer, input[idx]);
+			token_list = lexer_check_tokenlen(token_list, input, &start, &token_len, &idx);
+			while (input[idx] != '\0')
+			{
+				idx++;
+				token_len++;
+				if (input[idx] == '\"' && input[idx - 1] != '\\')//ここまでをnew_listに追加
+				{
+					token_len++;
+					token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, token_len), &token_len);
+					start = ++idx;
+					break ;
+				}
+			}
 		}
-		else if (lexer->state == STATE_IN_SQUOTE)
+		else if (input[idx] == '\t' || input[idx] == ' ')
 		{
-			lexer_in_squote(token, lexer, input[idx]);
+			if (token_len)
+				token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, token_len), &token_len);
+			start = ++idx;
 		}
-		idx++;
+		else
+		{
+			idx++;
+			token_len++;
+		}
 	}
-	token->data[lexer->data_idx] = '\0';
-}
-
-/*
-** トークン(意味のある単語)に分ける
-*/
-t_lsttoken	*lexer(char *input)
-{
-	t_lsttoken *token;
-	t_lexer		lexer;
-	size_t	input_len;
-
-	input_len = ft_strlen(input); /* inputの長さを求める */
-	token = lexer_lstnew(input_len); /* t_lsttoken　mallocして初期化 */
-	if (token == NULL)//lexer_lstnew内のmallocで失敗した時
-	{
-		return (NULL);
-	}
-	lexer_structinit(&lexer); /*msh_lexer.c内で使う構造体の初期化 */
-	lexer_evaluate_input(token, &lexer, input, input_len);
-	if (token == NULL)
-	{
-		free_lst(&token);
-		return (NULL);
-	}
-	return (token);
+	token_list = lexer_check_tokenlen(token_list, input, &start, &token_len, &idx);
+	return (token_list);
 }
