@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/05 21:00:12 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 14:49:52 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,19 +304,22 @@ void	execute_2(t_parser_node *node, int *l_pipe_fd, int *r_pipe_fd, int *save_pi
 void	execute(t_parser_node *node, t_env *env, int *exit_status)
 {
 	// t_parser_node	*copy_node = node;
-	int				l_pipe_fd[2];
-	int				r_pipe_fd[2];
-	int				save_pipe_fd[2];
-	// int				pid_status;
-	// pid_t			child_p1;
-	// pid_t			child_p2;
+	// int				l_pipe_fd[2];
+	// int				r_pipe_fd[2];
+	// int				save_pipe_fd[2];
+	int	pipe_fd[2];
 
-	int	save_stdin = dup(0);
-	int save_stdout = dup(1);
+	int				pid_status;
+	pid_t			child_p1;
+	pid_t			child_p2;
+
+	// int	save_stdin = dup(0);
+	// int save_stdout = dup(1);
 
 	printf("---in exexute----------------------------------\n");
-	init_pipe_fd(l_pipe_fd, r_pipe_fd, save_pipe_fd);
-	execute_2(node, l_pipe_fd, r_pipe_fd, save_pipe_fd, env, exit_status);
+	// init_pipe_fd(l_pipe_fd, r_pipe_fd, save_pipe_fd);
+	// execute_2(node, l_pipe_fd, r_pipe_fd, save_pipe_fd, env, exit_status);
+	//execute_2(node, env, exit_status);
 	// l_pipe_fd[P_READ] = -1;
 	// l_pipe_fd[P_WRITE] = -1;
 	// r_pipe_fd[P_READ] = -1;
@@ -337,9 +340,74 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 	// 	execute(node->l_node, env, exit_status);
 	// 	execute(node->r_node, env, exit_status);
 	// }
-	// else if (node->content->flag == FT_PIPE_F)
-	// {
-	// 	printf("root->node->content=[%s]\n1::in parent pid=[%d]\n", node->content->data, getpid());
+	if (node == NULL)
+	{
+		return ;
+	}
+
+	if (node->content->flag  == FT_COMMAND_F)
+	{
+		if (!(exec_check_builtin(node->content->data)))
+		{
+			//printf("l_node::in not builtin[%s]\n", node->content->data);
+			exec_search_command_path(node->content, env);
+			printf("new command_path[%s]\n", node->content->data);
+		}
+		//printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->content->data, dup(0), dup(1));
+		exec_command(node->content, env, exit_status);
+	}
+
+	else if (node->content->flag == FT_PIPE_F)
+	{
+		printf("root_node->content=[%s], node->l_node->content[%s], node->r_node->content[%s]\n", node->content->data, node->l_node->content->data, node->r_node->content->data);
+
+		pipe(pipe_fd);
+
+		child_p1 = fork();
+		if (child_p1 == 0)
+		{
+			close(pipe_fd[P_READ]);
+			dup2(pipe_fd[P_WRITE], 1);
+			close(pipe_fd[P_WRITE]);
+
+			execute(node->l_node, env, exit_status);
+			if (!(exec_check_builtin(node->content->data)))
+			{
+				//printf("l_node::in not builtin[%s]\n", node->content->data);
+				exec_search_command_path(node->content, env);
+				printf("new command_path[%s]\n", node->content->data);
+			}
+			printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->content->data, dup(0), dup(1));
+			exec_command(node->content, env, exit_status);
+			exit(*exit_status);
+		}
+		child_p2 = fork();
+		if (child_p2 == 0)
+		{
+			close(pipe_fd[P_WRITE]);
+			dup2(pipe_fd[P_READ], 0);
+			close(pipe_fd[P_READ]);
+
+			if (!(exec_check_builtin(node->r_node->content->data)))
+			{
+				//printf("l_node::in not builtin[%s]\n", node->content->data);
+				exec_search_command_path(node->r_node->content, env);
+				printf("new command_path[%s]\n", node->r_node->content->data);
+			}
+			printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->r_node->content->data, dup(0), dup(1));
+			exec_command(node->r_node->content, env, exit_status);
+			exit(*exit_status);
+		}
+		close(pipe_fd[P_READ]);
+		close(pipe_fd[P_WRITE]);
+		waitpid(child_p1, &pid_status, 0);
+		waitpid(child_p2, &pid_status, 0);
+		*exit_status = WEXITSTATUS(pid_status);
+	}
+	// waitpid(child_p1, &pid_status, 0);
+	// waitpid(child_p2, &pid_status, 0);
+	// close(pipe_fd[P_READ]);
+	// close(pipe_fd[P_WRITE]);
 
 	// 	copy_node = node;
 
@@ -450,15 +518,6 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 	// 		*exit_status = WEXITSTATUS(pid_status);
 	// 	}
 	// }
-
-	/*node->;がきた　または　ツリーが最後まで実行された　時に以下を実行してstdin/stdoutを戻す*/
-	if (save_pipe_fd[P_READ])
-	{
-		close(save_pipe_fd[P_READ]);
-		close(save_pipe_fd[P_WRITE]);
-	}
-	dup2(0, save_stdin);
-	dup2(1, save_stdout);
 
 	// save_pipe_fd[P_READ] = dup(r_pipe_fd[P_READ]);
 	// save_pipe_fd[P_WRITE] = dup(r_pipe_fd[P_WRITE]);

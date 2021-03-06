@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/05 20:13:03 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 14:33:55 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	msh_loop(t_env *env, int *exit_status)
 		}
 		token = lexer(line);
 
-		token_print(token);
+		//token_print(token);
 
 		node = parser(token);
 		//token = find_first_commnd_node(node);
