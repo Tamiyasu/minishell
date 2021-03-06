@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 17:31:18 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 19:34:27 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,12 @@ void	exec_search_command_path(t_lsttoken *token, t_env *env)
 
 	if (token->data[0] == '.' || token->data[0] == '/')
 	{
-		printf("in no search[%c]\n", token->data[0]);
+		//printf("in no search[%c]\n", token->data[0]);
 		return ;
 	}
 	idx = msh_env_search(env->data, "PATH");
 	path_value = ft_split(&env->data[idx][5], ':');
 	idx= 0;
-	for (int x = 0; path_value[x] != NULL; x++)
-	{
-		printf("path_value[%d]=%s\n", x, path_value[x]);
-	}
 	while (path_value[idx] != NULL)
 	{
 		//printf("path_value[%d]=[%s]\n", idx, path_value[idx]);//del
@@ -128,7 +124,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 	pid_t			child_p1;
 	pid_t			child_p2;
 
-	printf("---in exec_pipe----------------------------------\n");
+//	printf("---in exec_pipe----------------------------------\n");
 
 	if (node == NULL)
 	{
@@ -140,14 +136,14 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 		{
 			//printf("l_node::in not builtin[%s]\n", node->content->data);
 			exec_search_command_path(node->content, env);
-			printf("new command_path[%s]\n\n", node->content->data);
+			//printf("new command_path[%s]\n\n", node->content->data);
 		}
 		//printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->content->data, dup(0), dup(1));
 		exec_command(node->content, env, exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 	{
-		printf("root_node->content=[%s], node->l_node->content[%s], node->r_node->content[%s]\n\n", node->content->data, node->l_node->content->data, node->r_node->content->data);
+	//	printf("root_node->content=[%s], node->l_node->content[%s], node->r_node->content[%s]\n\n", node->content->data, node->l_node->content->data, node->r_node->content->data);
 
 		pipe(pipe_fd);
 
@@ -158,13 +154,13 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 			dup2(pipe_fd[P_WRITE], 1);
 			close(pipe_fd[P_WRITE]);
 
-			execute(node->l_node, env, exit_status);
+			exec_pipe(node->l_node, env, exit_status);
 			if (!(exec_check_builtin(node->content->data)))
 			{
 				exec_search_command_path(node->content, env);
-				printf("new command_path[%s]\n\n", node->content->data);
+			//	printf("new command_path[%s]\n\n", node->content->data);
 			}
-			printf("command[%s], STDIN[%d], STDOUT[%d]\n\n", node->content->data, dup(0), dup(1));
+			//printf("command[%s], STDIN[%d], STDOUT[%d]\n\n", node->content->data, dup(0), dup(1));
 			exec_command(node->content, env, exit_status);
 			exit(*exit_status);
 		}
@@ -178,9 +174,9 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 			if (!(exec_check_builtin(node->r_node->content->data)))
 			{
 				exec_search_command_path(node->r_node->content, env);
-				printf("new command_path[%s]\n\n", node->r_node->content->data);
+				//printf("new command_path[%s]\n\n", node->r_node->content->data);
 			}
-			printf("command[%s], STDIN[%d], STDOUT[%d]\n------------------------------------\n", node->r_node->content->data, dup(0), dup(1));
+			//printf("command[%s], STDIN[%d], STDOUT[%d]\n------------------------------------\n", node->r_node->content->data, dup(0), dup(1));
 			exec_command(node->r_node->content, env, exit_status);
 			exit(*exit_status);
 		}
@@ -190,13 +186,15 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 		waitpid(child_p2, &pid_status, 0);
 		*exit_status = WEXITSTATUS(pid_status);
 	}
-	else if (node->content->flag == FT_SEMICOLON_F)
-	{
-		execute(node->l_node, env, exit_status);
-		execute(node->r_node, env, exit_status);
-	}
+	// else if (node->content->flag == FT_SEMICOLON_F)
+	// {
+	// 	// exec_pipe(node->l_node, env, exit_status);
+	// 	// exec_pipe(node->r_node, env, exit_status);
+	// 	execute(node->l_node, env, exit_status);
+	// 	execute(node->r_node, env, exit_status);
+	// }
 
-	printf("---exec_pipe end------------------------\n");
+	//printf("---exec_pipe end------------------------\n");
 }
 
 void	execute(t_parser_node *node, t_env *env, int *exit_status)
@@ -233,79 +231,4 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 	{
 		exec_pipe(node, env, exit_status);
 	}
-	// int	pipe_fd[2];
-
-	// int				pid_status;
-	// pid_t			child_p1;
-	// pid_t			child_p2;
-
-	// printf("---in exexute----------------------------------\n");
-
-	// if (node == NULL)
-	// {
-	// 	return ;
-	// }
-	// if (node->content->flag  == FT_COMMAND_F)
-	// {
-	// 	if (!(exec_check_builtin(node->content->data)))
-	// 	{
-	// 		//printf("l_node::in not builtin[%s]\n", node->content->data);
-	// 		exec_search_command_path(node->content, env);
-	// 		printf("new command_path[%s]\n\n", node->content->data);
-	// 	}
-	// 	//printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->content->data, dup(0), dup(1));
-	// 	exec_command(node->content, env, exit_status);
-	// }
-	// else if (node->content->flag == FT_PIPE_F)
-	// {
-	// 	printf("root_node->content=[%s], node->l_node->content[%s], node->r_node->content[%s]\n\n", node->content->data, node->l_node->content->data, node->r_node->content->data);
-
-	// 	pipe(pipe_fd);
-
-	// 	child_p1 = fork();
-	// 	if (child_p1 == 0)
-	// 	{
-	// 		close(pipe_fd[P_READ]);
-	// 		dup2(pipe_fd[P_WRITE], 1);
-	// 		close(pipe_fd[P_WRITE]);
-
-	// 		execute(node->l_node, env, exit_status);
-	// 		if (!(exec_check_builtin(node->content->data)))
-	// 		{
-	// 			exec_search_command_path(node->content, env);
-	// 			printf("new command_path[%s]\n\n", node->content->data);
-	// 		}
-	// 		printf("command[%s], STDIN[%d], STDOUT[%d]\n\n", node->content->data, dup(0), dup(1));
-	// 		exec_command(node->content, env, exit_status);
-	// 		exit(*exit_status);
-	// 	}
-	// 	child_p2 = fork();
-	// 	if (child_p2 == 0)
-	// 	{
-	// 		close(pipe_fd[P_WRITE]);
-	// 		dup2(pipe_fd[P_READ], 0);
-	// 		close(pipe_fd[P_READ]);
-
-	// 		if (!(exec_check_builtin(node->r_node->content->data)))
-	// 		{
-	// 			exec_search_command_path(node->r_node->content, env);
-	// 			printf("new command_path[%s]\n\n", node->r_node->content->data);
-	// 		}
-	// 		printf("command[%s], STDIN[%d], STDOUT[%d]\n------------------------------------\n", node->r_node->content->data, dup(0), dup(1));
-	// 		exec_command(node->r_node->content, env, exit_status);
-	// 		exit(*exit_status);
-	// 	}
-	// 	close(pipe_fd[P_READ]);
-	// 	close(pipe_fd[P_WRITE]);
-	// 	waitpid(child_p1, &pid_status, 0);
-	// 	waitpid(child_p2, &pid_status, 0);
-	// 	*exit_status = WEXITSTATUS(pid_status);
-	// }
-	// else if (node->content->flag == FT_SEMICOLON_F)
-	// {
-	// 	execute(node->l_node, env, exit_status);
-	// 	execute(node->r_node, env, exit_status);
-	// }
-
-	// printf("---exec end------------------------\n");
 }
