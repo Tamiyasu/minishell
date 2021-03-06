@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/04 17:21:33 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 21:19:30 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "execute.h"
 #include "libft.h"
 #include "get_next_line.h"
+#include "parser.h"
 
 #include <unistd.h>
 
@@ -38,31 +39,15 @@ void	free_args(char **args)
 	args = NULL;
 }
 
-// void	free_lst(t_lsttoken **token)
-// {
-// 	t_lsttoken *temp;
-// 	t_lsttoken *temp_next;
-
-// 	temp = *token;
-// 	while (temp != NULL)
-// 	{
-// 		temp_next = temp->next;
-// 		free(temp->data);
-// 		free(temp);
-// 		temp = temp_next;
-// 	}
-// 	*token = NULL;
-// }
-
-// t_lsttoken *find_first_commnd_node(t_parser_node *node)
-// {
-// 	printf("node : %p\n", node);
-// 	printf("content : %p\n", node->content);
-// 	printf("flag : %d\n", node->content->flag);
-// 	while (node->content->flag != FT_COMMAND_F)
-// 		node = node->l_node;
-// 	return (node->content);
-// }
+t_lsttoken *find_first_commnd_node(t_parser_node *node)
+{
+	printf("node : %p\n", node);
+	printf("content : %p\n", node->content);
+	printf("flag : %d\n", node->content->flag);
+	while (node->content->flag != FT_COMMAND_F)
+		node = node->l_node;
+	return (node->content);
+}
 
 
 void	msh_loop(t_env *env, int *exit_status)
@@ -79,25 +64,28 @@ void	msh_loop(t_env *env, int *exit_status)
 	while (loop_status)
 	{
 		ft_putstr_fd("minishell>> ", 1);
-		if (get_next_line(&line) == GNL_ERR)/* read（標準入力からコマンドを読み取る) */
+		if (get_next_line(&line) == GNL_ERR)
 		{
 			return ;//error処理(free等)してexit。
 		}
-		token_list = lexer(line);/* lexer (読み取った入力をトークン(意味のある単語)に分ける) */
+		token_list = lexer(line);
 		if (token_list == NULL)
-		{
-			continue ;
-		}
-		////////////* check msh_lexer */
-		printf("------[check msh_lexer]-------------\n");
-		t_lsttoken *copy_token = token_list;
-		for (int count = 0; copy_token != NULL; count++)
-		{
-			printf("count[%d]=[%s]\n", count, copy_token->data);
-			copy_token = copy_token->next;
-		}
-		printf("------------------------------\n");
-		free_lst(&copy_token);
+			return ;
+		node = parser(token_list);
+		token_list = find_first_commnd_node(node);
+
+		printf("node * : %p\n", node);
+		node_print(node, 0);
+		//////////////* check msh_lexer */
+		// t_lsttoken *copy_token = token;
+
+
+		// for (int count = 0; copy_token != NULL; count++)
+		// {
+		// 	printf("count[%d]=[%s]\n", count, copy_token->data);
+		// 	copy_token = copy_token->next;
+		// }
+		//free_lst(&copy_token);
 		//////////////* check msh_lexer del*/
 
 		node =  parser(token_list);

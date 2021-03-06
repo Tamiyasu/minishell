@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 16:59:25 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 14:01:44 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/05 21:17:55 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ void		free_lst(t_lsttoken **token);
 void		token_list_addback(t_lsttoken **token_list, t_lsttoken *new);
 t_lsttoken	*token_list_new(void	*content);
 t_lsttoken	*token_list_last(t_lsttoken *token_list);
-
+void print_token(t_lsttoken *token, char *header);
 #endif
