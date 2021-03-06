@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 19:34:27 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 20:42:48 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	exec_search_command_path(t_lsttoken *token, t_env *env)
 
 	if (token->data[0] == '.' || token->data[0] == '/')
 	{
-		//printf("in no search[%c]\n", token->data[0]);
 		return ;
 	}
 	idx = msh_env_search(env->data, "PATH");
@@ -47,7 +46,6 @@ void	exec_search_command_path(t_lsttoken *token, t_env *env)
 	idx= 0;
 	while (path_value[idx] != NULL)
 	{
-		//printf("path_value[%d]=[%s]\n", idx, path_value[idx]);//del
 		dp = opendir(path_value[idx]);
 		if (dp == NULL)
 		{
@@ -56,10 +54,8 @@ void	exec_search_command_path(t_lsttoken *token, t_env *env)
 		}
 		while ((dirp = readdir(dp)) != NULL)
 		{
-			//printf("file name[%s]\n", dirp->d_name);//del
 			if (ft_strcmp(token->data, dirp->d_name) == 0)
 			{
-				//printf("file name[%s]\n", dirp->d_name);//del
 				tmp = ft_strjoin("/", token->data);
 				free(token->data);
 				token->data = ft_strjoin(path_value[idx],  tmp);
@@ -124,7 +120,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 	pid_t			child_p1;
 	pid_t			child_p2;
 
-//	printf("---in exec_pipe----------------------------------\n");
+	//printf("---in exec_pipe----------------------------------\n");
 
 	if (node == NULL)
 	{
@@ -134,11 +130,8 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 	{
 		if (!(exec_check_builtin(node->content->data)))
 		{
-			//printf("l_node::in not builtin[%s]\n", node->content->data);
 			exec_search_command_path(node->content, env);
-			//printf("new command_path[%s]\n\n", node->content->data);
 		}
-		//printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->content->data, dup(0), dup(1));
 		exec_command(node->content, env, exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)
@@ -158,7 +151,6 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 			if (!(exec_check_builtin(node->content->data)))
 			{
 				exec_search_command_path(node->content, env);
-			//	printf("new command_path[%s]\n\n", node->content->data);
 			}
 			//printf("command[%s], STDIN[%d], STDOUT[%d]\n\n", node->content->data, dup(0), dup(1));
 			exec_command(node->content, env, exit_status);
@@ -174,7 +166,6 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 			if (!(exec_check_builtin(node->r_node->content->data)))
 			{
 				exec_search_command_path(node->r_node->content, env);
-				//printf("new command_path[%s]\n\n", node->r_node->content->data);
 			}
 			//printf("command[%s], STDIN[%d], STDOUT[%d]\n------------------------------------\n", node->r_node->content->data, dup(0), dup(1));
 			exec_command(node->r_node->content, env, exit_status);
@@ -188,10 +179,10 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 	}
 	// else if (node->content->flag == FT_SEMICOLON_F)
 	// {
-	// 	// exec_pipe(node->l_node, env, exit_status);
-	// 	// exec_pipe(node->r_node, env, exit_status);
-	// 	execute(node->l_node, env, exit_status);
-	// 	execute(node->r_node, env, exit_status);
+	// 	exec_pipe(node->l_node, env, exit_status);
+	// 	exec_pipe(node->r_node, env, exit_status);
+	// 	// execute(node->l_node, env, exit_status);
+	// 	// execute(node->r_node, env, exit_status);
 	// }
 
 	//printf("---exec_pipe end------------------------\n");
