@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 14:49:52 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 15:04:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -351,7 +351,7 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 		{
 			//printf("l_node::in not builtin[%s]\n", node->content->data);
 			exec_search_command_path(node->content, env);
-			printf("new command_path[%s]\n", node->content->data);
+			printf("new command_path[%s]\n\n", node->content->data);
 		}
 		//printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->content->data, dup(0), dup(1));
 		exec_command(node->content, env, exit_status);
@@ -359,7 +359,7 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 
 	else if (node->content->flag == FT_PIPE_F)
 	{
-		printf("root_node->content=[%s], node->l_node->content[%s], node->r_node->content[%s]\n", node->content->data, node->l_node->content->data, node->r_node->content->data);
+		printf("root_node->content=[%s], node->l_node->content[%s], node->r_node->content[%s]\n\n", node->content->data, node->l_node->content->data, node->r_node->content->data);
 
 		pipe(pipe_fd);
 
@@ -375,9 +375,9 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 			{
 				//printf("l_node::in not builtin[%s]\n", node->content->data);
 				exec_search_command_path(node->content, env);
-				printf("new command_path[%s]\n", node->content->data);
+				printf("new command_path[%s]\n\n", node->content->data);
 			}
-			printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->content->data, dup(0), dup(1));
+			printf("command[%s], STDIN[%d], STDOUT[%d]\n\n", node->content->data, dup(0), dup(1));
 			exec_command(node->content, env, exit_status);
 			exit(*exit_status);
 		}
@@ -392,9 +392,9 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 			{
 				//printf("l_node::in not builtin[%s]\n", node->content->data);
 				exec_search_command_path(node->r_node->content, env);
-				printf("new command_path[%s]\n", node->r_node->content->data);
+				printf("new command_path[%s]\n\n", node->r_node->content->data);
 			}
-			printf("command[%s], STDIN[%d], STDOUT[%d]\n", node->r_node->content->data, dup(0), dup(1));
+			printf("command[%s], STDIN[%d], STDOUT[%d]\n------------------------------------\n", node->r_node->content->data, dup(0), dup(1));
 			exec_command(node->r_node->content, env, exit_status);
 			exit(*exit_status);
 		}
