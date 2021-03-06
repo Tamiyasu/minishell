@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 14:33:55 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 16:15:44 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ t_lsttoken *find_first_commnd_node(t_parser_node *node)
 void	msh_loop(t_env *env, int *exit_status)
 {
 	char	*line;
-	int		loop_status;
-	t_lsttoken *token;
+	//int		loop_status;
+	t_lsttoken *token_list;
 	t_parser_node *node;
 
 	line = NULL;
-	loop_status = 1;
-	token =  NULL;
+	//loop_status = 1;
+	token_list =  NULL;
 	while (1)
 	{
 		ft_putstr_fd("minishell>> ", 1);
@@ -65,23 +65,39 @@ void	msh_loop(t_env *env, int *exit_status)
 		{
 			return ;//error処理(free等)してexit。
 		}
-		token = lexer(line);
+		token_list = lexer(line);
+		if (token_list == NULL)
+		{
+			free(line);
+			continue ;
+		}
+
+		node = parser(token_list);
+		token_list = find_first_commnd_node(node);
+
+		printf("node * : %p\n", node);
+		node_print(node, 0);
+
+		// node =  parser(token_list);
+		//token = find_first_commnd_node(node);
+		// printf("after parser node root=[%s]\n", node->content->data);
 
 		//token_print(token);
 
-		node = parser(token);
-		//token = find_first_commnd_node(node);
+		// expansion(node, exit_status);
 
 		//printf("node * : %p\n", node);
 		node_print(node, 0);
 
+		/* execute（解析されたコマンドを実行）*/
+		//loop_status = execute(node, env, exit_status); //exitコマンド実行時にreturn(0)がくる
 		execute(node, env, exit_status); //exitコマンド実行時にreturn(0)がくる
 		free_tree(&node);
 		free(line);
 		line = NULL;
 	}
-	exit_status++;//del
-	env = NULL;//del
+	// exit_status++;//del
+	// env = NULL;//del
 }
 
 int	main(int argc, char *argv[], char *envp[])

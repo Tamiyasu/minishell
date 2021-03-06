@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 14:32:27 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 16:11:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ t_lsttoken	*lexer_check_tokenlen(t_lsttoken *token_list, char *input, int *start
 
 t_lsttoken	*lexer_set_stdout(t_lsttoken *token_list, char *input, int *token_len, int start, int *idx)
 {
+	int	i;
+
+	i = 0;
 	if (token_len)//check isdigit
 	{
-		int i = 0;
 		while (i  < *token_len)
 		{
 			if (ft_isdigit(input[start + i]) != 1)

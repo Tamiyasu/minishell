@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 16:59:25 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 14:32:04 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 16:13:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ void		free_lst(t_lsttoken **token);
 void		token_list_addback(t_lsttoken **token_list, t_lsttoken *new);
 t_lsttoken	*token_list_new(void	*content);
 t_lsttoken	*token_list_last(t_lsttoken *token_list);
-void		token_print(t_lsttoken *token);
+void print_token(t_lsttoken *token, char *header);
 #endif

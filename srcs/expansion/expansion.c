@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 14:25:34 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 16:17:45 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,17 @@ struct node{
 }
 */
 
-void	expansion(t_lsttoken *token,/*t_parser_node *node, t_env *env, */int *exit_status)
-{
-	while (token != NULL)
-	{
-		if (ft_strcmp(token->data, "$?") == 0)
-		{
-			free(token->data);
-			token->data = ft_strdup(ft_itoa(*exit_status));
-		}
-		token = token->next;
-	}
+// void	expansion(t_lsttoken *token,/*t_parser_node *node, t_env *env, */int *exit_status)
+// {
+// 	while (token != NULL)
+// 	{
+// 		if (ft_strcmp(token->data, "$?") == 0)
+// 		{
+// 			free(token->data);
+// 			token->data = ft_strdup(ft_itoa(*exit_status));
+// 		}
+// 		token = token->next;
+// 	}
 
     // if (node == NULL)
     //     return;
@@ -42,4 +42,4 @@ void	expansion(t_lsttoken *token,/*t_parser_node *node, t_env *env, */int *exit_
 	// 	node->content = node->content->next;
 	// }
     // expansion(node->r_node, exit_status);
-}
+// }

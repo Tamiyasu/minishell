@@ -6,11 +6,12 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/05 16:22:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/06 16:11:01 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include "lexer.h"
 #include "libft.h"
 
 static int	execve_count_lst(t_lsttoken *token)
