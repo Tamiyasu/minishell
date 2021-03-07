@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/07 20:50:56 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/07 21:22:46 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 	{
 		printf("in redirect[%s]\n", node->content->data);
 		save_stdout = dup(STDOUT_FILENO);
-		fd = open(node->r_node->content->data, O_WRONLY | O_CREAT | S_IRUSR | S_IWUSR);
+		fd = open(node->r_node->content->data, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		if (!fd)
 		{
 			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
@@ -220,7 +220,7 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 	{
 		printf("in redirect[%s]\n", node->content->data);
 		save_stdout = dup(STDOUT_FILENO);
-		fd = open(node->r_node->content->data, O_WRONLY | O_CREAT | O_APPEND);
+		fd = open(node->r_node->content->data, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		if (!fd)
 		{
 			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
