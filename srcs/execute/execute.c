@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 20:42:48 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/07 20:50:56 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,10 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
 
 void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 {
-	int	pipe_fd[2];
-
-	int				pid_status;
-	pid_t			child_p1;
-	pid_t			child_p2;
+	int		pipe_fd[2];
+	int		status;
+	pid_t	child_p1;
+	pid_t	child_p2;
 
 	//printf("---in exec_pipe----------------------------------\n");
 
@@ -143,9 +142,9 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 		child_p1 = fork();
 		if (child_p1 == 0)
 		{
-			close(pipe_fd[P_READ]);
-			dup2(pipe_fd[P_WRITE], 1);
-			close(pipe_fd[P_WRITE]);
+			close(pipe_fd[READ]);
+			dup2(pipe_fd[WRITE], 1);
+			close(pipe_fd[WRITE]);
 
 			exec_pipe(node->l_node, env, exit_status);
 			if (!(exec_check_builtin(node->content->data)))
@@ -159,9 +158,9 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 		child_p2 = fork();
 		if (child_p2 == 0)
 		{
-			close(pipe_fd[P_WRITE]);
-			dup2(pipe_fd[P_READ], 0);
-			close(pipe_fd[P_READ]);
+			close(pipe_fd[WRITE]);
+			dup2(pipe_fd[READ], 0);
+			close(pipe_fd[READ]);
 
 			if (!(exec_check_builtin(node->r_node->content->data)))
 			{
@@ -171,30 +170,66 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status)
 			exec_command(node->r_node->content, env, exit_status);
 			exit(*exit_status);
 		}
-		close(pipe_fd[P_READ]);
-		close(pipe_fd[P_WRITE]);
-		waitpid(child_p1, &pid_status, 0);
-		waitpid(child_p2, &pid_status, 0);
-		*exit_status = WEXITSTATUS(pid_status);
+		close(pipe_fd[READ]);
+		close(pipe_fd[WRITE]);
+		waitpid(child_p1, &status, 0);
+		waitpid(child_p2, &status, 0);
+		*exit_status = WEXITSTATUS(status);
 	}
-	// else if (node->content->flag == FT_SEMICOLON_F)
-	// {
-	// 	exec_pipe(node->l_node, env, exit_status);
-	// 	exec_pipe(node->r_node, env, exit_status);
-	// 	// execute(node->l_node, env, exit_status);
-	// 	// execute(node->r_node, env, exit_status);
-	// }
-
-	//printf("---exec_pipe end------------------------\n");
 }
 
 void	execute(t_parser_node *node, t_env *env, int *exit_status)
 {
-	int	child_p;
-	int	pid_status;
+	int			save_stdin = -1;
+	int			save_stdout = -1;
+	int			fd;
+	int			child_p;
+	int			pid_status;
 
 	if (node == NULL)
 		return ;
+	if (node->content->flag == FT_REDIRECT_I_F)
+	{
+		printf("in redirect[%s]\n", node->content->data);
+		save_stdin = dup(STDIN_FILENO);
+		fd = open(node->r_node->content->data, O_RDONLY);
+		if (!fd)
+		{
+			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
+			return ;
+		}
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+		node = node->l_node;
+	}
+	else if (node->content->flag == FT_REDIRECT_O_F)
+	{
+		printf("in redirect[%s]\n", node->content->data);
+		save_stdout = dup(STDOUT_FILENO);
+		fd = open(node->r_node->content->data, O_WRONLY | O_CREAT | S_IRUSR | S_IWUSR);
+		if (!fd)
+		{
+			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
+			return ;
+		}
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		node = node->l_node;
+	}
+	else if (node->content->flag == FT_REDIRECT_A_F)
+	{
+		printf("in redirect[%s]\n", node->content->data);
+		save_stdout = dup(STDOUT_FILENO);
+		fd = open(node->r_node->content->data, O_WRONLY | O_CREAT | O_APPEND);
+		if (!fd)
+		{
+			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
+			return ;
+		}
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		node = node->l_node;
+	}
 	if (node->content->flag == FT_COMMAND_F)
 	{
 		if (exec_check_builtin(node->content->data))
@@ -211,6 +246,17 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status)
 			}
 			waitpid(child_p, &pid_status, 0);
 			*exit_status = WEXITSTATUS(pid_status);
+		}
+		//close(fd) && dup2
+		if (save_stdin != -1)
+		{
+			dup2(save_stdin, STDIN_FILENO);
+			close(save_stdin);
+		}
+		if (save_stdout != -1)
+		{
+			dup2(save_stdout, STDOUT_FILENO);
+			close(save_stdout);
 		}
 	}
 	else if (node->content->flag == FT_SEMICOLON_F)

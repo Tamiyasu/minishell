@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 16:12:55 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/07 19:05:57 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 
 enum pipe_in_out
 {
-	P_READ,
-	P_WRITE
+	READ,
+	WRITE
 };
 
 void	execute(t_parser_node *node, t_env *env, int *exit_status);
-int		execute_command(t_lsttoken *token, t_env *env, int *exit_status);
+//int		execute_command(t_lsttoken *token, t_env *env, int *exit_status);
 int		execute_cd(t_lsttoken *token, t_env *env);
 int		execute_echo(t_lsttoken *token);
 void	execute_execve(t_lsttoken *token, t_env *env);

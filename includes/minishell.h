@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 16:12:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/07 17:27:55 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,7 @@
 # include <errno.h>
 # include <sys/wait.h>
 # include <dirent.h>
-
-// typedef struct		s_lsttoken
-// {
-// 	char				*data;
-// 	int			flag;
-// 	struct s_lsttoken	*next;
-// }					t_lexer_token;
+# include <fcntl.h>
 
 typedef struct	s_env
 {
@@ -39,7 +33,6 @@ typedef struct	s_env
 }				t_env;
 
 void		free_args(char **args);
-//t_lexer_token	*msh_lexer(char *input);
 
 /*
 ** msh_env.c
