@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 19:41:26 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/08 15:54:01 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,11 @@ t_lsttoken *find_first_commnd_node(t_parser_node *node)
 
 void	msh_loop(t_env *env, int *exit_status)
 {
-	char	*line;
+	char			*line;
 	//int		loop_status;
-	t_lsttoken *token_list;
-	t_parser_node *node;
+	t_lsttoken		*token_list;
+	t_parser_node	*node;
+	t_info_fd		fd;
 
 	line = NULL;
 	//loop_status = 1;
@@ -71,6 +72,7 @@ void	msh_loop(t_env *env, int *exit_status)
 			free(line);
 			continue ;
 		}
+		print_token(token_list, "check token");
 
 		node = parser(token_list);
 		//token_list = find_first_commnd_node(node);
@@ -84,7 +86,10 @@ void	msh_loop(t_env *env, int *exit_status)
 
 		/* execute（解析されたコマンドを実行）*/
 		//loop_status = execute(node, env, exit_status); //exitコマンド実行時にreturn(0)がくる
-		execute(node, env, exit_status); //exitコマンド実行時にreturn(0)がくる
+
+		init_fd(&fd);
+
+		execute(node, env, exit_status, &fd); //exitコマンド実行時にreturn(0)がくる
 		free_tree(&node);
 		free(line);
 		line = NULL;
