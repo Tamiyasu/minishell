@@ -3,13 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/08 20:55:07 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/09 18:01:24 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "sys/types.h"
+#include "sys/stat.h"
 #include "execute.h"
 #include "libft.h"
 
