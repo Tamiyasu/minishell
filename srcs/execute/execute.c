@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/08 20:55:07 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/09 21:33:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
 	return ;
 }
 
-void	exec_dup_redirect(t_info_fd *fd)
+void	redirect_exec_dup(t_info_fd *fd)
 {
 	if (fd->redirect_i != -1)
 	{
@@ -136,12 +136,50 @@ void	exec_dup_redirect(t_info_fd *fd)
 	}
 }
 
+void	redirect_check_fdnum(t_info_fd *fd, char *data)
+{
+		fd->fd_num = ft_atoi(data);
+		if (fd->fd_num == 0)
+		{
+			fd->fd_num = 1;
+		}
+}
+
+void	redirect_save_fd(t_info_fd *fd, int dup_fd, int open_fd)
+{
+	if (dup_fd == STDIN_FILENO)
+	{
+		if (fd->save_stdin == -1)
+		{
+			fd->save_stdin = dup(dup_fd);
+			fd->redirect_i = open_fd;
+		}
+	}
+	else
+	{
+		if (fd->save_stdout == -1)
+		{
+			fd->save_stdout = dup(dup_fd);
+			fd->redirect_o = open_fd;
+		}
+	}
+}
+
+void	redirect_close_fd(int save_fd, int close_fd)
+{
+	if (save_fd != -1)
+	{
+		dup2(save_fd, close_fd);
+		close(save_fd);
+	}
+}
+
 void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *exit_status)
 {
 	pid_t	child_p;
 	int		pid_status;
 
-	exec_dup_redirect(fd);
+	redirect_exec_dup(fd);
 	if (exec_check_builtin(node->content->data))
 	{
 		exec_command(node->content, env, exit_status);
@@ -155,6 +193,44 @@ void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *ex
 	*exit_status = WEXITSTATUS(pid_status);
 }
 
+void	exec_command_in_childp(t_lsttoken *token, t_env *env, int *exit_status)
+{
+	if (!(exec_check_builtin(token->data)))
+	{
+		exec_search_command_path(token, env);
+	}
+	exec_command(token, env, exit_status);
+}
+
+int	redirect_in_check_open(char *file)
+{
+	int	open_fd;
+
+	open_fd = open(file, O_RDONLY);
+	if (!open_fd)
+	{
+		ft_putendl_fd(strerror(errno), STDOUT_FILENO);
+		return (open_fd);
+	}
+	return (open_fd);
+}
+
+int	redirect_out_check_open(char *file, int flag)
+{
+	int	open_fd;
+
+	if (flag == FT_REDIRECT_O_F)
+		open_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	else
+		open_fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	if (!open_fd)
+	{
+		ft_putendl_fd(strerror(errno), STDOUT_FILENO);
+		return (open_fd);
+	}
+	return (open_fd);
+}
+
 void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
 	int		pipe_fd[2];
@@ -163,109 +239,43 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 	pid_t	child_p1;
 	pid_t	child_p2;
 
-	printf("---in exec_pipe----------------------------------\n");
-
 	if (node == NULL)
 		return ;
 
-	if (node->content->flag == FT_REDIRECT_I_F)
-	{
-		open_fd = open(node->r_node->content->data, O_RDONLY);
-		if (!open_fd)
-		{
-			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
-			return ;
-		}
-		if (fd->save_stdin == -1)
-		{
-			fd->save_stdin = dup(STDIN_FILENO);
-			fd->redirect_i = open_fd;
-		}
-		exec_pipe(node->l_node, env, exit_status, fd);
-		if (fd->save_stdin != -1)
-		{
-			dup2(fd->save_stdin, STDIN_FILENO);
-			close(fd->save_stdin);
-		}
-	}
-	else if (node->content->flag == FT_REDIRECT_O_F)
-	{
-		fd->fd_num = ft_atoi(node->content->data);
-		if (fd->fd_num == 0)
-		{
-			fd->fd_num = 1;
-		}
-		open_fd = open(node->r_node->content->data, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-		if (!open_fd)
-		{
-			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
-			return ;
-		}
-		if (fd->save_stdout == -1)
-		{
-			fd->save_stdout = dup(fd->fd_num);
-			fd->redirect_o = open_fd;
-		}
-		exec_pipe(node->l_node, env, exit_status, fd);
-		if (fd->save_stdout != -1)
-		{
-			dup2(fd->save_stdout, fd->fd_num);
-			close(fd->save_stdout);
-		}
-	}
-	else if (node->content->flag == FT_REDIRECT_A_F)
-	{
-		fd->fd_num = ft_atoi(node->content->data);
-		if (fd->fd_num == 0)
-		{
-			fd->fd_num = 1;
-		}
-		open_fd = open(node->r_node->content->data, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-		if (!open_fd)
-		{
-			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
-			return ;
-		}
-		if (fd->save_stdout == -1)
-		{
-			fd->save_stdout = dup(fd->fd_num);
-			fd->redirect_o = open_fd;
-		}
-		exec_pipe(node->l_node, env, exit_status, fd);
-		close(fd->redirect_o);
-		if (fd->save_stdout != -1)
-		{
-			dup2(fd->save_stdout, fd->fd_num);
-			close(fd->save_stdout);
-		}
-	}
-
 	if (node->content->flag  == FT_COMMAND_F)
 	{
-		exec_dup_redirect(fd);
-		if (!(exec_check_builtin(node->content->data)))
-		{
-			exec_search_command_path(node->content, env);
-		}
-		exec_command(node->content, env, exit_status);
+		redirect_exec_dup(fd);
+		exec_command_in_childp(node->content, env, exit_status);
+	}
+	else if (node->content->flag == FT_REDIRECT_I_F)
+	{
+		if ((open_fd = redirect_in_check_open(node->r_node->content->data))== -1)
+			return ;
+		fd->redirect_i = open_fd;
+		exec_pipe(node->l_node, env, exit_status, fd);
+		close(fd->redirect_i);
+	}
+	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
+	{
+		redirect_check_fdnum(fd, node->content->data);
+		if ((open_fd = redirect_out_check_open(node->r_node->content->data, node->content->flag)) == -1)
+			return ;
+		fd->redirect_o = open_fd;
+		exec_pipe(node->l_node, env, exit_status, fd);
+		close(fd->redirect_o);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 	{
 		pipe(pipe_fd);
-
 		child_p1 = fork();
 		if (child_p1 == 0)
 		{
 			close(pipe_fd[READ]);
 			dup2(pipe_fd[WRITE], 1);
 			close(pipe_fd[WRITE]);
-
 			exec_pipe(node->l_node, env, exit_status, fd);
-			if (!(exec_check_builtin(node->content->data)))
-			{
-				exec_search_command_path(node->content, env);
-			}
-			exec_command(node->content, env, exit_status);
+			redirect_exec_dup(fd);
+			exec_command_in_childp(node->content, env, exit_status);
 			exit(*exit_status);
 		}
 		child_p2 = fork();
@@ -277,13 +287,9 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 			if (node->r_node->content->flag != FT_COMMAND_F)
 			{
 				exec_pipe(node->r_node, env, exit_status, fd);
-				return  ;
+				//return ;
 			}
-			if (!(exec_check_builtin(node->r_node->content->data)))
-			{
-				exec_search_command_path(node->r_node->content, env);
-			}
-			exec_command(node->r_node->content, env, exit_status);
+			exec_command_in_childp(node->r_node->content, env, exit_status);
 			exit(*exit_status);
 		}
 		close(pipe_fd[READ]);
@@ -310,77 +316,21 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		exec_pipe(node, env, exit_status, fd);
 	else if (node->content->flag == FT_REDIRECT_I_F)
 	{
-		open_fd = open(node->r_node->content->data, O_RDONLY);
-		if (!open_fd)
-		{
-			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
+		if ((open_fd = redirect_in_check_open(node->r_node->content->data)) == -1)
 			return ;
-		}
-		if (fd->save_stdin == -1)
-		{
-			fd->save_stdin = dup(STDIN_FILENO);
-			fd->redirect_i = open_fd;
-		}
+		redirect_save_fd(fd, STDIN_FILENO, open_fd);
 		execute(node->l_node, env, exit_status, fd);
-		if (fd->save_stdin != -1)
-		{
-			dup2(fd->save_stdin, STDIN_FILENO);
-			close(fd->save_stdin);
-		}
+		redirect_close_fd(fd->save_stdin, STDIN_FILENO);
 	}
-	else if (node->content->flag == FT_REDIRECT_O_F)
+	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
 	{
-		fd->fd_num = ft_atoi(node->content->data);
-		if (fd->fd_num == 0)
-		{
-			fd->fd_num = 1;
-		}
-		open_fd = open(node->r_node->content->data, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-		if (!open_fd)
-		{
-			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
+		redirect_check_fdnum(fd, node->content->data);
+		if ((open_fd = redirect_out_check_open(node->r_node->content->data, node->content->flag)) == -1)
 			return ;
-		}
-		if (fd->save_stdout == -1)
-		{
-			fd->save_stdout = dup(fd->fd_num);
-			fd->redirect_o = open_fd;
-		}
+		redirect_save_fd(fd, fd->fd_num, open_fd);
 		execute(node->l_node, env, exit_status, fd);
-		if (fd->save_stdout != -1)
-		{
-			dup2(fd->save_stdout, fd->fd_num);
-			close(fd->save_stdout);
-		}
-	}
-	else if (node->content->flag == FT_REDIRECT_A_F)
-	{
-		fd->fd_num = ft_atoi(node->content->data);
-		if (fd->fd_num == 0)
-		{
-			fd->fd_num = 1;
-		}
-		open_fd = open(node->r_node->content->data, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-		if (!open_fd)
-		{
-			ft_putendl_fd(strerror(errno), STDOUT_FILENO);
-			return ;
-		}
-		if (fd->save_stdout == -1)
-		{
-			fd->save_stdout = dup(fd->fd_num);
-			fd->redirect_o = open_fd;
-		}
-		execute(node->l_node, env, exit_status, fd);
-		close(fd->redirect_o);
-		if (fd->save_stdout != -1)
-		{
-			dup2(fd->save_stdout, fd->fd_num);
-			close(fd->save_stdout);
-		}
+		redirect_close_fd(fd->save_stdout, fd->fd_num);
 	}
 	if (node->content->flag == FT_COMMAND_F)
-	{
 		exec_simple_command(node, fd, env, exit_status);
-	}
 }
