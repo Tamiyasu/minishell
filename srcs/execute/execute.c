@@ -6,10 +6,12 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/09 21:33:23 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/09 21:38:55 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "sys/types.h"
+#include "sys/stat.h"
 #include "execute.h"
 #include "libft.h"
 
