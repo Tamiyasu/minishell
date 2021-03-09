@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/08 15:54:01 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/09 20:51:48 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,16 @@ void	msh_loop(t_env *env, int *exit_status)
 	while (1)
 	{
 		ft_putstr_fd("minishell>> ", 1);
-		if (get_next_line(&line) == GNL_ERR)
+		int gnl_result = get_next_line(&line);
+		if (gnl_result == GNL_ERR)
 		{
-			return ;//error処理(free等)してexit。
+			printf("here !\n");
+		} else if (gnl_result == GNL_EOF && ft_strlen(line) == 0){
+			*exit_status = 0;
+			write(1, "exit\n", 5);
+			break;
 		}
+		printf("gnl_result : %d\n", gnl_result);
 		token_list = lexer(line);
 		if (token_list == NULL)
 		{
