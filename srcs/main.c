@@ -6,12 +6,13 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 19:41:26 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/12 20:40:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "lexer.h"
+#include "expansion.h"
 #include "execute.h"
 #include "libft.h"
 #include "get_next_line.h"
@@ -73,17 +74,11 @@ void	msh_loop(t_env *env, int *exit_status)
 		}
 
 		node = parser(token_list);
-		//token_list = find_first_commnd_node(node);
-		//printf("node * : %p\n", node);
 		node_print(node, 0);
 		printf("----------------------------end node_print\n\n");
 
+		expansion(node, env, exit_status);
 
-		// expansion(node, exit_status);
-
-
-		/* execute（解析されたコマンドを実行）*/
-		//loop_status = execute(node, env, exit_status); //exitコマンド実行時にreturn(0)がくる
 		execute(node, env, exit_status); //exitコマンド実行時にreturn(0)がくる
 		free_tree(&node);
 		free(line);
