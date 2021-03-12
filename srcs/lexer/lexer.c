@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 16:11:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/12 20:42:38 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,35 +107,31 @@ t_lsttoken		*lexer(char *input)
 		}
 		else if (input[idx] == '\'')
 		{
-			token_list = lexer_check_tokenlen(token_list, input, &start, &token_len, &idx);
 			while (input[idx] != '\0')
 			{
 				idx++;
 				token_len++;
-				if (input[idx] == '\'')//ここまでをnew_listに追加
+				if (input[idx] == '\'')
 				{
 					token_len++;
-					token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, token_len), &token_len);
-					start = ++idx;
 					break ;
 				}
 			}
+			idx++;
 		}
 		else if (input[idx] == '\"')
 		{
-			token_list = lexer_check_tokenlen(token_list, input, &start, &token_len, &idx);
 			while (input[idx] != '\0')
 			{
 				idx++;
 				token_len++;
-				if (input[idx] == '\"' && input[idx - 1] != '\\')//ここまでをnew_listに追加
+				if (input[idx] == '\"' && input[idx - 1] != '\\')
 				{
 					token_len++;
-					token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, token_len), &token_len);
-					start = ++idx;
 					break ;
 				}
 			}
+			idx++;
 		}
 		else if (input[idx] == '\t' || input[idx] == ' ')
 		{
