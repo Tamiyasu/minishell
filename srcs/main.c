@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/12 20:40:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/12 20:46:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,11 @@ t_lsttoken *find_first_commnd_node(t_parser_node *node)
 
 void	msh_loop(t_env *env, int *exit_status)
 {
-	char	*line;
+	char			*line;
 	//int		loop_status;
-	t_lsttoken *token_list;
-	t_parser_node *node;
+	t_lsttoken		*token_list;
+	t_parser_node	*node;
+	t_info_fd		fd;
 
 	line = NULL;
 	//loop_status = 1;
@@ -62,16 +63,23 @@ void	msh_loop(t_env *env, int *exit_status)
 	while (1)
 	{
 		ft_putstr_fd("minishell>> ", 1);
-		if (get_next_line(&line) == GNL_ERR)
+		int gnl_result = get_next_line(&line);
+		if (gnl_result == GNL_ERR)
 		{
-			return ;//error処理(free等)してexit。
+			printf("here !\n");
+		} else if (gnl_result == GNL_EOF && ft_strlen(line) == 0){
+			*exit_status = 0;
+			write(1, "exit\n", 5);
+			break;
 		}
+		printf("gnl_result : %d\n", gnl_result);
 		token_list = lexer(line);
 		if (token_list == NULL)
 		{
 			free(line);
 			continue ;
 		}
+		print_token(token_list, "check token");
 
 		node = parser(token_list);
 		node_print(node, 0);

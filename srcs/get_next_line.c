@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/24 00:32:11 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/09 20:54:10 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,11 +118,16 @@ int				get_next_line(char **line)
 		{
 			buf_join = ft_strjoin_and_free(buf_join, buf);
 		}
-		if (ft_strchr(buf, '\n') || rc == GNL_EOF)
+		if (ft_strchr(buf, '\n')/* || rc == GNL_EOF*/)
+		{
+			free(buf);
+			break;
+		} else if(ft_strlen(buf) == 0 && rc == GNL_EOF)
 		{
 			free(buf);
 			break;
 		}
+
 		free(buf);
 	}
 	rc = ft_make_one_line(buf_join, &save, line);
