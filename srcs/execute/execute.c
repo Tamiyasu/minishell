@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 15:02:33 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/13 18:43:56 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,10 +189,22 @@ void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *ex
 		return ;
 	}
 	exec_search_command_path(node->content, env);
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
 	c_pid(fork());
 	if (c_pid(-1) == 0)
+	{
+		signal(SIGINT, sig_handler_c);
+		signal(SIGQUIT, sig_handler_c);
 		execute_execve(node->content,env);
+	}
 	waitpid(c_pid(-1), &pid_status, 0);
+	if (pid_status == 2)
+		ft_putendl_fd("", STDOUT_FILENO);	
+	else if (pid_status == 3)
+		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
+	signal(SIGINT, sig_handler_p);
+	signal(SIGQUIT, sig_handler_p);
 	c_pid(0);
 	*exit_status = WEXITSTATUS(pid_status);
 }

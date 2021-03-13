@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:45:39 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/13 14:54:33 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/13 18:10:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define SIGNAL_HANDLER_H
 
 pid_t c_pid(pid_t t);
-void sig_handler(int signo);
+void sig_handler_c(int signo);
+void sig_handler_p(int signo);
 
 #endif

@@ -6,11 +6,12 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:48:02 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/13 15:14:45 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/13 18:43:40 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signal_handler.h"
+#include <stdio.h>
 
 pid_t c_pid(pid_t t)
 {
@@ -20,21 +21,13 @@ pid_t c_pid(pid_t t)
     return c_pid;
 }
 
-void sig_handler(int signo)
+void sig_handler_c(int signo)
 {
     if (c_pid(-1))
-    {
         kill (c_pid(-1), signo);
-        if (signo == SIGINT)
-            write(1, "\n", 1);
-        else if (signo == SIGQUIT)
-            write(1, "Quit: 3\n", 8);
-    }
-    else
-    {
-        if (signo == SIGINT)
-            write(1, "\nminishell>>", 12);
-        else if (signo == SIGQUIT)
-            write(1, "", 0);
-    }
+}
+void sig_handler_p(int signo)
+{
+    if (signo == SIGINT)
+        write(1, "\nminishell>> ", 13);
 }
