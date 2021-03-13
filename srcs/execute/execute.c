@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/09 21:38:55 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/13 18:43:56 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "sys/stat.h"
 #include "execute.h"
 #include "libft.h"
+#include "signal_handler.h"
 
 void	init_fd(t_info_fd *fd)
 {
@@ -178,7 +179,7 @@ void	redirect_close_fd(int save_fd, int close_fd)
 
 void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *exit_status)
 {
-	pid_t	child_p;
+	//pid_t	child_p;
 	int		pid_status;
 
 	redirect_exec_dup(fd);
@@ -188,10 +189,23 @@ void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *ex
 		return ;
 	}
 	exec_search_command_path(node->content, env);
-	child_p = fork();
-	if (child_p == 0)
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
+	c_pid(fork());
+	if (c_pid(-1) == 0)
+	{
+		signal(SIGINT, sig_handler_c);
+		signal(SIGQUIT, sig_handler_c);
 		execute_execve(node->content,env);
-	waitpid(child_p, &pid_status, 0);
+	}
+	waitpid(c_pid(-1), &pid_status, 0);
+	if (pid_status == 2)
+		ft_putendl_fd("", STDOUT_FILENO);	
+	else if (pid_status == 3)
+		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
+	signal(SIGINT, sig_handler_p);
+	signal(SIGQUIT, sig_handler_p);
+	c_pid(0);
 	*exit_status = WEXITSTATUS(pid_status);
 }
 
