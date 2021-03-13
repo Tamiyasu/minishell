@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 00:56:23 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 01:17:59 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,15 +129,6 @@ void	 redirect_check_fdnum(t_info_fd *fd, char *data)
 		}
 }
 
-void	redirect_close_fd(int save_fd, int close_fd)
-{
-	if (save_fd != -1)
-	{
-		dup2(save_fd, close_fd);
-		close(save_fd);
-	}
-}
-
 void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 {
 	//pid_t	child_p;
@@ -235,6 +226,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 	if (node->content->flag  == FT_COMMAND_F)
 	{
 		exec_command(node->content, env, exit_status, 1);
+		return ;
 	}
 	else if (node->content->flag == FT_REDIRECT_I_F)
 	{
@@ -242,7 +234,6 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 			return ;
 		dup2(open_fd, STDIN_FILENO);
 		exec_pipe(node->l_node, env, exit_status, fd);
-		// close(fd->redirect_i);
 	}
 	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
 	{
@@ -260,7 +251,6 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 			close(open_fd);
 		}
 		exec_pipe(node->l_node, env, exit_status, fd);
-		// close(fd->redirect_o);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 	{
@@ -273,10 +263,6 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 			dup2(pipe_fd[WRITE], STDOUT_FILENO);
 			close(pipe_fd[WRITE]);
 			exec_pipe(node->l_node, env, exit_status, fd);
-			// redirect_exec_dup(fd);
-			// if (ft_strcmp(node->l_node->content->data, "") == 0)
-			// 	exit (0);
-			// exec_pipeline_command(node->content, env, exit_status);
 			exit(*exit_status);
 		}
 		child_p2 = fork();
@@ -285,13 +271,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 			close(pipe_fd[WRITE]);
 			dup2(pipe_fd[READ], STDIN_FILENO);
 			close(pipe_fd[READ]);
-			// if (node->r_node->content->flag != FT_COMMAND_F)
-			// {
 			exec_pipe(node->r_node, env, exit_status, fd);
-			// }
-			// // if (ft_strcmp(node->l_node->content->data, "") == 0)
-			// // 	exit (0);
-			// exec_pipeline_command(node->r_node->content, env, exit_status);
 			exit(*exit_status);
 		}
 		close(pipe_fd[READ]);
@@ -313,7 +293,7 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 	if (node->content->flag == FT_SEMICOLON_F)
 	{
 		execute(node->l_node, env, exit_status, fd);
-		init_fd(fd);
+		reset_fd(fd);
 		execute(node->r_node, env, exit_status, fd);
 	}
 	else if (node->content->flag == FT_PIPE_F)
@@ -325,7 +305,6 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		dup2(open_fd, STDIN_FILENO);
 		close(open_fd);
 		execute(node->l_node, env, exit_status, fd);
-		redirect_close_fd(fd->save_stdin, STDIN_FILENO);
 	}
 	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
 	{
@@ -348,11 +327,5 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 	{
 		exec_command(node->content, env, exit_status, 0);
 		reset_fd(fd);
-		// dup2(fd->save_stdout, STDIN_FILENO);
-		// close(fd->save_stdin);
-		// dup2(fd->save_stdout, STDOUT_FILENO);
-		// close(fd->save_stdout);
-		// dup2(fd->save_stderr, STDERR_FILENO);
-		// close(fd->save_stderr);
 	}
 }
