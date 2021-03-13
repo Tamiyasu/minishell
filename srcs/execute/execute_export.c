@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/13 18:26:35 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 static void	execute_output_error(char *token_data)
 {
-	ft_putstr_fd("minishell: unset: `",  1);
-	ft_putstr_fd(token_data, 1);
-	ft_putendl_fd("': not a valid identifier", 1);
+	ft_putstr_fd("minishell: unset: `",  STDERR_FILENO);
+	ft_putstr_fd(token_data, STDERR_FILENO);
+	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
 static int	msh_lstsize(t_lsttoken *token)

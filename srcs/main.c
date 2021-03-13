@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/12 21:01:33 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/13 18:18:15 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,26 +66,29 @@ void	msh_loop(t_env *env, int *exit_status)
 		int gnl_result = get_next_line(&line);
 		if (gnl_result == GNL_ERR)
 		{
-			printf("here !\n");
+			// printf("here !\n");
 		} else if (gnl_result == GNL_EOF && ft_strlen(line) == 0){
 			*exit_status = 0;
 			write(1, "exit\n", 5);
 			break;
 		}
-		printf("gnl_result : %d\n", gnl_result);
+		// printf("gnl_result : %d\n", gnl_result);
 		token_list = lexer(line);
 		if (token_list == NULL)
 		{
 			free(line);
 			continue ;
 		}
-		print_token(token_list, "check token");
+		// print_token(token_list, "check token");
 
 		node = parser(token_list);
-		node_print(node, 0);
-		printf("----------------------------end node_print\n\n");
+		// node_print(node, 0);
+		// printf("----------------------------end node_print\n\n");
 
 		expansion(node, env, exit_status);
+		// print_token(token_list, "check token");
+		// printf("----------------------------end expansion_print\n\n");
+
 
 		init_fd(&fd);
 		execute(node, env, exit_status, &fd); //exitコマンド実行時にreturn(0)がくる

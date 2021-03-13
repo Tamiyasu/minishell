@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 15:10:30 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/13 18:27:50 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	execute_pwd(void)
 	cwdir = getcwd(NULL, 0);//このように引数を指定してあげると、getcwdの方で、buf[1024]で取ってくれる。
 	if (cwdir == NULL)
 	{
-		strerror(errno);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		return (1);
 	}
 	ft_putendl_fd(cwdir, 1);
