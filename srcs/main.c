@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/09 20:51:48 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/13 14:47:49 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 #include "libft.h"
 #include "get_next_line.h"
 #include "parser.h"
-
-#include <unistd.h>
+#include "signal_handler.h"
 
 void	free_args(char **args)
 {
@@ -110,6 +109,9 @@ int	main(int argc, char *argv[], char *envp[])
 	argc -= argc;//del
 	argv -= (long)argv;//del
 	exit_status = 0;//de;
+
+    signal(SIGINT, sig_handler);
+    signal(SIGQUIT, sig_handler);
 
 	msh_env_init(&env);
 	msh_env_make_data(&env, envp);
