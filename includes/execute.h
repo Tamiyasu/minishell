@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 00:36:19 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 00:56:16 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int		execute_export(t_lsttoken *token, t_env *env);
 int		execute_env(char **env_data);
 int		execute_pwd(void);
 int		execute_unset(t_lsttoken *token, t_env *env);
-void		init_fd(t_info_fd *fd);
+void	init_fd(t_info_fd *fd);
+void	reset_fd(t_info_fd *fd);
 
 /*
 ** unset, export

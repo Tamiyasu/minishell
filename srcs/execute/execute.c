@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 00:41:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 00:56:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <sys/stat.h>
 #include "execute.h"
 #include "libft.h"
+#include "signal_handler.h"
 
 void	init_fd(t_info_fd *fd)
 {
@@ -27,6 +28,16 @@ void	init_fd(t_info_fd *fd)
 	fd->save_stdout = dup(STDOUT_FILENO);
 	fd->save_stderr = dup(STDERR_FILENO);
 	fd->fd_num = -1;
+}
+
+void	reset_fd(t_info_fd *fd)
+{
+	dup2(fd->save_stdout, STDIN_FILENO);
+	close(fd->save_stdin);
+	dup2(fd->save_stdout, STDOUT_FILENO);
+	close(fd->save_stdout);
+	dup2(fd->save_stderr, STDERR_FILENO);
+	close(fd->save_stderr);
 }
 
 
@@ -127,9 +138,9 @@ void	redirect_close_fd(int save_fd, int close_fd)
 	}
 }
 
-void	exec_command(t_lsttoken *token, /*t_info_fd *fd,*/ t_env *env, int *exit_status, int flag)
+void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 {
-	pid_t	child_p;
+	//pid_t	child_p;
 	int		pid_status;
 
 	pid_status = 0;
@@ -149,14 +160,34 @@ void	exec_command(t_lsttoken *token, /*t_info_fd *fd,*/ t_env *env, int *exit_st
 	{
 		return ;
 	}
-	if (flag)
+	if (flag)//pipeがあり、子プロセスないでコマンドが実行される時(execveを実行するのにforkする必要なし)
 	{
-		command_execve(token,  env);
-	}
-	child_p = fork();
-	if (child_p == 0)
 		command_execve(token, env);
-	waitpid(child_p, &pid_status, 0);
+	}
+	// child_p = fork();
+	// if (child_p == 0)
+	// 	command_execve(token, env);
+	// waitpid(child_p, &pid_status, 0);
+
+
+	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
+	c_pid(fork());
+	if (c_pid(-1) == 0)
+	{
+		signal(SIGINT, sig_handler_c);
+		signal(SIGQUIT, sig_handler_c);
+		command_execve(token, env);
+	}
+	waitpid(c_pid(-1), &pid_status, 0);
+	if (pid_status == 2)
+		ft_putendl_fd("", STDOUT_FILENO);
+	else if (pid_status == 3)
+		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
+	signal(SIGINT, sig_handler_p);
+	signal(SIGQUIT, sig_handler_p);
+	c_pid(0);
 	*exit_status = WEXITSTATUS(pid_status);
 	// printf("WIFEXITED=[%d] WEXITSTATIS=[%d]\n\n", WIFEXITED(pid_status), WEXITSTATUS(pid_status));
 }
@@ -203,22 +234,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 
 	if (node->content->flag  == FT_COMMAND_F)
 	{
-		// if (ft_strcmp(node->content->data, "") == 0)
-		// {
-		// 	return ;
-		// }
-		// if (exec_check_builtin(node->content->data))
-		// {
-		// 	builtin_command(node->content, env, exit_status);
-		// 	return ;
-		// }
-		// //execve実行前に、commandがディレクトリ名で指定されていないかチェック
-		// if (exec_check_command_path(node->content->data, exit_status) == -1)
-		// {
-		// 	return ;
-		// }
-		// execute_execve(node->content,env);
-		exec_command(node->content, /*fd, */env, exit_status, 1);
+		exec_command(node->content, env, exit_status, 1);
 	}
 	else if (node->content->flag == FT_REDIRECT_I_F)
 	{
@@ -330,12 +346,13 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 	}
 	if (node->content->flag == FT_COMMAND_F)
 	{
-		exec_command(node->content, /*fd, */env, exit_status, 0);
-		dup2(fd->save_stdout, STDIN_FILENO);
-		close(fd->save_stdin);
-		dup2(fd->save_stdout, STDOUT_FILENO);
-		close(fd->save_stdout);
-		dup2(fd->save_stderr, STDERR_FILENO);
-		close(fd->save_stderr);
+		exec_command(node->content, env, exit_status, 0);
+		reset_fd(fd);
+		// dup2(fd->save_stdout, STDIN_FILENO);
+		// close(fd->save_stdin);
+		// dup2(fd->save_stdout, STDOUT_FILENO);
+		// close(fd->save_stdout);
+		// dup2(fd->save_stderr, STDERR_FILENO);
+		// close(fd->save_stderr);
 	}
 }
