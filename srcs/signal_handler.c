@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:48:02 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/13 18:43:40 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/13 19:20:23 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ void sig_handler_c(int signo)
 }
 void sig_handler_p(int signo)
 {
-    if (signo == SIGINT)
-        write(1, "\nminishell>> ", 13);
+    if (!c_pid(-1))
+    {    
+        if (signo == SIGINT)
+            write(1, "\nminishell-> ", 13);
+        //if (signo == SIGQUIT)
+        //    write(1, "\b \b\b  \b\b", 9);
+    }
 }

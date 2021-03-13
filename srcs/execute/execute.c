@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 18:43:56 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/13 20:48:09 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,7 @@ void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *ex
 	signal(SIGQUIT, sig_handler_p);
 	c_pid(0);
 	*exit_status = WEXITSTATUS(pid_status);
+	printf("*exit_status, pid_status : %d, %d\n",*exit_status, pid_status );
 }
 
 void	exec_command_in_childp(t_lsttoken *token, t_env *env, int *exit_status)
@@ -324,9 +325,12 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		return ;
 	if (node->content->flag == FT_SEMICOLON_F)
 	{
+		printf("------------------------ : \n");
 		execute(node->l_node, env, exit_status, fd);
+		printf("exit_status : %d\n", *exit_status);
 		init_fd(fd);
 		execute(node->r_node, env, exit_status, fd);
+		printf("exit_status : %d\n", *exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 		exec_pipe(node, env, exit_status, fd);
