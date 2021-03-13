@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 20:48:09 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/14 01:30:43 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,8 @@ void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *ex
 	signal(SIGINT, sig_handler_p);
 	signal(SIGQUIT, sig_handler_p);
 	c_pid(0);
+	printf("WIFEXITED(status) : %d\n", WIFEXITED(pid_status));
+	printf("WTERMSIG(status): %d \n", WTERMSIG(pid_status));
 	*exit_status = WEXITSTATUS(pid_status);
 	printf("*exit_status, pid_status : %d, %d\n",*exit_status, pid_status );
 }
@@ -313,6 +315,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		close(pipe_fd[WRITE]);
 		waitpid(child_p1, &status, 0);
 		waitpid(child_p2, &status, 0);
+		printf("%d\n", WIFEXITED(status));
 		*exit_status = WEXITSTATUS(status);
 	}
 }
