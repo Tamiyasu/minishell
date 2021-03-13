@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_execve.c                                   :+:      :+:    :+:   */
+/*   command_execve.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 20:46:11 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 00:35:44 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	**execve_format_args(t_lsttoken *token, char *command)
 	return (args);
 }
 
-void			execute_execve(t_lsttoken *token, t_env *env)
+void			command_execve(t_lsttoken *token, t_env *env)
 {
 	char	**args;
 	int		rc;
@@ -64,6 +64,7 @@ void			execute_execve(t_lsttoken *token, t_env *env)
 	{
 		free_args(args);
 		printf("errno=[%d]\n", errno);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(token->data, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);

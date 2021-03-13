@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/10 22:01:51 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/14 00:35:26 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRC_FILE	+= execute/execute.c
 SRC_FILE	+= execute/execute_cd.c
 SRC_FILE	+= execute/execute_echo.c
 SRC_FILE	+= execute/execute_env.c
-SRC_FILE	+= execute/execute_execve.c
+SRC_FILE	+= execute/command_execve.c
 SRC_FILE	+= execute/execute_exit.c
 SRC_FILE	+= execute/execute_export.c
 SRC_FILE	+= execute/execute_pwd.c

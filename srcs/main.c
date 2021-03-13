@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 18:18:15 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 00:17:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,13 @@ void	msh_loop(t_env *env, int *exit_status)
 
 		init_fd(&fd);
 		execute(node, env, exit_status, &fd); //exitコマンド実行時にreturn(0)がくる
+		dup2(fd.save_stdout, STDIN_FILENO);
+		close(fd.save_stdin);
+		dup2(fd.save_stdout, STDOUT_FILENO);
+		close(fd.save_stdout);
+		dup2(fd.save_stderr, STDERR_FILENO);
+		close(fd.save_stderr);
+
 		free_tree(&node);
 		free(line);
 		line = NULL;
