@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 20:00:13 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/14 20:16:36 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_info_fd	*fd_list_last(t_info_fd *fd)
 int get_exit_status(int pid_status)
 {
 	if (WIFSIGNALED(pid_status))
-		return (pid_status + 128);
+		return (WTERMSIG(pid_status) + 128);
 	else
 		return (WEXITSTATUS(pid_status));
 }
@@ -204,12 +204,6 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	{
 		command_execve(token, env);
 	}
-	// child_p = fork();
-	// if (child_p == 0)
-	// 	command_execve(token, env);
-	// waitpid(child_p, &pid_status, 0);
-
-
 	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
     signal(SIGINT, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
@@ -229,9 +223,6 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	signal(SIGQUIT, sig_handler_p);
 	c_pid(0);
 	*exit_status = get_exit_status(pid_status);
-
-	//*exit_status = WEXITSTATUS(pid_status);
-	// printf("WIFEXITED=[%d] WEXITSTATIS=[%d]\n\n", WIFEXITED(pid_status), WEXITSTATUS(pid_status));
 }
 
 int	redirect_file_open(char *file, int flag)
@@ -305,8 +296,6 @@ void	exec_redirect(t_parser_node *node, t_info_fd *fd,
 void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
 	int		pipe_fd[2];
-	//int		open_fd;
-	//int		fd_num;
 	int		status;
 	pid_t	child_p1;
 	pid_t	child_p2;
@@ -323,20 +312,6 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 			|| node->content->flag == FT_REDIRECT_O_F
 			|| node->content->flag == FT_REDIRECT_A_F)
 	{
-		// if (node->content->flag == FT_REDIRECT_I_F)
-		// 	fd_num = STDIN_FILENO;
-		// else
-		// 	fd_num = redirect_check_fdnum(node->content->data);
-		// open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
-		// if (!open_fd)
-		// 	return ;
-		// if (redirect_check_reserve(fd, fd_num))
-		// {
-		// 	fd = redirect_save_fd(fd, fd_num);
-		// 	dup2(open_fd, fd_num);
-		// }
-		// close(open_fd);
-		// exec_pipe(node->l_node, env, exit_status, fd);
 		exec_redirect(node, fd, env, exit_status, exec_pipe);
 	}
 	else if (node->content->flag == FT_PIPE_F)
@@ -371,9 +346,6 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 
 void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
-	// int	open_fd;
-	// int fd_num;
-
 	if (node == NULL)
 		return ;
 	else if (node->content->flag == FT_SEMICOLON_F)
@@ -389,20 +361,6 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 			|| node->content->flag == FT_REDIRECT_O_F
 			|| node->content->flag == FT_REDIRECT_A_F)
 	{
-		// if (node->content->flag == FT_REDIRECT_I_F)
-		// 	fd_num = STDIN_FILENO;
-		// else
-		// 	fd_num = redirect_check_fdnum(node->content->data);
-		// open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
-		// if (!open_fd)
-		// 	return ;
-		// if (redirect_check_reserve(fd, fd_num))
-		// {
-		// 	fd = redirect_save_fd(fd, fd_num);
-		// 	dup2(open_fd, fd_num);
-		// }
-		// close(open_fd);
-		// execute(node->l_node, env, exit_status, fd);
 		exec_redirect(node, fd, env, exit_status, execute);
 	}
 	else if (node->content->flag == FT_COMMAND_F)
