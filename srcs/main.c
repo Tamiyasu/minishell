@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 17:50:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 20:11:18 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,11 @@ t_lsttoken *find_first_commnd_node(t_parser_node *node)
 void	msh_loop(t_env *env, int *exit_status)
 {
 	char			*line;
-	//int		loop_status;
 	t_lsttoken		*token_list;
 	t_parser_node	*node;
 	t_info_fd		*fd;
 
 	line = NULL;
-	//loop_status = 1;
 	token_list =  NULL;
 	while (1)
 	{
