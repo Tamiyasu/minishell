@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 17:55:23 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 20:00:13 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,14 @@ t_info_fd	*fd_list_last(t_info_fd *fd)
 		return_fd = return_fd->next;
 	}
 	return (return_fd);
+}
+
+int get_exit_status(int pid_status)
+{
+	if (WIFSIGNALED(pid_status))
+		return (pid_status + 128);
+	else
+		return (WEXITSTATUS(pid_status));
 }
 
 void	fd_list_addback(t_info_fd **fd, t_info_fd *new)
@@ -220,7 +228,9 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	signal(SIGINT, sig_handler_p);
 	signal(SIGQUIT, sig_handler_p);
 	c_pid(0);
-	*exit_status = WEXITSTATUS(pid_status);
+	*exit_status = get_exit_status(pid_status);
+
+	//*exit_status = WEXITSTATUS(pid_status);
 	// printf("WIFEXITED=[%d] WEXITSTATIS=[%d]\n\n", WIFEXITED(pid_status), WEXITSTATUS(pid_status));
 }
 
@@ -295,8 +305,8 @@ void	exec_redirect(t_parser_node *node, t_info_fd *fd,
 void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
 	int		pipe_fd[2];
-	int		open_fd;
-	int		fd_num;
+	//int		open_fd;
+	//int		fd_num;
 	int		status;
 	pid_t	child_p1;
 	pid_t	child_p2;
@@ -355,7 +365,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		close(pipe_fd[WRITE]);
 		waitpid(child_p1, &status, 0);
 		waitpid(child_p2, &status, 0);
-		*exit_status = WEXITSTATUS(status);
+		*exit_status = get_exit_status(status);
 	}
 }
 
