@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 01:00:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 17:50:02 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	msh_loop(t_env *env, int *exit_status)
 	//int		loop_status;
 	t_lsttoken		*token_list;
 	t_parser_node	*node;
-	t_info_fd		fd;
+	t_info_fd		*fd;
 
 	line = NULL;
 	//loop_status = 1;
@@ -89,9 +89,11 @@ void	msh_loop(t_env *env, int *exit_status)
 		// printf("----------------------------end expansion_print\n\n");
 
 
-		init_fd(&fd);
-		execute(node, env, exit_status, &fd); //exitコマンド実行時にreturn(0)がくる
-		reset_fd(&fd);
+		//init_fd(&fd);
+		fd = NULL;
+		execute(node, env, exit_status, fd); //exitコマンド実行時にreturn(0)がくる
+		reset_fd(fd);
+		free_fd(&fd);
 
 		free_tree(&node);
 		free(line);

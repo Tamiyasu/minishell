@@ -6,38 +6,76 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 01:17:59 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 17:55:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <stat.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "execute.h"
 #include "libft.h"
 #include "signal_handler.h"
 
-void	init_fd(t_info_fd *fd)
+t_info_fd	*fd_list_last(t_info_fd *fd)
 {
-	// fd->redirect_i = -1;
-	// fd->redirect_o = -1;
-	// fd->redirect_err = -1;
-	// fd->save_stdin = -1;
-	// fd->save_stdout = -1;
-	fd->save_stdin = dup(STDIN_FILENO);
-	fd->save_stdout = dup(STDOUT_FILENO);
-	fd->save_stderr = dup(STDERR_FILENO);
-	fd->fd_num = -1;
+	t_info_fd	*return_fd;
+
+	return_fd = fd;
+	while (return_fd && return_fd->next)
+	{
+		return_fd = return_fd->next;
+	}
+	return (return_fd);
+}
+
+void	fd_list_addback(t_info_fd **fd, t_info_fd *new)
+{
+	if (*fd)
+		fd_list_last(*fd)->next = new;
+	else
+			*fd = new;
+}
+
+t_info_fd	*fd_list_new(int fd_num, int fd_save)
+{
+	t_info_fd	*fd;
+
+	fd = malloc(sizeof(t_info_fd));
+	if (fd)
+	{
+		fd->fd_num = fd_num;
+		fd->fd_save = fd_save;
+		fd->next = NULL;
+	}
+	return (fd);
+}
+
+void	free_fd(t_info_fd **fd)
+{
+
+	t_info_fd *temp;
+	t_info_fd *temp_next;
+
+	temp = *fd;
+	while (temp != NULL)
+	{
+		temp_next = temp->next;
+		free(temp);
+		temp = temp_next;
+	}
+	*fd = NULL;
 }
 
 void	reset_fd(t_info_fd *fd)
 {
-	dup2(fd->save_stdout, STDIN_FILENO);
-	close(fd->save_stdin);
-	dup2(fd->save_stdout, STDOUT_FILENO);
-	close(fd->save_stdout);
-	dup2(fd->save_stderr, STDERR_FILENO);
-	close(fd->save_stderr);
+	if (!fd)
+		return ;
+	while (fd)
+	{
+		dup2(fd->fd_save, fd->fd_num);
+		close(fd->fd_save);
+		fd = fd->next;
+	}
 }
 
 
@@ -120,13 +158,16 @@ void	command_builtin(t_lsttoken *token, t_env *env, int *exit_status)
 	return ;
 }
 
-void	 redirect_check_fdnum(t_info_fd *fd, char *data)
+int	 redirect_check_fdnum(char *data)
 {
-		fd->fd_num = ft_atoi(data);
-		if (fd->fd_num == 0)
-		{
-			fd->fd_num = 1;
-		}
+	int	fd_num;
+
+	fd_num = ft_atoi(data);
+	if (fd_num == 0)
+	{
+		fd_num = 1;
+	}
+	return (fd_num);
 }
 
 void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
@@ -183,24 +224,13 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	// printf("WIFEXITED=[%d] WEXITSTATIS=[%d]\n\n", WIFEXITED(pid_status), WEXITSTATUS(pid_status));
 }
 
-int	redirect_in_check_open(char *file)
+int	redirect_file_open(char *file, int flag)
 {
 	int	open_fd;
 
-	open_fd = open(file, O_RDONLY);
-	if (!open_fd)
-	{
-		ft_putendl_fd(strerror(errno), STDOUT_FILENO);
-		return (open_fd);
-	}
-	return (open_fd);
-}
-
-int	redirect_out_check_open(char *file, int flag)
-{
-	int	open_fd;
-
-	if (flag == FT_REDIRECT_O_F)
+	if (flag == FT_REDIRECT_I_F)
+		open_fd = open(file, O_RDONLY);
+	else if (flag == FT_REDIRECT_O_F)
 		open_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	else
 		open_fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -212,10 +242,61 @@ int	redirect_out_check_open(char *file, int flag)
 	return (open_fd);
 }
 
+t_info_fd	*redirect_save_fd(t_info_fd *fd, int fd_num)//dupで保存はSTDINやSTDOUTなどのfd_num, fd_numがすでに存在していたらなし
+{
+	t_info_fd *new_fd;
+
+	if (fd == NULL)
+	{
+		fd = fd_list_new(fd_num, dup(fd_num));
+		return (fd);
+	}
+	new_fd = fd_list_new(fd_num, dup(fd_num));
+	fd_list_addback(&fd, new_fd);
+	return (fd);
+}
+
+int	redirect_check_reserve(t_info_fd *fd, int fd_num)
+{
+	while (fd)
+	{
+		if (fd->fd_num == fd_num)
+		{
+			return (0);
+		}
+		fd = fd->next;
+	}
+	return (1);
+}
+
+void	exec_redirect(t_parser_node *node, t_info_fd *fd,
+						t_env *env, int *exit_status,
+						void (*func)(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd))
+{
+	int	fd_num;
+	int open_fd;
+
+	if (node->content->flag == FT_REDIRECT_I_F)
+		fd_num = STDIN_FILENO;
+	else
+		fd_num = redirect_check_fdnum(node->content->data);
+	open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
+	if (!open_fd)
+		return ;
+	if (redirect_check_reserve(fd, fd_num))
+	{
+		fd = redirect_save_fd(fd, fd_num);
+		dup2(open_fd, fd_num);
+	}
+	close(open_fd);
+	func(node->l_node, env, exit_status, fd);
+}
+
 void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
 	int		pipe_fd[2];
 	int		open_fd;
+	int		fd_num;
 	int		status;
 	pid_t	child_p1;
 	pid_t	child_p2;
@@ -228,29 +309,25 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		exec_command(node->content, env, exit_status, 1);
 		return ;
 	}
-	else if (node->content->flag == FT_REDIRECT_I_F)
+	else if (node->content->flag == FT_REDIRECT_I_F
+			|| node->content->flag == FT_REDIRECT_O_F
+			|| node->content->flag == FT_REDIRECT_A_F)
 	{
-		if ((open_fd = redirect_in_check_open(node->r_node->content->data))== -1)
-			return ;
-		dup2(open_fd, STDIN_FILENO);
-		exec_pipe(node->l_node, env, exit_status, fd);
-	}
-	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
-	{
-		redirect_check_fdnum(fd, node->content->data);
-		if ((open_fd = redirect_out_check_open(node->r_node->content->data, node->content->flag)) == -1)
-			return ;
-		if (fd->fd_num == STDERR_FILENO)
-		{
-			dup2(open_fd, STDERR_FILENO);
-			close(open_fd);
-		}
-		else
-		{
-			dup2(open_fd, fd->fd_num);
-			close(open_fd);
-		}
-		exec_pipe(node->l_node, env, exit_status, fd);
+		// if (node->content->flag == FT_REDIRECT_I_F)
+		// 	fd_num = STDIN_FILENO;
+		// else
+		// 	fd_num = redirect_check_fdnum(node->content->data);
+		// open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
+		// if (!open_fd)
+		// 	return ;
+		// if (redirect_check_reserve(fd, fd_num))
+		// {
+		// 	fd = redirect_save_fd(fd, fd_num);
+		// 	dup2(open_fd, fd_num);
+		// }
+		// close(open_fd);
+		// exec_pipe(node->l_node, env, exit_status, fd);
+		exec_redirect(node, fd, env, exit_status, exec_pipe);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 	{
@@ -284,46 +361,41 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 
 void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
-	int	open_fd;
+	// int	open_fd;
+	// int fd_num;
 
 	if (node == NULL)
-	{
 		return ;
-	}
-	if (node->content->flag == FT_SEMICOLON_F)
+	else if (node->content->flag == FT_SEMICOLON_F)
 	{
 		execute(node->l_node, env, exit_status, fd);
 		reset_fd(fd);
+		free_fd(&fd);
 		execute(node->r_node, env, exit_status, fd);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 		exec_pipe(node, env, exit_status, fd);
-	else if (node->content->flag == FT_REDIRECT_I_F)
+	else if (node->content->flag == FT_REDIRECT_I_F
+			|| node->content->flag == FT_REDIRECT_O_F
+			|| node->content->flag == FT_REDIRECT_A_F)
 	{
-		if ((open_fd = redirect_in_check_open(node->r_node->content->data)) == -1)
-			return ;
-		dup2(open_fd, STDIN_FILENO);
-		close(open_fd);
-		execute(node->l_node, env, exit_status, fd);
+		// if (node->content->flag == FT_REDIRECT_I_F)
+		// 	fd_num = STDIN_FILENO;
+		// else
+		// 	fd_num = redirect_check_fdnum(node->content->data);
+		// open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
+		// if (!open_fd)
+		// 	return ;
+		// if (redirect_check_reserve(fd, fd_num))
+		// {
+		// 	fd = redirect_save_fd(fd, fd_num);
+		// 	dup2(open_fd, fd_num);
+		// }
+		// close(open_fd);
+		// execute(node->l_node, env, exit_status, fd);
+		exec_redirect(node, fd, env, exit_status, execute);
 	}
-	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
-	{
-		redirect_check_fdnum(fd, node->content->data);// >に指定された数字をfd->fd_numに保存
-		if ((open_fd = redirect_out_check_open(node->r_node->content->data, node->content->flag)) == -1)
-			return ;
-		if (fd->fd_num == STDERR_FILENO)
-		{
-			dup2(open_fd, STDERR_FILENO);
-			close(open_fd);
-		}
-		else
-		{
-			dup2(open_fd, fd->fd_num);
-			close(open_fd);
-		}
-		execute(node->l_node, env, exit_status, fd);
-	}
-	if (node->content->flag == FT_COMMAND_F)
+	else if (node->content->flag == FT_COMMAND_F)
 	{
 		exec_command(node->content, env, exit_status, 0);
 		reset_fd(fd);
