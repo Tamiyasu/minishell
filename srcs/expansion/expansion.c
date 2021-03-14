@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 22:00:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/14 19:54:10 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,14 @@ char	*save_env_data(t_env *env, char *new_data, char *token_data, int *start, in
 
 char	*set_environment_data(char *token_data, char *new_data, int *start, int *data_len, int *idx, t_env *env, int exit_status)
 {
+	char *exit_status_str;
+
 	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
 	if (token_data[*idx] == '?')
 	{
-		new_data = replace_variables_with_values(new_data, ft_itoa(exit_status));
+		exit_status_str = ft_itoa(exit_status);
+		new_data = replace_variables_with_values(new_data, exit_status_str);
+		free(exit_status_str);
 		*idx = (*idx + 1);
 		*start = *idx;
 	}
