@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
 /*   Updated: 2021/03/14 20:16:36 by ysaito           ###   ########.fr       */
@@ -26,6 +26,14 @@ t_info_fd	*fd_list_last(t_info_fd *fd)
 		return_fd = return_fd->next;
 	}
 	return (return_fd);
+}
+
+int get_exit_status(int pid_status)
+{
+	if (WIFSIGNALED(pid_status))
+		return (WTERMSIG(pid_status) + 128);
+	else
+		return (WEXITSTATUS(pid_status));
 }
 
 void	fd_list_addback(t_info_fd **fd, t_info_fd *new)
@@ -214,19 +222,7 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	signal(SIGINT, sig_handler_p);
 	signal(SIGQUIT, sig_handler_p);
 	c_pid(0);
-	// *exit_status = WEXITSTATUS(pid_status);
-	if (WIFEXITED(pid_status))//子プロセスが正常終了時に真を返す
-	{
-		printf("WEXITSTATUS=[%d]\n", WEXITSTATUS(pid_status));
-		*exit_status = WEXITSTATUS(pid_status);//子プロセスの終了ステータスを返す。
-	}
-	if (WIFSIGNALED(pid_status))//子プロセスがシグナルにより終了した時真を返す
-	{
-		printf("WTERMSIG[%d] WCOREDUMP=[%d]\n", WTERMSIG(pid_status), WCOREDUMP(pid_status));
-		*exit_status = 128 + WTERMSIG(pid_status);//子プロセス終了の原因となったシグナルの番号を返す
-	}
-	// if (WIFSTOPPED(pid_status) != 0)//子プロセスがシグナルの配送により停止した場合に真を返す
-	// 	printf("WSTOPSIG=[%d]\n\n", WSTOPSIG(pid_status));//子プロセスを停止させたシグナルの番号を返す。
+	*exit_status = get_exit_status(pid_status);
 }
 
 int	redirect_file_open(char *file, int flag)
@@ -344,7 +340,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		close(pipe_fd[WRITE]);
 		waitpid(child_p1, &status, 0);
 		waitpid(child_p2, &status, 0);
-		*exit_status = WEXITSTATUS(status);
+		*exit_status = get_exit_status(status);
 	}
 }
 
