@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/03 14:56:36 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/13 18:27:24 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ static long long exit_atoi(t_lsttoken *token)
 
 void	exit_num_arg_err(char *data)
 {
-	ft_putendl_fd("exit", 1);
-	ft_putstr_fd("minishell: exit: ", 1);
-	ft_putstr_fd(data, 1);
-	ft_putendl_fd(": numeric argument required", 1);
+	ft_putendl_fd("exit", STDERR_FILENO);
+	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+	ft_putstr_fd(data, STDERR_FILENO);
+	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
 	// *exit_status = 255;
 	// return (EXIT_SUCCESS);
 }
@@ -108,8 +108,8 @@ void	execute_exit(t_lsttoken *token, int *exit_status)
 	}
 	if (exit_check_argsnum(token) != 1)
 	{
-		ft_putendl_fd("exit", 1);
-		ft_putendl_fd("bash: exit: too many arguments", 1);
+		ft_putendl_fd("exit", STDERR_FILENO);
+		ft_putendl_fd("bash: exit: too many arguments", STDERR_FILENO);
 		*exit_status = 1;
 		exit (*exit_status);
 	}

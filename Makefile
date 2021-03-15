@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/13 14:50:35 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/03/14 00:48:01 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,12 +19,12 @@ SRC_FILE	+= signal_handler.c
 SRC_FILE	+= lexer/lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
 SRC_FILE    += parser/parser.c
-#SRC_FILE	+= expansion/expansion.c
+SRC_FILE	+= expansion/expansion.c
 SRC_FILE	+= execute/execute.c
 SRC_FILE	+= execute/execute_cd.c
 SRC_FILE	+= execute/execute_echo.c
 SRC_FILE	+= execute/execute_env.c
-SRC_FILE	+= execute/execute_execve.c
+SRC_FILE	+= execute/command_execve.c
 SRC_FILE	+= execute/execute_exit.c
 SRC_FILE	+= execute/execute_export.c
 SRC_FILE	+= execute/execute_pwd.c

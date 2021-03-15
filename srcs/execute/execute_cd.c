@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/02 20:53:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/13 18:25:56 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 static void	cd_output_error(char *str)
 {
-	ft_putstr_fd("minishell: cd: ", 1);
-	ft_putstr_fd(str, 1);
-	ft_putendl_fd(": No such file or directory", 1);
+	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 }
 
 static void	cd_update_envpwd(t_env *env)
@@ -59,7 +59,7 @@ int	execute_cd(t_lsttoken *token, t_env *env)
 		idx = msh_env_search(env->data, "HOME");
 		if (idx == -1)  /* 環境変数HOMEが存在しない時 */
 		{
-			ft_putendl_fd("minishell: cd: HOME not set", 1);
+			ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 			return (1);
 		}
 		env_home = ft_strdup(&env->data[idx][5]);

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/14 01:33:34 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/15 23:22:53 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
 {
     t_lsttoken *token_i;
 
-    printf("in add_back new : %s\n", new->data);
+    // printf("in add_back new : %s\n", new->data);
     if (!(*token))
     {
-        printf("it ________________________new!");
+        // printf("it ________________________new!");
         *token = new;
         return(new);
     }
-    printf("in add_back *token : %s\n", (*token)->data);
+    // printf("in add_back *token : %s\n", (*token)->data);
     token_i = *token;
     while (token_i->next)
     {
@@ -213,7 +213,7 @@ t_parser_node   *parser(t_lsttoken *token_list)
     last_type = FT_EMPTY_F;
     c_type = FT_EMPTY_F;
 
-    printf("in parser\n");
+    // printf("in parser\n");
     token = token_list;
     node = malloc(sizeof(t_parser_node));
     node->content = NULL;

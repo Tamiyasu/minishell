@@ -6,23 +6,84 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 01:30:43 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/15 23:22:57 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sys/types.h"
-#include "sys/stat.h"
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "execute.h"
 #include "libft.h"
 #include "signal_handler.h"
 
-void	init_fd(t_info_fd *fd)
+t_info_fd	*fd_list_last(t_info_fd *fd)
 {
-	fd->redirect_i = -1;
-	fd->redirect_o = -1;
-	fd->save_stdin = -1;
-	fd->save_stdout = -1;
-	fd->fd_num = -1;
+	t_info_fd	*return_fd;
+
+	return_fd = fd;
+	while (return_fd && return_fd->next)
+	{
+		return_fd = return_fd->next;
+	}
+	return (return_fd);
+}
+
+int get_exit_status(int pid_status)
+{
+	if (WIFSIGNALED(pid_status))
+		return (WTERMSIG(pid_status) + 128);
+	else
+		return (WEXITSTATUS(pid_status));
+}
+
+void	fd_list_addback(t_info_fd **fd, t_info_fd *new)
+{
+	if (*fd)
+		fd_list_last(*fd)->next = new;
+	else
+			*fd = new;
+}
+
+t_info_fd	*fd_list_new(int fd_num, int fd_save)
+{
+	t_info_fd	*fd;
+
+	fd = malloc(sizeof(t_info_fd));
+	if (fd)
+	{
+		fd->fd_num = fd_num;
+		fd->fd_save = fd_save;
+		fd->next = NULL;
+	}
+	return (fd);
+}
+
+void	free_fd(t_info_fd **fd)
+{
+
+	t_info_fd *temp;
+	t_info_fd *temp_next;
+
+	temp = *fd;
+	while (temp != NULL)
+	{
+		temp_next = temp->next;
+		free(temp);
+		temp = temp_next;
+	}
+	*fd = NULL;
+}
+
+void	reset_fd(t_info_fd *fd)
+{
+	if (!fd)
+		return ;
+	while (fd)
+	{
+		dup2(fd->fd_save, fd->fd_num);
+		close(fd->fd_save);
+		fd = fd->next;
+	}
 }
 
 
@@ -41,54 +102,38 @@ int	exec_check_builtin(char *token_data)
 	return (0);
 }
 
-void	exec_search_command_path(t_lsttoken *token, t_env *env)
+int	exec_check_command_path(char *command, int *exit_status)
 {
-	char			**path_value;
-	int				idx;
-	DIR				*dp;
-	struct dirent	*dirp;
-	char			*tmp;
+	struct stat		stat_buf;
 
-
-	if (token->data[0] == '.' || token->data[0] == '/')
+	if (ft_strchr(command, '/') == 0)
 	{
-		return ;
+		*exit_status = 127;
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(command, STDERR_FILENO);
+		ft_putendl_fd(": command not found", STDERR_FILENO);
+		return (-1);
 	}
-	idx = msh_env_search(env->data, "PATH");
-	path_value = ft_split(&env->data[idx][5], ':');
-	idx= 0;
-	while (path_value[idx] != NULL)
+	if (command[0] == '.')
 	{
-		dp = opendir(path_value[idx]);
-		if (dp == NULL)
-		{
-			ft_putendl_fd(strerror(errno), 1);
-			return ;
-		}
-		while ((dirp = readdir(dp)) != NULL)
-		{
-			if (ft_strcmp(token->data, dirp->d_name) == 0)
-			{
-				tmp = ft_strjoin("/", token->data);
-				free(token->data);
-				token->data = ft_strjoin(path_value[idx],  tmp);
-				free(tmp);
-				tmp = NULL;
-				closedir(dp);
-				free_args(path_value);
-				return ;
-			}
-		}
-		closedir(dp);
-		idx++;
+		return (0);
 	}
-	free_args(path_value);
+	lstat(command, &stat_buf);
+	if ((stat_buf.st_mode & S_IFMT) == 0040000)
+	{
+		*exit_status = 126;
+		ft_putstr_fd(command, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(strerror(21), STDERR_FILENO);
+		return (-1);
+	}
+	return (0);
 }
 
 /*
 ** コマンドを実行する　returnで終了ステータスを返す.
 */
-void	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
+void	command_builtin(t_lsttoken *token, t_env *env, int *exit_status)
 {
 	if (ft_strcmp(token->data, "cd") == 0)
 	{
@@ -118,77 +163,48 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status)
 	{
 		execute_exit(token, exit_status);
 	}
-	else
-	{
-		execute_execve(token, env);
-	}
 	return ;
 }
 
-void	redirect_exec_dup(t_info_fd *fd)
+int	 redirect_check_fdnum(char *data)
 {
-	if (fd->redirect_i != -1)
+	int	fd_num;
+
+	fd_num = ft_atoi(data);
+	if (fd_num == 0)
 	{
-		dup2(fd->redirect_i, STDIN_FILENO);
-		close(fd->redirect_i);
+		fd_num = 1;
 	}
-	if (fd->redirect_o != -1)
-	{
-		dup2(fd->redirect_o, fd->fd_num);
-		close(fd->redirect_o);
-	}
+	return (fd_num);
 }
 
-void	redirect_check_fdnum(t_info_fd *fd, char *data)
-{
-		fd->fd_num = ft_atoi(data);
-		if (fd->fd_num == 0)
-		{
-			fd->fd_num = 1;
-		}
-}
-
-void	redirect_save_fd(t_info_fd *fd, int dup_fd, int open_fd)
-{
-	if (dup_fd == STDIN_FILENO)
-	{
-		if (fd->save_stdin == -1)
-		{
-			fd->save_stdin = dup(dup_fd);
-			fd->redirect_i = open_fd;
-		}
-	}
-	else
-	{
-		if (fd->save_stdout == -1)
-		{
-			fd->save_stdout = dup(dup_fd);
-			fd->redirect_o = open_fd;
-		}
-	}
-}
-
-void	redirect_close_fd(int save_fd, int close_fd)
-{
-	if (save_fd != -1)
-	{
-		dup2(save_fd, close_fd);
-		close(save_fd);
-	}
-}
-
-void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *exit_status)
+void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 {
 	//pid_t	child_p;
 	int		pid_status;
 
-	redirect_exec_dup(fd);
-	if (exec_check_builtin(node->content->data))
+	pid_status = 0;
+
+	// printf("--------------------------------simple_command()\nfd->save_stdin[%d] redirect_i[%d] save_stdout[%d] redirect_o[%d] save_stderr[%d] redirect_err[%d]\n\n", fd->save_stdin, fd->redirect_i, fd->save_stdout, fd->redirect_o, fd->save_stderr, fd->redirect_err);
+	if (ft_strcmp(token->data, "") == 0)
 	{
-		exec_command(node->content, env, exit_status);
 		return ;
 	}
-	exec_search_command_path(node->content, env);
+	if (exec_check_builtin(token->data))
+	{
+		command_builtin(token, env, exit_status);
+		return ;
+	}
+	//execve実行前に、commandがディレクトリ名で指定されていないかチェック
+	if (exec_check_command_path(token->data, exit_status) == -1)
+	{
+		return ;
+	}
+	if (flag)//pipeがあり、子プロセスないでコマンドが実行される時(execveを実行するのにforkする必要なし)
+	{
+		command_execve(token, env);
+	}
+	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
     signal(SIGINT, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
 	c_pid(fork());
@@ -196,49 +212,26 @@ void	exec_simple_command(t_parser_node *node, t_info_fd *fd, t_env *env, int *ex
 	{
 		signal(SIGINT, sig_handler_c);
 		signal(SIGQUIT, sig_handler_c);
-		execute_execve(node->content,env);
+		command_execve(token, env);
 	}
 	waitpid(c_pid(-1), &pid_status, 0);
 	if (pid_status == 2)
-		ft_putendl_fd("", STDOUT_FILENO);	
+		ft_putendl_fd("", STDOUT_FILENO);
 	else if (pid_status == 3)
 		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
 	signal(SIGINT, sig_handler_p);
 	signal(SIGQUIT, sig_handler_p);
 	c_pid(0);
-	printf("WIFEXITED(status) : %d\n", WIFEXITED(pid_status));
-	printf("WTERMSIG(status): %d \n", WTERMSIG(pid_status));
-	*exit_status = WEXITSTATUS(pid_status);
-	printf("*exit_status, pid_status : %d, %d\n",*exit_status, pid_status );
+	*exit_status = get_exit_status(pid_status);
 }
 
-void	exec_command_in_childp(t_lsttoken *token, t_env *env, int *exit_status)
-{
-	if (!(exec_check_builtin(token->data)))
-	{
-		exec_search_command_path(token, env);
-	}
-	exec_command(token, env, exit_status);
-}
-
-int	redirect_in_check_open(char *file)
+int	redirect_file_open(char *file, int flag)
 {
 	int	open_fd;
 
-	open_fd = open(file, O_RDONLY);
-	if (!open_fd)
-	{
-		ft_putendl_fd(strerror(errno), STDOUT_FILENO);
-		return (open_fd);
-	}
-	return (open_fd);
-}
-
-int	redirect_out_check_open(char *file, int flag)
-{
-	int	open_fd;
-
-	if (flag == FT_REDIRECT_O_F)
+	if (flag == FT_REDIRECT_I_F)
+		open_fd = open(file, O_RDONLY);
+	else if (flag == FT_REDIRECT_O_F)
 		open_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	else
 		open_fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -250,10 +243,59 @@ int	redirect_out_check_open(char *file, int flag)
 	return (open_fd);
 }
 
+t_info_fd	*redirect_save_fd(t_info_fd *fd, int fd_num)//dupで保存はSTDINやSTDOUTなどのfd_num, fd_numがすでに存在していたらなし
+{
+	t_info_fd *new_fd;
+
+	if (fd == NULL)
+	{
+		fd = fd_list_new(fd_num, dup(fd_num));
+		return (fd);
+	}
+	new_fd = fd_list_new(fd_num, dup(fd_num));
+	fd_list_addback(&fd, new_fd);
+	return (fd);
+}
+
+int	redirect_check_reserve(t_info_fd *fd, int fd_num)
+{
+	while (fd)
+	{
+		if (fd->fd_num == fd_num)
+		{
+			return (0);
+		}
+		fd = fd->next;
+	}
+	return (1);
+}
+
+void	exec_redirect(t_parser_node *node, t_info_fd *fd,
+						t_env *env, int *exit_status,
+						void (*func)(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd))
+{
+	int	fd_num;
+	int open_fd;
+
+	if (node->content->flag == FT_REDIRECT_I_F)
+		fd_num = STDIN_FILENO;
+	else
+		fd_num = redirect_check_fdnum(node->content->data);
+	open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
+	if (!open_fd)
+		return ;
+	if (redirect_check_reserve(fd, fd_num))
+	{
+		fd = redirect_save_fd(fd, fd_num);
+		dup2(open_fd, fd_num);
+	}
+	close(open_fd);
+	func(node->l_node, env, exit_status, fd);
+}
+
 void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
 	int		pipe_fd[2];
-	int		open_fd;
 	int		status;
 	pid_t	child_p1;
 	pid_t	child_p2;
@@ -263,25 +305,14 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 
 	if (node->content->flag  == FT_COMMAND_F)
 	{
-		redirect_exec_dup(fd);
-		exec_command_in_childp(node->content, env, exit_status);
+		exec_command(node->content, env, exit_status, 1);
+		return ;
 	}
-	else if (node->content->flag == FT_REDIRECT_I_F)
+	else if (node->content->flag == FT_REDIRECT_I_F
+			|| node->content->flag == FT_REDIRECT_O_F
+			|| node->content->flag == FT_REDIRECT_A_F)
 	{
-		if ((open_fd = redirect_in_check_open(node->r_node->content->data))== -1)
-			return ;
-		fd->redirect_i = open_fd;
-		exec_pipe(node->l_node, env, exit_status, fd);
-		close(fd->redirect_i);
-	}
-	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
-	{
-		redirect_check_fdnum(fd, node->content->data);
-		if ((open_fd = redirect_out_check_open(node->r_node->content->data, node->content->flag)) == -1)
-			return ;
-		fd->redirect_o = open_fd;
-		exec_pipe(node->l_node, env, exit_status, fd);
-		close(fd->redirect_o);
+		exec_redirect(node, fd, env, exit_status, exec_pipe);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 	{
@@ -289,71 +320,54 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		child_p1 = fork();
 		if (child_p1 == 0)
 		{
+			// printf("next node->data[%s]\n",  node->l_node->content->data);
 			close(pipe_fd[READ]);
-			dup2(pipe_fd[WRITE], 1);
+			dup2(pipe_fd[WRITE], STDOUT_FILENO);
 			close(pipe_fd[WRITE]);
 			exec_pipe(node->l_node, env, exit_status, fd);
-			redirect_exec_dup(fd);
-			exec_command_in_childp(node->content, env, exit_status);
 			exit(*exit_status);
 		}
 		child_p2 = fork();
 		if (child_p2 == 0)
 		{
 			close(pipe_fd[WRITE]);
-			dup2(pipe_fd[READ], 0);
+			dup2(pipe_fd[READ], STDIN_FILENO);
 			close(pipe_fd[READ]);
-			if (node->r_node->content->flag != FT_COMMAND_F)
-			{
-				exec_pipe(node->r_node, env, exit_status, fd);
-				//return ;
-			}
-			exec_command_in_childp(node->r_node->content, env, exit_status);
+			exec_pipe(node->r_node, env, exit_status, fd);
 			exit(*exit_status);
 		}
 		close(pipe_fd[READ]);
 		close(pipe_fd[WRITE]);
 		waitpid(child_p1, &status, 0);
 		waitpid(child_p2, &status, 0);
-		printf("%d\n", WIFEXITED(status));
-		*exit_status = WEXITSTATUS(status);
+		*exit_status = get_exit_status(status);
 	}
 }
 
 void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 {
-	int			open_fd;
-
 	if (node == NULL)
 		return ;
-	if (node->content->flag == FT_SEMICOLON_F)
+	else if (node->content->flag == FT_SEMICOLON_F)
 	{
 		printf("------------------------ : \n");
 		execute(node->l_node, env, exit_status, fd);
-		printf("exit_status : %d\n", *exit_status);
-		init_fd(fd);
+		reset_fd(fd);
+		free_fd(&fd);
 		execute(node->r_node, env, exit_status, fd);
 		printf("exit_status : %d\n", *exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 		exec_pipe(node, env, exit_status, fd);
-	else if (node->content->flag == FT_REDIRECT_I_F)
+	else if (node->content->flag == FT_REDIRECT_I_F
+			|| node->content->flag == FT_REDIRECT_O_F
+			|| node->content->flag == FT_REDIRECT_A_F)
 	{
-		if ((open_fd = redirect_in_check_open(node->r_node->content->data)) == -1)
-			return ;
-		redirect_save_fd(fd, STDIN_FILENO, open_fd);
-		execute(node->l_node, env, exit_status, fd);
-		redirect_close_fd(fd->save_stdin, STDIN_FILENO);
+		exec_redirect(node, fd, env, exit_status, execute);
 	}
-	else if (node->content->flag == FT_REDIRECT_O_F || node->content->flag == FT_REDIRECT_A_F)
+	else if (node->content->flag == FT_COMMAND_F)
 	{
-		redirect_check_fdnum(fd, node->content->data);
-		if ((open_fd = redirect_out_check_open(node->r_node->content->data, node->content->flag)) == -1)
-			return ;
-		redirect_save_fd(fd, fd->fd_num, open_fd);
-		execute(node->l_node, env, exit_status, fd);
-		redirect_close_fd(fd->save_stdout, fd->fd_num);
+		exec_command(node->content, env, exit_status, 0);
+		reset_fd(fd);
 	}
-	if (node->content->flag == FT_COMMAND_F)
-		exec_simple_command(node, fd, env, exit_status);
 }
