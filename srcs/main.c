@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 20:11:18 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 00:58:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,11 @@ void	msh_loop(t_env *env, int *exit_status)
 	while (1)
 	{
 		ft_putstr_fd("minishell>> ", 1);
+		signal(SIGINT, sig_handler_p);
+		signal(SIGQUIT, sig_handler_p);
 		int gnl_result = get_next_line(&line);
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		if (gnl_result == GNL_ERR)
 		{
 			// printf("here !\n");
@@ -107,10 +111,6 @@ int	main(int argc, char *argv[], char *envp[])
 	argc -= argc;//del
 	argv -= (long)argv;//del
 	exit_status = 0;//de;
-
-    signal(SIGINT, sig_handler_p);
-    signal(SIGQUIT, sig_handler_p);
-
 	msh_env_init(&env);
 	msh_env_make_data(&env, envp);
 	if (env.data == NULL)

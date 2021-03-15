@@ -6,12 +6,13 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:48:02 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/13 19:20:23 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/16 01:23:47 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signal_handler.h"
 #include <stdio.h>
+#include "libft.h"
 
 pid_t c_pid(pid_t t)
 {
@@ -31,8 +32,6 @@ void sig_handler_p(int signo)
     if (!c_pid(-1))
     {    
         if (signo == SIGINT)
-            write(1, "\nminishell-> ", 13);
-        //if (signo == SIGQUIT)
-        //    write(1, "\b \b\b  \b\b", 9);
+            write(1, "\nminishell>> ", 13);
     }
 }

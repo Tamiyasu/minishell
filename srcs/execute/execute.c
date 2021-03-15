@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/15 23:22:57 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/16 01:24:35 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ int	 redirect_check_fdnum(char *data)
 
 void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 {
-	//pid_t	child_p;
+	pid_t	child_p;
 	int		pid_status;
 
 	pid_status = 0;
@@ -205,23 +205,21 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 		command_execve(token, env);
 	}
 	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
-    signal(SIGINT, SIG_IGN);
-    signal(SIGQUIT, SIG_IGN);
-	c_pid(fork());
-	if (c_pid(-1) == 0)
+	signal(SIGINT, sig_handler_c);
+	signal(SIGQUIT, sig_handler_c);
+	child_p = fork();
+	if (child_p == 0)
 	{
-		signal(SIGINT, sig_handler_c);
-		signal(SIGQUIT, sig_handler_c);
 		command_execve(token, env);
 	}
-	waitpid(c_pid(-1), &pid_status, 0);
+	c_pid(child_p);
+	waitpid(child_p, &pid_status, 0);
+	c_pid(0);
+
 	if (pid_status == 2)
 		ft_putendl_fd("", STDOUT_FILENO);
 	else if (pid_status == 3)
 		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
-	signal(SIGINT, sig_handler_p);
-	signal(SIGQUIT, sig_handler_p);
-	c_pid(0);
 	*exit_status = get_exit_status(pid_status);
 }
 
@@ -317,6 +315,8 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 	else if (node->content->flag == FT_PIPE_F)
 	{
 		pipe(pipe_fd);
+		signal(SIGINT, sig_handler_c);
+		signal(SIGQUIT, sig_handler_c);
 		child_p1 = fork();
 		if (child_p1 == 0)
 		{
@@ -338,8 +338,15 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		}
 		close(pipe_fd[READ]);
 		close(pipe_fd[WRITE]);
+		c_pid(child_p1);
 		waitpid(child_p1, &status, 0);
+		c_pid(child_p2);
 		waitpid(child_p2, &status, 0);
+		c_pid(0);
+		if (status == 2)
+			ft_putendl_fd("", STDOUT_FILENO);
+		else if (status == 3)
+			ft_putendl_fd("Quit: 3", STDOUT_FILENO);
 		*exit_status = get_exit_status(status);
 	}
 }
