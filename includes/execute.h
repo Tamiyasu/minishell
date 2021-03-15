@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 16:45:56 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/15 21:15:14 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,11 @@ enum pipe_in_out
 
 typedef struct	s_info_fd
 {
-	//int			open_fd;
-	// int			save_stdin;
-	// int			save_stdout;
-	// int			save_stderr;
-	// int			redirect_i;
-	// int			redirect_o;
-	// int			redirect_err;
-	// int			fd_num;
-	//int			reserved_fd[1024];
 	int					fd_num;
 	int					fd_save;
 	int					flag;
 	struct s_info_fd	*next;
 }				t_info_fd;
-
-//fd_num
-//save_fd = dup(fd_num);
-
-//dup2(save_fd, fd_num);
-
 
 void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd);
 int		exec_check_builtin(char *token_data);

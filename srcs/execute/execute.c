@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/15 20:42:50 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/15 21:14:51 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,10 +313,6 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd,
 	int	fd_num;
 	int open_fd;
 
-	// if (node->content->flag == FT_REDIRECT_I_F)
-	// 	fd_num = STDIN_FILENO;
-	// else
-		// fd_num = redirect_check_fdnum(node->content->data);
 	fd_num = redirect_check_fdnum(node->content->data);
 	open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
 	if (!open_fd)
