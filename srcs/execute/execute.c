@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 13:45:24 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 13:58:41 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,44 +176,44 @@ int	 redirect_check_fdnum(char *data)
 	return (fd_num);
 }
 
-void	search_command_path(t_lsttoken *token, t_env *env)
-{
-	char			**path_value;
-	int				idx;
-	DIR				*dp;
-	struct dirent	*dirp;
-	char			*tmp;
+// void	search_command_path(t_lsttoken *token, t_env *env)
+// {
+// 	char			**path_value;
+// 	int				idx;
+// 	DIR				*dp;
+// 	struct dirent	*dirp;
+// 	char			*tmp;
 
-	if (token->data[0] == '.' || token->data[0] == '/')
-		return ;
-	idx = msh_env_search(env->data, "PATH");
-	path_value = ft_split(&env->data[idx][5], ':');
-	idx= 0;
-	while (path_value[idx] != NULL)
-	{
-		dp = opendir(path_value[idx]);
-		if (dp == NULL)
-			return ;
-		while ((dirp = readdir(dp)) != NULL)
-		{
-			if (ft_strcmp(token->data, dirp->d_name) == 0)
-			{
-				tmp = ft_strjoin("/", token->data);
-				free(token->data);
-				token->data = ft_strjoin(path_value[idx],  tmp);
-				free(tmp);
-				tmp = NULL;
-				closedir(dp);
-				free_args(path_value);
-				return ;
-			}
-		}
-		closedir(dp);
-		idx++;
-	}
-	free_args(path_value);
-	return ;
-}
+// 	if (token->data[0] == '.' || token->data[0] == '/')
+// 		return ;
+// 	idx = msh_env_search(env->data, "PATH");
+// 	path_value = ft_split(&env->data[idx][5], ':');
+// 	idx= 0;
+// 	while (path_value[idx] != NULL)
+// 	{
+// 		dp = opendir(path_value[idx]);
+// 		if (dp == NULL)
+// 			return ;
+// 		while ((dirp = readdir(dp)) != NULL)
+// 		{
+// 			if (ft_strcmp(token->data, dirp->d_name) == 0)
+// 			{
+// 				tmp = ft_strjoin("/", token->data);
+// 				free(token->data);
+// 				token->data = ft_strjoin(path_value[idx],  tmp);
+// 				free(tmp);
+// 				tmp = NULL;
+// 				closedir(dp);
+// 				free_args(path_value);
+// 				return ;
+// 			}
+// 		}
+// 		closedir(dp);
+// 		idx++;
+// 	}
+// 	free_args(path_value);
+// 	return ;
+// }
 
 
 void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
@@ -244,7 +244,7 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	{
 		signal(SIGINT, sig_handler_c);
 		signal(SIGQUIT, sig_handler_c);
-		search_command_path(token, env);
+		//search_command_path(token, env);
 		command_execve(token, env);
 	}
 	waitpid(c_pid(-1), &pid_status, 0);
