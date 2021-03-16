@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/15 20:37:01 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 09:14:04 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,12 @@ char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_le
 		if (token_data[*idx] == '\\' && token_data[*idx + 1] == '\\')
 			new_data = save_reading_data(token_data, new_data, start, data_len, idx);
 		else if (token_data[*idx] == '\\' && token_data[*idx + 1] == '$')
+		{
+			new_data = save_reading_data(token_data, new_data, start, data_len, idx);
+			*data_len = (*data_len + 1);
+			*idx = (*idx + 1);
+		}
+		else if (token_data[*idx] == '\\' && token_data[*idx + 1] == '\"')
 		{
 			new_data = save_reading_data(token_data, new_data, start, data_len, idx);
 			*data_len = (*data_len + 1);
