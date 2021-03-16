@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 01:24:35 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/16 21:15:26 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,7 +357,7 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd)
 		return ;
 	else if (node->content->flag == FT_SEMICOLON_F)
 	{
-		printf("------------------------ : \n");
+		//printf("------------------------ : \n");
 		execute(node->l_node, env, exit_status, fd);
 		reset_fd(fd);
 		free_fd(&fd);
