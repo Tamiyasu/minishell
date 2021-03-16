@@ -6,12 +6,11 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 13:58:41 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:34:25 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-#include "libft.h"
 #include "signal_handler.h"
 
 t_info_fd	*fd_list_last(t_info_fd *msh_fd)
@@ -100,67 +99,22 @@ int	exec_check_builtin(char *token_data)
 	return (0);
 }
 
-// int	exec_check_command_path(char *command, int *exit_status)
-// {
-// 	struct stat		stat_buf;
-
-// 	if (ft_strchr(command, '/') == 0)
-// 	{
-// 		*exit_status = 127;
-// 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-// 		ft_putstr_fd(command, STDERR_FILENO);
-// 		ft_putendl_fd(": command not found", STDERR_FILENO);
-// 		return (-1);
-// 	}
-// 	if (command[0] == '.')
-// 	{
-// 		return (0);
-// 	}
-// 	lstat(command, &stat_buf);
-// 	if ((stat_buf.st_mode & S_IFMT) == 0040000)
-// 	{
-// 		*exit_status = 126;
-// 		ft_putstr_fd(command, STDERR_FILENO);
-// 		ft_putstr_fd(": ", STDERR_FILENO);
-// 		ft_putendl_fd(strerror(21), STDERR_FILENO);
-// 		return (-1);
-// 	}
-// 	return (0);
-// }
-
-/*
-** コマンドを実行する　returnで終了ステータスを返す.
-*/
 void	command_builtin(t_lsttoken *token, t_env *env, int *exit_status)
 {
 	if (ft_strcmp(token->data, "cd") == 0)
-	{
 		*exit_status = execute_cd(token, env);
-	}
 	else if (ft_strcmp(token->data, "echo") == 0)
-	{
 		*exit_status = execute_echo(token);
-	}
 	else if (ft_strcmp(token->data, "env") == 0)
-	{
 		*exit_status = execute_env(env->data);
-	}
 	else if (ft_strcmp(token->data, "export") == 0)
-	{
 		*exit_status = execute_export(token, env);
-	}
 	else if (ft_strcmp(token->data, "pwd") == 0)
-	{
 		*exit_status = execute_pwd();
-	}
 	else if (ft_strcmp(token->data, "unset") == 0)
-	{
 		*exit_status = execute_unset(token, env);
-	}
 	else if (ft_strcmp(token->data, "exit") == 0)
-	{
 		execute_exit(token, exit_status);
-	}
 	return ;
 }
 
@@ -176,67 +130,20 @@ int	 redirect_check_fdnum(char *data)
 	return (fd_num);
 }
 
-// void	search_command_path(t_lsttoken *token, t_env *env)
-// {
-// 	char			**path_value;
-// 	int				idx;
-// 	DIR				*dp;
-// 	struct dirent	*dirp;
-// 	char			*tmp;
-
-// 	if (token->data[0] == '.' || token->data[0] == '/')
-// 		return ;
-// 	idx = msh_env_search(env->data, "PATH");
-// 	path_value = ft_split(&env->data[idx][5], ':');
-// 	idx= 0;
-// 	while (path_value[idx] != NULL)
-// 	{
-// 		dp = opendir(path_value[idx]);
-// 		if (dp == NULL)
-// 			return ;
-// 		while ((dirp = readdir(dp)) != NULL)
-// 		{
-// 			if (ft_strcmp(token->data, dirp->d_name) == 0)
-// 			{
-// 				tmp = ft_strjoin("/", token->data);
-// 				free(token->data);
-// 				token->data = ft_strjoin(path_value[idx],  tmp);
-// 				free(tmp);
-// 				tmp = NULL;
-// 				closedir(dp);
-// 				free_args(path_value);
-// 				return ;
-// 			}
-// 		}
-// 		closedir(dp);
-// 		idx++;
-// 	}
-// 	free_args(path_value);
-// 	return ;
-// }
-
-
-void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
+void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int child_flag)
 {
 	int		pid_status;
 
 	pid_status = 0;
-
-	// printf("--------------------------------simple_command()\nfd->save_stdin[%d] redirect_i[%d] save_stdout[%d] redirect_o[%d] save_stderr[%d] redirect_err[%d]\n\n", msh_fd->save_stdin, msh_fd->redirect_i, msh_fd->save_stdout, msh_fd->redirect_o, msh_fd->save_stderr, msh_fd->redirect_err);
 	if (ft_strcmp(token->data, "") == 0)
-	{
 		return ;
-	}
 	if (exec_check_builtin(token->data))
 	{
 		command_builtin(token, env, exit_status);
 		return ;
 	}
-	if (flag)//pipeがあり、子プロセスないでコマンドが実行される時(execveを実行するのにforkする必要なし)
-	{
+	if (child_flag)
 		command_execve(token, env);
-	}
-	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
     signal(SIGINT, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
 	c_pid(fork());
@@ -244,7 +151,6 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	{
 		signal(SIGINT, sig_handler_c);
 		signal(SIGQUIT, sig_handler_c);
-		//search_command_path(token, env);
 		command_execve(token, env);
 	}
 	waitpid(c_pid(-1), &pid_status, 0);
@@ -276,7 +182,7 @@ int	redirect_file_open(char *file, int flag)
 	return (open_fd);
 }
 
-t_info_fd	*redirect_save_fd(t_info_fd *msh_fd, int fd_num, int flag)//dupで保存はSTDINやSTDOUTなどのfd_num, fd_numがすでに存在していたらなし
+t_info_fd	*redirect_save_fd(t_info_fd *msh_fd, int fd_num, int flag)
 {
 	t_info_fd *new_fd;
 

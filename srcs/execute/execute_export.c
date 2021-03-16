@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 18:26:35 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:26:41 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "execute.h"
 #include "libft.h"
 
-static void	execute_output_error(char *token_data)
-{
-	ft_putstr_fd("minishell: unset: `",  STDERR_FILENO);
-	ft_putstr_fd(token_data, STDERR_FILENO);
-	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
-}
+// static void	execute_output_error(char *token_data)
+// {
+// 	ft_putstr_fd("minishell: unset: `",  STDERR_FILENO);
+// 	ft_putstr_fd(token_data, STDERR_FILENO);
+// 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+// }
 
 static int	msh_lstsize(t_lsttoken *token)
 {
@@ -95,7 +95,8 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend, int *exit_
 		{
 			if (token->flag == -1)
 			{
-				execute_output_error(token->data);
+				//execute_output_error(token->data);
+				output_error("export", "not a valid identifier");
 				*exit_status = 1;
 				break ;
 			}
@@ -104,7 +105,8 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend, int *exit_
 				if (ft_isalpha(split_tokend[i][j]) == 0 && split_tokend[i][j] != '_')
 				{
 					token->flag = -1;
-					execute_output_error(token->data);
+					//execute_output_error(token->data);
+					output_error("export", "not a valid identifier");
 					*exit_status = 1;
 					break ;
 				}
@@ -114,7 +116,8 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend, int *exit_
 				if (ft_isalnum(split_tokend[i][j]) == 0 && split_tokend[i][j] != '_')
 				{
 					token->flag = -1;
-					execute_output_error(token->data);
+					//execute_output_error(token->data);
+					output_error("export", "not a valid identifier");
 					*exit_status = 1;
 					break ;
 				}
@@ -271,7 +274,7 @@ int			execute_export(t_lsttoken *token, t_env *env)
 	split_env = execute_split_env(env);
 	if (split_env == NULL)//execute_split_env()内でmallocエラー
 	{
-		ft_putendl_fd(strerror(errno), 1);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		exit_status = 1;
 		return (exit_status);
 	}

@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/15 18:59:57 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 16:02:17 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,8 @@ void	msh_loop(t_env *env, int *exit_status)
 		// print_token(token_list, "check token");
 		// printf("----------------------------end expansion_print\n\n");
 
-
-		//init_fd(&msh_fd);
 		msh_fd = NULL;
 		execute(node, env, exit_status, msh_fd); //exitコマンド実行時にreturn(0)がくる
-		//reset_fd(msh_fd);
-		//free_fd(&msh_fd);
-
 		free_tree(&node);
 		free(line);
 		line = NULL;

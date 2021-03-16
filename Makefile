@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/14 00:48:01 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/16 16:14:31 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRC_FILE	+= execute/execute_pwd.c
 SRC_FILE	+= execute/execute_unset.c
 SRC_FILE	+= execute/export_putenv.c
 SRC_FILE	+= execute/execute_split_env.c
+SRC_FILE	+= execute/error.c
 
 
 INC_DIR	= ./includes

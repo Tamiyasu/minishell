@@ -6,12 +6,16 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/15 21:15:14 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:25:52 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTE_H
 # define EXECUTE_H
+
+# define EXIT_COMMAND_NOT_EXECUTED 126
+# define EXIT_COMMAND_NOT_FOUND 127
+# define EXIT_OUT_OF_RANGE_STATUS 255
 
 # include "minishell.h"
 # include "parser.h"
@@ -43,6 +47,9 @@ int		execute_unset(t_lsttoken *token, t_env *env);
 void	init_fd(t_info_fd *fd);
 void	reset_fd(t_info_fd *fd);
 void	free_fd(t_info_fd **fd);
+void	output_error(char *err_command, char *err_string);
+void	output_no_filename(void);
+void	output_error_exit_args(char	*exit_args);
 
 /*
 ** unset, export

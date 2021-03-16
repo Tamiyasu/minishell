@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 14:57:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:35:01 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	**execve_format_args(t_lsttoken *token, char *command)
 	return (args);
 }
 
-int	check_path_directory(char *command/*, int *exit_status*/)
+int	check_path_directory(char *command)
 {
 	struct stat		stat_buf;
 
@@ -107,26 +107,14 @@ int	search_command_path(t_lsttoken *token, t_env *env)
 	return (0);
 }
 
-//1 =エラー
-//126 connamd not executable(実行権限なし)
-//127 command not found
-
-//ENOENT 2 /* No such file or directory */->127
-//ENOEXEC 8      /* Exec format error */
-//EACCES 13      /* Permission denied */
-
-
 void			command_execve(t_lsttoken *token, t_env *env)
 {
-	//char	*command;
 	char	**args;
 	int		rc;
 
 	if (!(search_command_path(token, env)))
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(token->data, STDERR_FILENO);
-		ft_putendl_fd(": command not found", STDERR_FILENO);
+		output_error(token->data, "command not found");
 		exit(127);
 	}
 	args = execve_format_args(token, token->data);
@@ -137,41 +125,24 @@ void			command_execve(t_lsttoken *token, t_env *env)
 		//printf("command=[%s]execve errno=[%d][%s]\n", token->data, errno, strerror(errno));
 		if (ft_strcmp(token->data, ".") == 0)
 		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putendl_fd(".: filename argument requirred", STDERR_FILENO);
-			ft_putendl_fd(".: usage: . filename [arguments]", STDERR_FILENO);
+			output_no_filename();
 			exit(2);
 		}
 		if (check_path_directory(token->data))
 		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(token->data, STDERR_FILENO);
-			ft_putendl_fd(": is a directory", STDERR_FILENO);
+			output_error(token->data, "is a directory");
 			exit(126);
 		}
 		if (errno == EACCES)
 		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(token->data, STDERR_FILENO);
-			ft_putstr_fd(": " , STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
+			output_error(token->data, strerror(errno));
 			exit(126);
 		}
-		if (errno == 8)//ENOEXEC 8      /* Exec format error */
+		if (errno == ENOEXEC)//ENOEXEC 8      /* Exec format error */
 		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(token->data, STDERR_FILENO);
-			ft_putstr_fd(": " , STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
+			output_error(token->data, strerror(errno));
 			exit(126);
 		}
-		// ft_putstr_fd("minishell: ", STDERR_FILENO);
-		// ft_putstr_fd(token->data, STDERR_FILENO);
-		// ft_putstr_fd(": ", STDERR_FILENO);
-		// ft_putendl_fd(strerror(errno), STDERR_FILENO);
-
-		// if (errno == 13) /* Permission denied */
-		// 	exit(126);
 		exit (errno);
 	}
 	free_args(args);

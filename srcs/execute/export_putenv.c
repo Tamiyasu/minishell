@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 18:11:32 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 11:15:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:21:11 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int		export_putenv(t_env *env)
 	if (idx_array == NULL)
 	{
 		ft_putendl_fd(strerror(errno), 1);//mallocのエラー出力して?return(最初の入力待ち)に
-		return (1);
+		return (EXIT_FAILURE);
 	}
 	i = 0;
 	while (i < env->num)
@@ -149,5 +149,5 @@ int		export_putenv(t_env *env)
 	}
 	free(idx_array);
 	idx_array = NULL;
-	return (0);
+	return (EXIT_SUCCESS);
 }
