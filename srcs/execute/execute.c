@@ -132,6 +132,7 @@ int	 redirect_check_fdnum(char *data)
 
 void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int child_flag)
 {
+	pid_t	child_p;
 	int		pid_status;
 
 	pid_status = 0;
@@ -144,23 +145,23 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int child_fla
 	}
 	if (child_flag)
 		command_execve(token, env);
-    signal(SIGINT, SIG_IGN);
-    signal(SIGQUIT, SIG_IGN);
-	c_pid(fork());
-	if (c_pid(-1) == 0)
+	}
+	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
+	signal(SIGINT, sig_handler_c);
+	signal(SIGQUIT, sig_handler_c);
+	child_p = fork();
+	if (child_p == 0)
 	{
-		signal(SIGINT, sig_handler_c);
-		signal(SIGQUIT, sig_handler_c);
 		command_execve(token, env);
 	}
-	waitpid(c_pid(-1), &pid_status, 0);
+	c_pid(child_p);
+	waitpid(child_p, &pid_status, 0);
+	c_pid(0);
+
 	if (pid_status == 2)
 		ft_putendl_fd("", STDOUT_FILENO);
 	else if (pid_status == 3)
 		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
-	signal(SIGINT, sig_handler_p);
-	signal(SIGQUIT, sig_handler_p);
-	c_pid(0);
 	*exit_status = get_exit_status(pid_status);
 }
 
@@ -254,6 +255,8 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *msh
 	else if (node->content->flag == FT_PIPE_F)
 	{
 		pipe(pipe_fd);
+		signal(SIGINT, sig_handler_c);
+		signal(SIGQUIT, sig_handler_c);
 		child_p1 = fork();
 		if (child_p1 == 0)
 		{
@@ -274,8 +277,15 @@ void	exec_pipe(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *msh
 		}
 		close(pipe_fd[READ]);
 		close(pipe_fd[WRITE]);
+		c_pid(child_p1);
 		waitpid(child_p1, &status, 0);
+		c_pid(child_p2);
 		waitpid(child_p2, &status, 0);
+		c_pid(0);
+		if (status == 2)
+			ft_putendl_fd("", STDOUT_FILENO);
+		else if (status == 3)
+			ft_putendl_fd("Quit: 3", STDOUT_FILENO);
 		*exit_status = get_exit_status(status);
 	}
 }
@@ -286,10 +296,12 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *msh_f
 		return ;
 	else if (node->content->flag == FT_SEMICOLON_F)
 	{
-		execute(node->l_node, env, exit_status, msh_fd);
-		reset_fd(msh_fd);
-		free_fd(&msh_fd);
-		execute(node->r_node, env, exit_status, msh_fd);
+		//printf("------------------------ : \n");
+		execute(node->l_node, env, exit_status, fd);
+		reset_fd(fd);
+		free_fd(&fd);
+		execute(node->r_node, env, exit_status, fd);
+		//printf("exit_status : %d\n", *exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 		exec_pipe(node, env, exit_status, msh_fd);
