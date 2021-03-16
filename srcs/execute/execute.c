@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:34:25 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 21:25:15 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int child_fla
 	}
 	if (child_flag)
 		command_execve(token, env);
-	}
 	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
 	signal(SIGINT, sig_handler_c);
 	signal(SIGQUIT, sig_handler_c);
@@ -297,10 +296,10 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *msh_f
 	else if (node->content->flag == FT_SEMICOLON_F)
 	{
 		//printf("------------------------ : \n");
-		execute(node->l_node, env, exit_status, fd);
-		reset_fd(fd);
-		free_fd(&fd);
-		execute(node->r_node, env, exit_status, fd);
+		execute(node->l_node, env, exit_status, msh_fd);
+		reset_fd(msh_fd);
+		free_fd(&msh_fd);
+		execute(node->r_node, env, exit_status, msh_fd);
 		//printf("exit_status : %d\n", *exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)
