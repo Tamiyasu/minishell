@@ -3,16 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 16:37:49 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 23:13:44 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "lexer.h"
 #include "libft.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 static void	cd_update_envpwd(t_env *env)
 {
@@ -66,6 +70,10 @@ int	cd_home(t_env *env)
 
 int	execute_cd(t_lsttoken *token, t_env *env)
 {
+	char *err_str;
+	struct stat stat_buf;
+	int err_cord;
+
 	token = token->next;
 	if (token == NULL)
 	{
@@ -73,7 +81,12 @@ int	execute_cd(t_lsttoken *token, t_env *env)
 	}
 	else if (chdir(token->data) == -1)
 	{
-		output_error("cd", strerror(ENOENT));
+		err_cord = ENOENT;
+		if(!stat(token->data, &stat_buf) && (stat_buf.st_mode & S_IFMT) != S_IFDIR)
+			err_cord = ENOTDIR;
+		err_str = ft_strjoin("cd: ", token->data);
+		output_error(err_str, strerror(err_cord));
+		free(err_str);
 		return (EXIT_FAILURE);
 	}
 	cd_update_envpwd(env);
