@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/16 22:23:39 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/16 22:32:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ t_parser_node   *find_parent_node(t_parser_node   *node)
 {
     t_parser_node *ret_node;
     ret_node = NULL;
-    printf("node_p : %p\n", node);
 
     if (node && node->content && (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F))
     {
@@ -264,7 +263,6 @@ t_parser_node   *parser(t_lsttoken *token_list)
         }
         else if(is_redirect(c_type))
         {
-            printf("here\n");
             new_node = malloc(sizeof(t_parser_node));
             new_node->content = token;
             new_node->r_node = NULL;
