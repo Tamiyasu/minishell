@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 09:40:22 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 12:02:05 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void	reset_fd(t_info_fd *msh_fd)
 		msh_fd = msh_fd->next;
 	}
 }
-
 
 int	exec_check_builtin(char *token_data)
 {
@@ -219,7 +218,6 @@ void	search_command_path(t_lsttoken *token, t_env *env)
 
 void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 {
-	//pid_t	child_p;
 	int		pid_status;
 
 	pid_status = 0;
@@ -231,7 +229,6 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int flag)
 	}
 	if (exec_check_builtin(token->data))
 	{
-		search_command_path(token, env);
 		command_builtin(token, env, exit_status);
 		return ;
 	}
