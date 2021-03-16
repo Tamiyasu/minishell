@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/15 21:14:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 09:40:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,7 +322,7 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd,
 		msh_fd = redirect_save_fd(msh_fd, fd_num, node->content->flag);
 		dup2(open_fd, fd_num);
 	}
-	close(open_fd);
+	// close(open_fd);
 	func(node->l_node, env, exit_status, msh_fd);
 }
 
