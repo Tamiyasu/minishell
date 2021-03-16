@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/14 19:54:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/16 17:38:31 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,12 @@ char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_le
 			*data_len = (*data_len + 1);
 			*idx = (*idx + 1);
 		}
+		else if (token_data[*idx] == '\\' && token_data[*idx + 1] == '\"')
+		{
+			new_data = save_reading_data(token_data, new_data, start, data_len, idx);
+			*data_len = (*data_len + 1);
+			*idx = (*idx + 1);
+		}
 		else if (token_data[*idx] == '$')
 		{
 			new_data = set_environment_data(token_data, new_data, start, data_len, idx, env, exit_status);
@@ -196,50 +202,6 @@ void	expansion_check(t_lsttoken *token_list, t_env *env, int *exit_status)
 	}
 }
 
-void	search_command_path(t_lsttoken *token, t_env *env)
-{
-	char			**path_value;
-	int				idx;
-	DIR				*dp;
-	struct dirent	*dirp;
-	char			*tmp;
-
-	if (token->data[0] == '.' || token->data[0] == '/')
-	{
-		return ;
-	}
-	idx = msh_env_search(env->data, "PATH");
-	path_value = ft_split(&env->data[idx][5], ':');
-	idx= 0;
-	while (path_value[idx] != NULL)
-	{
-		dp = opendir(path_value[idx]);
-		if (dp == NULL)
-		{
-			return ;
-		}
-		while ((dirp = readdir(dp)) != NULL)
-		{
-			if (ft_strcmp(token->data, dirp->d_name) == 0)
-			{
-				tmp = ft_strjoin("/", token->data);
-				free(token->data);
-				token->data = ft_strjoin(path_value[idx],  tmp);
-				free(tmp);
-				tmp = NULL;
-				closedir(dp);
-				free_args(path_value);
-				return ;
-			}
-		}
-		closedir(dp);
-		idx++;
-	}
-	free_args(path_value);
-	return ;
-}
-
-
 void	expansion(t_parser_node *node, t_env *env, int *exit_status)
 {
 	if (node == NULL)
@@ -248,12 +210,6 @@ void	expansion(t_parser_node *node, t_env *env, int *exit_status)
 	if (node->content->flag == FT_COMMAND_F)
 	{
 		expansion_check(node->content, env, exit_status);
-		// printf("\ncommand=[%s]\n", node->content->data);
-		if (!(exec_check_builtin(node->content->data)))
-		{
-			search_command_path(node->content, env);
-		}
-		// printf("after command=[%s]\n\n", node->content->data);
 	}
 	expansion(node->l_node, env, exit_status);
 	expansion(node->r_node, env, exit_status);

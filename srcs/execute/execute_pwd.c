@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 18:27:50 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:19:30 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	execute_pwd(void)
 	if (cwdir == NULL)
 	{
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		return (1);
+		return (EXIT_FAILURE);
 	}
-	ft_putendl_fd(cwdir, 1);
+	ft_putendl_fd(cwdir, STDOUT_FILENO);
 	free(cwdir);
-	return (0);
+	return (EXIT_SUCCESS);
 }

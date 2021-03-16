@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/12 20:42:38 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/15 17:03:19 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_lsttoken	*lexer_check_tokenlen(t_lsttoken *token_list, char *input, int *start
 	return (token_list);
 }
 
-t_lsttoken	*lexer_set_stdout(t_lsttoken *token_list, char *input, int *token_len, int start, int *idx)
+t_lsttoken	*lexer_set_redirect(t_lsttoken *token_list, char *input, int *token_len, int start, int *idx)
 {
 	int	i;
 
@@ -80,6 +80,44 @@ t_lsttoken	*lexer_set_stdout(t_lsttoken *token_list, char *input, int *token_len
 	return (token_list);
 }
 
+int	lexer_squote_count_tokenlen(char *input, int *idx)
+{
+	int	token_len;
+
+	token_len  = 0;
+	while (input[*idx] != '\0')
+	{
+		*idx = (*idx + 1);
+		token_len++;
+		if (input[*idx] == '\'')
+		{
+			token_len++;
+			break ;
+		}
+	}
+	*idx = (*idx + 1);
+	return (token_len);
+}
+
+int	lexer_dquote_count_tokenlen(char *input, int *idx)
+{
+	int	token_len;
+
+	token_len  = 0;
+	while (input[*idx] != '\0')
+	{
+		*idx = (*idx + 1);
+		token_len++;
+		if (input[*idx] == '\"' && input[*idx - 1] != '\\')
+		{
+			token_len++;
+			break ;
+		}
+	}
+	*idx = (*idx + 1);
+	return (token_len);
+}
+
 t_lsttoken		*lexer(char *input)
 {
 	t_lsttoken	*token_list;
@@ -93,45 +131,25 @@ t_lsttoken		*lexer(char *input)
 	idx = 0;
 	while (input[idx] != '\0')
 	{
-		if (input[idx] == '|' || input[idx] == ';' || input[idx] == '<')
+		if (input[idx] == '|' || input[idx] == ';')
 		{
 			token_list = lexer_check_tokenlen(token_list, input, &start, &token_len, &idx);
 			token_len++;
 			token_list = lexer_set_token(token_list, ft_substr(&input[start], 0, token_len), &token_len);
 			start = ++idx;
 		}
-		else if (input[idx] == '>')
+		else if (input[idx] == '<' || input[idx] == '>')
 		{
-			token_list = lexer_set_stdout(token_list, input, &token_len, start, &idx);
+			token_list = lexer_set_redirect(token_list, input, &token_len, start, &idx);
 			start = ++idx;
 		}
 		else if (input[idx] == '\'')
 		{
-			while (input[idx] != '\0')
-			{
-				idx++;
-				token_len++;
-				if (input[idx] == '\'')
-				{
-					token_len++;
-					break ;
-				}
-			}
-			idx++;
+			token_len += lexer_squote_count_tokenlen(input, &idx);
 		}
 		else if (input[idx] == '\"')
 		{
-			while (input[idx] != '\0')
-			{
-				idx++;
-				token_len++;
-				if (input[idx] == '\"' && input[idx - 1] != '\\')
-				{
-					token_len++;
-					break ;
-				}
-			}
-			idx++;
+			token_len += lexer_dquote_count_tokenlen(input, &idx);
 		}
 		else if (input[idx] == '\t' || input[idx] == ' ')
 		{

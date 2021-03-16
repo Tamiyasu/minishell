@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 18:27:24 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:12:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,13 @@ static int	exit_check_integer(char *args)
 	{
 		idx++;
 		if (ft_isdigit(args[idx]) != 1)
-		{
 			return (0);
-		}
 		idx++;
 	}
 	while (args[idx] != '\0')
 	{
 		if (ft_isdigit(args[idx]) != 1)
-		{
 			return (0);
-		}
 		idx++;
 	}
 	return (1);
@@ -79,16 +75,6 @@ static long long exit_atoi(t_lsttoken *token)
 	return (num);
 }
 
-void	exit_num_arg_err(char *data)
-{
-	ft_putendl_fd("exit", STDERR_FILENO);
-	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-	ft_putstr_fd(data, STDERR_FILENO);
-	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-	// *exit_status = 255;
-	// return (EXIT_SUCCESS);
-}
-
 void	execute_exit(t_lsttoken *token, int *exit_status)
 {
 	long long  num;
@@ -96,33 +82,32 @@ void	execute_exit(t_lsttoken *token, int *exit_status)
 	token = token->next;
 	if (token == NULL)
 	{
-		ft_putendl_fd("exit", 1);
+		ft_putendl_fd("exit", STDOUT_FILENO);
 		//すべてのfree処理
 		exit(EXIT_SUCCESS);
 	}
 	if (exit_check_integer(token->data) != 1)
 	{
-		exit_num_arg_err(token->data);
 		//すべてのfree処理
-		exit(255);
+		output_error_exit_args(token->data);
+		exit(EXIT_OUT_OF_RANGE_STATUS);
 	}
 	if (exit_check_argsnum(token) != 1)
 	{
-		ft_putendl_fd("exit", STDERR_FILENO);
-		ft_putendl_fd("bash: exit: too many arguments", STDERR_FILENO);
+		output_error("exit", "too many arguments");
 		*exit_status = 1;
-		exit (*exit_status);
+		return ;
 	}
 	num = exit_atoi(token);
 	if (token->flag == -1)
 	{
-		exit_num_arg_err(token->data);
 		//すべてのfree処理
-		exit(255);
+		output_error_exit_args(token->data);
+		exit(EXIT_OUT_OF_RANGE_STATUS);
 	}
 	*exit_status = num % 256;
 	if (*exit_status < 0)
 		*exit_status += 256;
-	ft_putendl_fd("exit", 1);
+	ft_putendl_fd("exit", STDOUT_FILENO);
 	exit (*exit_status);
 }

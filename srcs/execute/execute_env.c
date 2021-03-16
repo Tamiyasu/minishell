@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/25 17:11:47 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/22 10:40:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 16:41:40 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,5 @@ int	execute_env(char **env_data)
 		}
 		idx++;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }

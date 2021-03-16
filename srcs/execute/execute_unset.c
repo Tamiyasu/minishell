@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/13 18:28:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/16 17:25:38 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "execute.h"
 #include "libft.h"
 
-static void	unset_output_error(char *token_data)
-{
-	ft_putstr_fd("minishell: unset: `",  STDERR_FILENO);
-	ft_putstr_fd(token_data, STDERR_FILENO);
-	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
-}
+// static void	unset_output_error(char *token_data)
+// {
+// 	ft_putstr_fd("minishell: unset: `",  STDERR_FILENO);
+// 	ft_putstr_fd(token_data, STDERR_FILENO);
+// 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+// }
 
 /*
 ** 指定された変数名[0]が文字or'_'で始まっているか、かつ、使用していい文字の変数名かチェック。
@@ -39,7 +39,8 @@ static void	unset_check_args(t_lsttoken *token, int *exit_status)
 				if (ft_isalpha(token->data[idx]) == 0 && token->data[idx] != '_')
 				{
 					token->flag = -1;
-					unset_output_error(token->data);
+					//unset_output_error(token->data);
+					output_error("unset", "not a valid identifier");
 					*exit_status = 1;
 					break ;
 				}
@@ -49,7 +50,8 @@ static void	unset_check_args(t_lsttoken *token, int *exit_status)
 				if (ft_isalnum(token->data[idx]) == 0 && token->data[idx] != '_')
 				{
 					token->flag = -1;
-					unset_output_error(token->data);
+					//unset_output_error(token->data);
+					output_error("unset", "not a valid identifier");
 					*exit_status = 1;
 					break ;
 				}
@@ -169,7 +171,7 @@ int		execute_unset(t_lsttoken *token, t_env *env)
 	split_env = execute_split_env(env);
 	if (split_env == NULL) //malloc失敗時
 	{
-		return (1);
+		return (EXIT_FAILURE);
 	}
 	unset_compare_token_with_env(token, env, split_env);
 	unset_make_new_envdata(env, split_env);
