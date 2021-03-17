@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/17 16:02:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/17 16:38:55 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ void	exec_command(t_lsttoken *token, t_env *env, int *exit_status, int child_fla
 	}
 	if (child_flag)
 		command_execve(token, env);
-	//pipeなし,そのままexecve実行すると./minishell自体が終わってしまうのでforkする必要あり。
 	signal(SIGINT, sig_handler_c);
 	signal(SIGQUIT, sig_handler_c);
 	child_p = fork();
@@ -174,11 +173,8 @@ int	redirect_file_open(char *file, int flag)
 		open_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	else
 		open_fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if (!open_fd)
-	{
-		ft_putendl_fd(strerror(errno), STDOUT_FILENO);
-		return (open_fd);
-	}
+	if (open_fd == -1)
+		output_error(file, strerror(errno));
 	return (open_fd);
 }
 
@@ -196,14 +192,12 @@ t_info_fd	*redirect_save_fd(t_info_fd *msh_fd, int fd_num, int flag)
 	return (msh_fd);
 }
 
-int	redirect_check_reserve(t_info_fd *msh_fd, int fd_num, int flag)
+int	redirect_check_reserve(t_info_fd *msh_fd, int fd_num, int redirect_flag)
 {
 	while (msh_fd)
 	{
-		if (flag == msh_fd->flag && fd_num == msh_fd->fd_num)
-		{
+		if (redirect_flag == msh_fd->flag && fd_num == msh_fd->fd_num)
 			return (0);
-		}
 		msh_fd = msh_fd->next;
 	}
 	return (1);
@@ -218,8 +212,11 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd,
 
 	fd_num = redirect_check_fdnum(node->content->data, node->content->flag);
 	open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
-	if (!open_fd)
+	if (open_fd == -1)
+	{
+		*exit_status = 1;
 		return ;
+	}
 	if (redirect_check_reserve(msh_fd, fd_num, node->content->flag))
 	{
 		msh_fd = redirect_save_fd(msh_fd, fd_num, node->content->flag);
