@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/17 19:48:58 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/17 21:34:28 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ int	check_path_directory(char *command)
 	struct stat		stat_buf;
 
 	lstat(command, &stat_buf);
-	//if ((stat_buf.st_mode & S_IFMT) == 0040000)
-	if (S_ISDIR(stat_buf.st_mode))
+	if ((stat_buf.st_mode & S_IFMT) == 0040000)
 	{
 		return (1);
 	}
@@ -86,7 +85,7 @@ int	search_command_path(t_lsttoken *token, t_env *env)
 	struct dirent	*dirp;
 	char			*tmp;
 
-	if (/*ft_strcmp(token->data, ".") == 0 ||*/ /*token->data[0] == '/' ||*/ft_strchr(token->data, '/'))
+	if (ft_strchr(token->data, '/'))
 		return (1);
 	idx = msh_env_search(env->data, "PATH");
 	path_value = ft_split(&env->data[idx][5], ':');
@@ -124,7 +123,6 @@ void			command_execve(t_lsttoken *token, t_env *env)
 {
 	char	**args;
 	int		rc;
-	int		status;
 
 	if (!(search_command_path(token, env)))
 	{
@@ -136,47 +134,21 @@ void			command_execve(t_lsttoken *token, t_env *env)
 	free_args(args);
 	if (rc == -1)
 	{
-		printf("\n----command=[%s]execve errno=[%d][%s]---\n\n", token->data, errno, strerror(errno));
-
 		if (errno == ENOENT)
 		{
-			status = EXIT_COMMAND_NOT_FOUND;
+			output_error(token->data, strerror(errno));
+			exit(EXIT_COMMAND_NOT_FOUND);
 		}
-		else
-		{
-			status = EXIT_COMMAND_NOT_EXECUTED;
-		}
-		// if (ft_strcmp(token->data, ".") == 0 && token->next == NULL)
-		// {
-		// 	output_no_filename();
-		// 	exit(2);
-		// }
-		// if (errno == ENOENT)
-		// {
-		// 	output_error(token->data, strerror(errno));
-		// 	exit(status);
-		// }
 		if (check_path_directory(token->data))
 		{
 			output_error(token->data, "is a directory");
-			exit(status);
+			exit(EXIT_COMMAND_NOT_EXECUTED);
 		}
 		if (errno == ENOEXEC && !(check_permission_exec(token->data)))
-		{
-			// output_error(token->data, strerror(errno));
-			// exit(126);
 			errno = EACCES;
-		}
 		if (errno == ENOEXEC)
-		{
 			exit(EXIT_SUCCESS);
-		}
-		if (errno == EACCES)
-		{
-			output_error(token->data, strerror(errno));
-			exit(status);
-		}
 		output_error(token->data, strerror(errno));
-		exit(status);
+		exit(EXIT_COMMAND_NOT_EXECUTED);
 	}
 }

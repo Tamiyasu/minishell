@@ -6,12 +6,13 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/17 16:38:55 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/17 20:24:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "signal_handler.h"
+#include "expansion.h"
 
 t_info_fd	*fd_list_last(t_info_fd *msh_fd)
 {
@@ -296,6 +297,7 @@ void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *msh_f
 		execute(node->l_node, env, exit_status, msh_fd);
 		reset_fd(msh_fd);
 		free_fd(&msh_fd);
+		expansion(node->r_node, env, exit_status);
 		execute(node->r_node, env, exit_status, msh_fd);
 		//printf("exit_status : %d\n", *exit_status);
 	}
