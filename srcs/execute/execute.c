@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 21:25:15 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/17 16:02:39 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,12 @@ void	command_builtin(t_lsttoken *token, t_env *env, int *exit_status)
 	return ;
 }
 
-int	 redirect_check_fdnum(char *data)
+int	 redirect_check_fdnum(char *data, int redirect_flag)
 {
 	int	fd_num;
 
 	fd_num = ft_atoi(data);
-	if (fd_num == 0)
+	if (fd_num == 0 && redirect_flag == FT_REDIRECT_O_F)
 	{
 		fd_num = 1;
 	}
@@ -216,7 +216,7 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd,
 	int	fd_num;
 	int open_fd;
 
-	fd_num = redirect_check_fdnum(node->content->data);
+	fd_num = redirect_check_fdnum(node->content->data, node->content->flag);
 	open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
 	if (!open_fd)
 		return ;
