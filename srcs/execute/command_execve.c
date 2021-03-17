@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:35:01 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/17 17:33:39 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	search_command_path(t_lsttoken *token, t_env *env)
 	struct dirent	*dirp;
 	char			*tmp;
 
-	if (token->data[0] == '.' || token->data[0] == '/')
+	if (/*token->data[0] == '.' ||*/ token->data[0] == '/')
 		return (1);
 	idx = msh_env_search(env->data, "PATH");
 	path_value = ft_split(&env->data[idx][5], ':');
@@ -122,7 +122,7 @@ void			command_execve(t_lsttoken *token, t_env *env)
 	if (rc == -1)
 	{
 		free_args(args);
-		//printf("command=[%s]execve errno=[%d][%s]\n", token->data, errno, strerror(errno));
+		printf("\n----command=[%s]execve errno=[%d][%s]---\n\n", token->data, errno, strerror(errno));
 		if (ft_strcmp(token->data, ".") == 0)
 		{
 			output_no_filename();
@@ -143,6 +143,7 @@ void			command_execve(t_lsttoken *token, t_env *env)
 			output_error(token->data, strerror(errno));
 			exit(126);
 		}
+		output_error(token->data, strerror(errno));
 		exit (errno);
 	}
 	free_args(args);
