@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/17 17:33:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/17 19:48:58 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,20 @@ int	check_path_directory(char *command)
 	struct stat		stat_buf;
 
 	lstat(command, &stat_buf);
-	if ((stat_buf.st_mode & S_IFMT) == 0040000)
+	//if ((stat_buf.st_mode & S_IFMT) == 0040000)
+	if (S_ISDIR(stat_buf.st_mode))
+	{
+		return (1);
+	}
+	return (0);
+}
+
+int	check_permission_exec(char *command)
+{
+	struct stat		stat_buf;
+
+	lstat(command, &stat_buf);
+	if ((stat_buf.st_mode & S_IXUSR) == 00100)
 	{
 		return (1);
 	}
@@ -73,7 +86,7 @@ int	search_command_path(t_lsttoken *token, t_env *env)
 	struct dirent	*dirp;
 	char			*tmp;
 
-	if (/*token->data[0] == '.' ||*/ token->data[0] == '/')
+	if (/*ft_strcmp(token->data, ".") == 0 ||*/ /*token->data[0] == '/' ||*/ft_strchr(token->data, '/'))
 		return (1);
 	idx = msh_env_search(env->data, "PATH");
 	path_value = ft_split(&env->data[idx][5], ':');
@@ -111,40 +124,59 @@ void			command_execve(t_lsttoken *token, t_env *env)
 {
 	char	**args;
 	int		rc;
+	int		status;
 
 	if (!(search_command_path(token, env)))
 	{
 		output_error(token->data, "command not found");
-		exit(127);
+		exit(EXIT_COMMAND_NOT_FOUND);
 	}
 	args = execve_format_args(token, token->data);
 	rc = execve(token->data, args, env->data);
+	free_args(args);
 	if (rc == -1)
 	{
-		free_args(args);
 		printf("\n----command=[%s]execve errno=[%d][%s]---\n\n", token->data, errno, strerror(errno));
-		if (ft_strcmp(token->data, ".") == 0)
+
+		if (errno == ENOENT)
 		{
-			output_no_filename();
-			exit(2);
+			status = EXIT_COMMAND_NOT_FOUND;
 		}
+		else
+		{
+			status = EXIT_COMMAND_NOT_EXECUTED;
+		}
+		// if (ft_strcmp(token->data, ".") == 0 && token->next == NULL)
+		// {
+		// 	output_no_filename();
+		// 	exit(2);
+		// }
+		// if (errno == ENOENT)
+		// {
+		// 	output_error(token->data, strerror(errno));
+		// 	exit(status);
+		// }
 		if (check_path_directory(token->data))
 		{
 			output_error(token->data, "is a directory");
-			exit(126);
+			exit(status);
+		}
+		if (errno == ENOEXEC && !(check_permission_exec(token->data)))
+		{
+			// output_error(token->data, strerror(errno));
+			// exit(126);
+			errno = EACCES;
+		}
+		if (errno == ENOEXEC)
+		{
+			exit(EXIT_SUCCESS);
 		}
 		if (errno == EACCES)
 		{
 			output_error(token->data, strerror(errno));
-			exit(126);
-		}
-		if (errno == ENOEXEC)//ENOEXEC 8      /* Exec format error */
-		{
-			output_error(token->data, strerror(errno));
-			exit(126);
+			exit(status);
 		}
 		output_error(token->data, strerror(errno));
-		exit (errno);
+		exit(status);
 	}
-	free_args(args);
 }
