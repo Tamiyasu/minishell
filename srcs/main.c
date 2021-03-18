@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 16:06:24 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "parser.h"
 #include "signal_handler.h"
 
-int	exit_status;
+int	g_exit_status;
 
 void	free_args(char **args)
 {
@@ -72,7 +72,7 @@ void	msh_loop(t_env *env)
 		}
 		else if (gnl_result == GNL_EOF && ft_strlen(line) == 0)
 		{
-			exit_status = 0;
+			g_exit_status = 0;
 			write(1, "exit\n", 5);
 			break;
 		}
@@ -107,7 +107,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	argc -= argc;//del
 	argv -= (long)argv;//del
-	exit_status = 0;
+	g_exit_status = 0;
 	env_init(&env);
 	env_make_data(&env, envp);
 	if (env.data == NULL)
@@ -116,5 +116,5 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	msh_loop(&env);
 	env_free(&env);
-	return (exit_status);
+	return (g_exit_status);
 }

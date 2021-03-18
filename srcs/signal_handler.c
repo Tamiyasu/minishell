@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:48:02 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/18 15:31:19 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void sig_handler_p(int signo)
 	{
 		if (signo == SIGINT)
 		{
-			exit_status = 1;
+			g_exit_status = 1;
 			write(1, "\nminishell>> ", 13);
 		}
 	}
