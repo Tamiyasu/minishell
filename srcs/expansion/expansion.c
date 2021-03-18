@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:38:31 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 14:57:35 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	*save_env_data(t_env *env, char *new_data, char *token_data, int *start, in
 	return (new_data);
 }
 
-char	*set_environment_data(char *token_data, char *new_data, int *start, int *data_len, int *idx, t_env *env, int exit_status)
+char	*set_environment_data(char *token_data, char *new_data, int *start, int *data_len, int *idx, t_env *env/*, int exit_status*/)
 {
 	char *exit_status_str;
 
@@ -115,7 +115,7 @@ char	*set_squote_data(char *token_data, char *new_data, int *start, int *data_le
 	return (new_data);
 }
 
-char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_len, int *idx, t_env *env, int exit_status)
+char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_len, int *idx, t_env *env/*, int exit_status*/)
 {
 	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
 	while (token_data[*idx] !=  '\"')
@@ -136,7 +136,7 @@ char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_le
 		}
 		else if (token_data[*idx] == '$')
 		{
-			new_data = set_environment_data(token_data, new_data, start, data_len, idx, env, exit_status);
+			new_data = set_environment_data(token_data, new_data, start, data_len, idx, env/*, exit_status*/);
 		}
 		else
 		{
@@ -156,7 +156,7 @@ char	*set_escape_data(char *token_data, char *new_data, int *start, int *data_le
 	return (new_data);
 }
 
-void	expansion_check(t_lsttoken *token_list, t_env *env, int *exit_status)
+void	expansion_check(t_lsttoken *token_list, t_env *env/*, int *exit_status*/)
 {
 	char	*new_data;
 	int		data_len;
@@ -175,9 +175,9 @@ void	expansion_check(t_lsttoken *token_list, t_env *env, int *exit_status)
 			if (token_list->data[idx] == '\'')
 				new_data = set_squote_data(token_list->data, new_data, &start, &data_len, &idx);
 			else if (token_list->data[idx] == '\"')
-				new_data = set_dquote_data(token_list->data, new_data, &start, &data_len, &idx, env, *exit_status);
+				new_data = set_dquote_data(token_list->data, new_data, &start, &data_len, &idx, env/*, *exit_status*/);
 			else if (token_list->data[idx] == '$')
-				new_data = set_environment_data(token_list->data, new_data, &start, &data_len, &idx, env, *exit_status);
+				new_data = set_environment_data(token_list->data, new_data, &start, &data_len, &idx, env/*, *exit_status*/);
 			else if (token_list->data[idx] == '\\' && token_list->data[idx + 1] != ' '
 					&& token_list->data[idx] != '\t' && token_list->data[idx + 1])
 				new_data = set_escape_data(token_list->data, new_data, &start, &data_len, &idx);
@@ -202,15 +202,15 @@ void	expansion_check(t_lsttoken *token_list, t_env *env, int *exit_status)
 	}
 }
 
-void	expansion(t_parser_node *node, t_env *env, int *exit_status)
+void	expansion(t_parser_node *node, t_env *env/*, int *exit_status*/)
 {
 	if (node == NULL)
 		return ;
 
 	if (node->content->flag == FT_COMMAND_F)
 	{
-		expansion_check(node->content, env, exit_status);
+		expansion_check(node->content, env/*, exit_status*/);
 	}
-	expansion(node->l_node, env, exit_status);
-	expansion(node->r_node, env, exit_status);
+	expansion(node->l_node, env/*, exit_status*/);
+	expansion(node->r_node, env/*, exit_status*/);
 }

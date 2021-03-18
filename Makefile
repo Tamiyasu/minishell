@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/16 16:14:31 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/18 15:37:31 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		= minishell
 SRC_DIR		= ./srcs
 SRC_FILE	= main.c
 SRC_FILE	+= get_next_line.c
-SRC_FILE	+= msh_env.c
+SRC_FILE	+= enviroment.c
 SRC_FILE	+= signal_handler.c
 SRC_FILE	+= lexer/lexer.c
 SRC_FILE	+= lexer/lexer_lst.c

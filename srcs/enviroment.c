@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_env.c                                          :+:      :+:    :+:   */
+/*   enviroment.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/11 18:06:14 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 15:38:03 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	msh_env_update_pwddata(t_env *env)
 		free(env->pwd_data);
 		env->pwd_data = NULL;
 	}
-	cwdir = getcwd(NULL, 0);//このように引数を指定してあげると、getcwdの方で、buf[1024]で取ってくれる。
+	cwdir = getcwd(NULL, 0);
 	if (cwdir == NULL)
 	{
 		strerror(errno);
