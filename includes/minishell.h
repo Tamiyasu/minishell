@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:37:13 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <fcntl.h>
 # include "libft.h"
 
-extern int	exit_status;
+extern int	g_exit_status;
 
 typedef struct	s_env
 {

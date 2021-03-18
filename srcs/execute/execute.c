@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:50:15 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,17 +103,17 @@ int	exec_check_builtin(char *token_data)
 void	command_builtin(t_lsttoken *token, t_env *env)
 {
 	if (ft_strcmp(token->data, "cd") == 0)
-		exit_status = execute_cd(token, env);
+		g_exit_status = execute_cd(token, env);
 	else if (ft_strcmp(token->data, "echo") == 0)
-		exit_status = execute_echo(token);
+		g_exit_status = execute_echo(token);
 	else if (ft_strcmp(token->data, "env") == 0)
-		exit_status = execute_env(env->data);
+		g_exit_status = execute_env(env->data);
 	else if (ft_strcmp(token->data, "export") == 0)
-		exit_status = execute_export(token, env);
+		g_exit_status = execute_export(token, env);
 	else if (ft_strcmp(token->data, "pwd") == 0)
-		exit_status = execute_pwd();
+		g_exit_status = execute_pwd();
 	else if (ft_strcmp(token->data, "unset") == 0)
-		exit_status = execute_unset(token, env);
+		g_exit_status = execute_unset(token, env);
 	else if (ft_strcmp(token->data, "exit") == 0)
 		execute_exit(token);
 	return ;
@@ -161,7 +161,7 @@ void	exec_command(t_lsttoken *token, t_env *env, int child_flag)
 		ft_putendl_fd("", STDOUT_FILENO);
 	else if (pid_status == 3)
 		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
-	exit_status = get_exit_status(pid_status);
+	g_exit_status = get_exit_status(pid_status);
 }
 
 int	redirect_file_open(char *file, int flag)
@@ -214,7 +214,7 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 	open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
 	if (open_fd == -1)
 	{
-		exit_status = 1;
+		g_exit_status = 1;
 		return ;
 	}
 	if (redirect_check_reserve(msh_fd, fd_num, node->content->flag))
@@ -260,7 +260,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 			dup2(pipe_fd[WRITE], STDOUT_FILENO);
 			close(pipe_fd[WRITE]);
 			exec_pipe(node->l_node, env, msh_fd);
-			exit(exit_status);
+			exit(g_exit_status);
 		}
 		child_p2 = fork();
 		if (child_p2 == 0)
@@ -269,7 +269,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 			dup2(pipe_fd[READ], STDIN_FILENO);
 			close(pipe_fd[READ]);
 			exec_pipe(node->r_node, env, msh_fd);
-			exit(exit_status);
+			exit(g_exit_status);
 		}
 		close(pipe_fd[READ]);
 		close(pipe_fd[WRITE]);
@@ -282,7 +282,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 			ft_putendl_fd("", STDOUT_FILENO);
 		else if (status == 3)
 			ft_putendl_fd("Quit: 3", STDOUT_FILENO);
-		exit_status = get_exit_status(status);
+		g_exit_status = get_exit_status(status);
 	}
 }
 
@@ -298,7 +298,7 @@ void	execute(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 		free_fd(&msh_fd);
 		expansion(node->r_node, env);
 		execute(node->r_node, env, msh_fd);
-		//printf("exit_status : %d\n", *exit_status);
+		//printf("g_exit_status : %d\n", *g_exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 		exec_pipe(node, env, msh_fd);

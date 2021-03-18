@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:47:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ char	*set_environment_data(char *token_data, char *new_data, int *start, int *da
 	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
 	if (token_data[*idx] == '?')
 	{
-		exit_status_str = ft_itoa(exit_status);
+		exit_status_str = ft_itoa(g_exit_status);
 		new_data = replace_variables_with_values(new_data, exit_status_str);
 		free(exit_status_str);
 		*idx = (*idx + 1);
