@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/15 17:03:19 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 16:56:13 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_lsttoken	*lexer_set_redirect(t_lsttoken *token_list, char *input, int *token_l
 	int	i;
 
 	i = 0;
-	if (token_len)//check isdigit
+	if (token_len)
 	{
 		while (i  < *token_len)
 		{
@@ -70,8 +70,8 @@ t_lsttoken	*lexer_set_redirect(t_lsttoken *token_list, char *input, int *token_l
 			start = *idx;
 		}
 	}
-	*token_len = (*token_len + 1);//> or >>のcheck
-	if (input[*idx + 1] == '>')//さらに>分情報追加
+	*token_len = (*token_len + 1);
+	if (input[*idx + 1] == '>')
 	{
 		*token_len = (*token_len + 1);
 		*idx = (*idx + 1);
@@ -144,13 +144,9 @@ t_lsttoken		*lexer(char *input)
 			start = ++idx;
 		}
 		else if (input[idx] == '\'')
-		{
 			token_len += lexer_squote_count_tokenlen(input, &idx);
-		}
 		else if (input[idx] == '\"')
-		{
 			token_len += lexer_dquote_count_tokenlen(input, &idx);
-		}
 		else if (input[idx] == '\t' || input[idx] == ' ')
 		{
 			if (token_len)
