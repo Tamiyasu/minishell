@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:25:38 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 ** 指定された変数名[0]が文字or'_'で始まっているか、かつ、使用していい文字の変数名かチェック。
 ** 変数名にエラーあり→token->flag = -1代入し、エラー文出力。
 */
-static void	unset_check_args(t_lsttoken *token, int *exit_status)
+static void	unset_check_args(t_token *token, int *exit_status)
 {
 	int	idx;
 
@@ -97,7 +97,7 @@ static void	unset_check_pwd(char *token_data, t_env *env)
 	}
 }
 
-static void	unset_compare_token_with_env(t_lsttoken *token, t_env *env, char **split_env)
+static void	unset_compare_token_with_env(t_token *token, t_env *env, char **split_env)
 {
 	int		idx;
 
@@ -156,7 +156,7 @@ static void	unset_make_new_envdata(t_env *env, char **split_env)
 }
 
 
-int		execute_unset(t_lsttoken *token, t_env *env)
+int		execute_unset(t_token *token, t_env *env)
 {
 	char	**split_env;
 	int		exit_status;

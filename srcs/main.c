@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 16:02:17 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:19:41 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	free_args(char **args)
 	args = NULL;
 }
 
-t_lsttoken *find_first_commnd_node(t_parser_node *node)
+t_token *find_first_commnd_node(t_parser_node *node)
 {
 	printf("node : %p\n", node);
 	printf("content : %p\n", node->content);
@@ -51,7 +51,7 @@ t_lsttoken *find_first_commnd_node(t_parser_node *node)
 void	msh_loop(t_env *env, int *exit_status)
 {
 	char			*line;
-	t_lsttoken		*token_list;
+	t_token		*token_list;
 	t_parser_node	*node;
 	t_info_fd		*msh_fd;
 
@@ -80,7 +80,7 @@ void	msh_loop(t_env *env, int *exit_status)
 			free(line);
 			continue ;
 		}
-		// print_token(token_list, "check token");
+		print_token(token_list, "check token");
 
 		node = parser(token_list);
 		// node_print(node, 0);

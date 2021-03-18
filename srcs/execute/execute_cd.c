@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 23:13:44 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	cd_home(t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-int	execute_cd(t_lsttoken *token, t_env *env)
+int	execute_cd(t_token *token, t_env *env)
 {
 	char *err_str;
 	struct stat stat_buf;

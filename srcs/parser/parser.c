@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/16 22:32:38 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "libft.h"
 
-t_lsttoken	*lexer_lstadd_back(t_lsttoken **token, t_lsttoken *new)
+t_token	*lexer_lstadd_back(t_token **token, t_token *new)
 {
-    t_lsttoken *token_i;
+    t_token *token_i;
 
     // printf("in add_back new : %s\n", new->data);
     if (!(*token))
@@ -81,7 +81,7 @@ int is_redirect(int flag)
     );
 }
 
-int check_token_type(t_lsttoken *token, int last_type)
+int check_token_type(t_token *token, int last_type)
 {
     int type_i;
     int token_length;
@@ -200,11 +200,11 @@ t_parser_node   *find_redirect_node(t_parser_node   *node)
     return (ret_node);
 }
 
-t_parser_node   *parser(t_lsttoken *token_list)
+t_parser_node   *parser(t_token *token_list)
 {
     t_parser_node *node;
-    t_lsttoken *token;
-    t_lsttoken *next;
+    t_token *token;
+    t_token *next;
     t_parser_node *command_node;
     t_parser_node *new_node;
     int last_type;

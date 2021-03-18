@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_lst.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:29:51 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/05 21:22:06 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include  "lexer.h"
 #include "libft.h"
 
-void	free_lst(t_lsttoken **token)
+void	free_lst(t_token **token)
 {
-	t_lsttoken *temp;
-	t_lsttoken *temp_next;
+	t_token *temp;
+	t_token *temp_next;
 
 	temp = *token;
 	while (temp != NULL)
@@ -29,9 +29,9 @@ void	free_lst(t_lsttoken **token)
 	*token = NULL;
 }
 
-t_lsttoken	*token_list_last(t_lsttoken *token_list)
+t_token	*token_list_last(t_token *token_list)
 {
-	t_lsttoken	*return_p;
+	t_token	*return_p;
 
 	return_p = token_list;
 	while (return_p && return_p->next)
@@ -41,11 +41,11 @@ t_lsttoken	*token_list_last(t_lsttoken *token_list)
 	return (return_p);
 }
 
-t_lsttoken	*token_list_new(void *content)
+t_token	*token_list_new(void *content)
 {
-	t_lsttoken	*return_p;
+	t_token	*return_p;
 
-	return_p = malloc(sizeof(t_lsttoken));
+	return_p = malloc(sizeof(t_token));
 	if (return_p)
 	{
 		return_p->next = 0;
@@ -56,7 +56,7 @@ t_lsttoken	*token_list_new(void *content)
 }
 
 
-void print_token(t_lsttoken *token, char *header)
+void print_token(t_token *token, char *header)
 {
 	if (header)
 		printf("%s", header);
@@ -71,7 +71,7 @@ void print_token(t_lsttoken *token, char *header)
 	}
 }
 
-void	token_list_addback(t_lsttoken **token_list, t_lsttoken *new)
+void	token_list_addback(t_token **token_list, t_token *new)
 {
 	if (*token_list)
 		token_list_last(*token_list)->next = new;

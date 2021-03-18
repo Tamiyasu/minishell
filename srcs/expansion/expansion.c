@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:38:31 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ char	*set_escape_data(char *token_data, char *new_data, int *start, int *data_le
 	return (new_data);
 }
 
-void	expansion_check(t_lsttoken *token_list, t_env *env, int *exit_status)
+void	expansion_check(t_token *token_list, t_env *env, int *exit_status)
 {
 	char	*new_data;
 	int		data_len;

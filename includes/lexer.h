@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 16:59:25 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/06 16:13:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:18:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,24 @@
 
 # include "minishell.h"
 
-typedef struct				s_lsttoken
+typedef struct				s_token
 {
 	char					*data;
 	int						flag;
-	struct s_lsttoken		*next;
-}							t_lsttoken;
+	struct s_token			*next;
+}							t_token;
 
-t_lsttoken	*lexer(char *input);
-void		free_lst(t_lsttoken **token);
-void		token_list_addback(t_lsttoken **token_list, t_lsttoken *new);
-t_lsttoken	*token_list_new(void	*content);
-t_lsttoken	*token_list_last(t_lsttoken *token_list);
-void print_token(t_lsttoken *token, char *header);
+typedef struct				s_lexer
+{
+	int						token_len;
+	int						start;
+	int						idx;
+}							t_lexer;
+
+t_token	*lexer(char *input);
+void	free_lst(t_token **token);
+void	token_list_addback(t_token **token_list, t_token *new);
+t_token	*token_list_new(void	*content);
+t_token	*token_list_last(t_token *token_list);
+void	print_token(t_token *token, char *header);
 #endif

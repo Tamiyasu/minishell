@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:26:41 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 // 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 // }
 
-static int	msh_lstsize(t_lsttoken *token)
+static int	msh_lstsize(t_token *token)
 {
 	int i;
 
@@ -35,7 +35,7 @@ static int	msh_lstsize(t_lsttoken *token)
 }
 
 
-static char	**execute_split_and_classify_tokend(t_lsttoken *token,  t_env *env)
+static char	**execute_split_and_classify_tokend(t_token *token,  t_env *env)
 {
 	char	**split_tokend;
 	char	**tmp_split;
@@ -82,7 +82,7 @@ static char	**execute_split_and_classify_tokend(t_lsttoken *token,  t_env *env)
 	return (split_tokend);
 }
 
-static void	export_check_args(t_lsttoken *token, char **split_tokend, int *exit_status)
+static void	export_check_args(t_token *token, char **split_tokend, int *exit_status)
 {
 	int	i;
 	int	j;
@@ -129,7 +129,7 @@ static void	export_check_args(t_lsttoken *token, char **split_tokend, int *exit_
 	}
 }
 
-static int	check_duplication_token(char *fwd_tokend, char **bwd_tokend, t_lsttoken *token)
+static int	check_duplication_token(char *fwd_tokend, char **bwd_tokend, t_token *token)
 {
 	int	save_flag;
 	int	idx;
@@ -156,7 +156,7 @@ static int	check_duplication_token(char *fwd_tokend, char **bwd_tokend, t_lsttok
 	return (save_flag);
 }
 
-static void	export_check_duplication_of_token(t_lsttoken *token, char **split_tokend)
+static void	export_check_duplication_of_token(t_token *token, char **split_tokend)
 {
 	int	idx;
 
@@ -169,7 +169,7 @@ static void	export_check_duplication_of_token(t_lsttoken *token, char **split_to
 	}
 }
 
-static void	export_compare_args_with_env(t_lsttoken *token, char **split_tokend, t_env *env, char **split_env)
+static void	export_compare_args_with_env(t_token *token, char **split_tokend, t_env *env, char **split_env)
 {
 	int	idx;
 	int	envidx;
@@ -217,7 +217,7 @@ static void	export_compare_args_with_env(t_lsttoken *token, char **split_tokend,
 	}
 }
 
-static void	export_make_new_envdata(t_lsttoken *token, t_env *env)
+static void	export_make_new_envdata(t_token *token, t_env *env)
 {
 	char	**new_env;
 	int		idx;
@@ -255,7 +255,7 @@ static void	export_make_new_envdata(t_lsttoken *token, t_env *env)
 	env->data = new_env;
 }
 
-int			execute_export(t_lsttoken *token, t_env *env)
+int			execute_export(t_token *token, t_env *env)
 {
 	char	**split_tokend;
 	char	**split_env;

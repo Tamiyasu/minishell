@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:35:01 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "lexer.h"
 #include "libft.h"
 
-static int	execve_count_lst(t_lsttoken *token)
+static int	execve_count_lst(t_token *token)
 {
 	int	num;
 
@@ -27,7 +27,7 @@ static int	execve_count_lst(t_lsttoken *token)
 	return (num);
 }
 
-static char	**execve_format_args(t_lsttoken *token, char *command)
+static char	**execve_format_args(t_token *token, char *command)
 {
 	char	**args;
 	int		lst_num;
@@ -65,7 +65,7 @@ int	check_path_directory(char *command)
 	return (0);
 }
 
-int	search_command_path(t_lsttoken *token, t_env *env)
+int	search_command_path(t_token *token, t_env *env)
 {
 	char			**path_value;
 	int				idx;
@@ -107,7 +107,7 @@ int	search_command_path(t_lsttoken *token, t_env *env)
 	return (0);
 }
 
-void			command_execve(t_lsttoken *token, t_env *env)
+void			command_execve(t_token *token, t_env *env)
 {
 	char	**args;
 	int		rc;
