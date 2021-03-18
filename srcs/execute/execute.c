@@ -6,12 +6,13 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:04:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 15:42:11 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "signal_handler.h"
+#include "expansion.h"
 
 t_info_fd	*fd_list_last(t_info_fd *msh_fd)
 {
@@ -306,7 +307,8 @@ void	execute(t_parser_node *node, t_env *env, /*int *exit_status,*/ t_info_fd *m
 		execute(node->l_node, env, /*exit_status,*/ msh_fd);
 		reset_fd(msh_fd);
 		free_fd(&msh_fd);
-		execute(node->r_node, env, /*exit_status,*/ msh_fd);
+		expansion(node->r_node, env, exit_status);
+		execute(node->r_node, env, exit_status, msh_fd);
 		//printf("exit_status : %d\n", *exit_status);
 	}
 	else if (node->content->flag == FT_PIPE_F)

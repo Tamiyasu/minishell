@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 14:57:35 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 15:42:37 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,10 @@ void	expansion(t_parser_node *node, t_env *env/*, int *exit_status*/)
 	{
 		expansion_check(node->content, env/*, exit_status*/);
 	}
-	expansion(node->l_node, env/*, exit_status*/);
-	expansion(node->r_node, env/*, exit_status*/);
+	expansion(node->l_node, env, exit_status);
+	if (node->content->flag == FT_SEMICOLON_F)
+	{
+		return ;
+	}
+	expansion(node->r_node, env, exit_status);
 }
