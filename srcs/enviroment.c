@@ -6,14 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:38:03 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 15:46:29 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
-void	msh_env_free(t_env *env)
+void	env_free(t_env *env)
 {
 	free_args(env->data);
 	if (env->pwd_data != NULL)
@@ -26,7 +26,7 @@ void	msh_env_free(t_env *env)
 	}
 }
 
-void	msh_env_init(t_env *env)
+void	env_init(t_env *env)
 {
 	env->num = 0;
 	env->oldpwd_flag = 0;
@@ -35,10 +35,7 @@ void	msh_env_init(t_env *env)
 	env->unset_pwd=  NULL;
 }
 
-/*
-** env->dataを現在のカレントディレクトリに更新する
-*/
-void	msh_env_update_pwddata(t_env *env)
+void	env_update_pwddata(t_env *env)
 {
 	char *cwdir;
 
@@ -57,11 +54,7 @@ void	msh_env_update_pwddata(t_env *env)
 	free(cwdir);
 }
 
-/*
-** 環境変数一覧(env_data)からvariable_nameに一致した環境変数が格納されているindexを探す
-** [return]variable_nameが格納されているindex。見つからなかったら-1
-*/
-int		msh_env_search(char **env_data, char *variable_name)
+int		env_search(char **env_data, char *variable_name)
 {
 	int	varlen;
 	int	idx;
@@ -80,12 +73,7 @@ int		msh_env_search(char **env_data, char *variable_name)
 	return (-1);
 }
 
-/*
-** 環境変数(envp)の数を数える かつ OLDPWD と PWDの有無チェック
-** OLDPWD/PWDなし
-** 	-> env->oldpwd_flag/env->pwd_flagに-1を入れ、環境変数num++;//後で追加するため
-*/
-int	msh_env_check_data(t_env *env, char **envp)
+int	env_check_data(t_env *env, char **envp)
 {
 	int	env_num;
 
@@ -94,12 +82,12 @@ int	msh_env_check_data(t_env *env, char **envp)
 	{
 		env_num++;
 	}
-	env->oldpwd_flag =  msh_env_search(envp, "OLDPWD");
+	env->oldpwd_flag =  env_search(envp, "OLDPWD");
 	if  (env->oldpwd_flag == -1)
 	{
 		env_num++;
 	}
-	env->pwd_flag = msh_env_search(envp, "PWD");
+	env->pwd_flag = env_search(envp, "PWD");
 	if (env->pwd_flag == -1)
 	{
 		env_num++;
@@ -107,14 +95,11 @@ int	msh_env_check_data(t_env *env, char **envp)
 	return (env_num);
 }
 
-/*
-** msh_loop実行前にt_env envを作成する
-*/
-void	msh_env_make_data(t_env *env, char **envp)
+void	env_make_data(t_env *env, char **envp)
 {
 	int	idx;
 
-	env->num = msh_env_check_data(env, envp);
+	env->num = env_check_data(env, envp);
 	env->data = malloc(sizeof(char *) * (env->num + 1));
 	if (env->data == NULL)
 		return ;
@@ -126,7 +111,7 @@ void	msh_env_make_data(t_env *env, char **envp)
 	}
 	if (env->oldpwd_flag == -1)
 		env->data[idx++] = ft_strdup("OLDPWD");
-	msh_env_update_pwddata(env);
+	env_update_pwddata(env);
 	if (env->pwd_flag == -1)
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
 	else

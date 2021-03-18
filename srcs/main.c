@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:35:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 15:46:50 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,13 @@ int	main(int argc, char *argv[], char *envp[])
 	argc -= argc;//del
 	argv -= (long)argv;//del
 	exit_status = 0;
-	msh_env_init(&env);
-	msh_env_make_data(&env, envp);
+	env_init(&env);
+	env_make_data(&env, envp);
 	if (env.data == NULL)
 	{
 		return (EXIT_FAILURE);
 	}
 	msh_loop(&env);
-	msh_env_free(&env);
+	env_free(&env);
 	return (exit_status);
 }
