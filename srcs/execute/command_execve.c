@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/17 21:34:28 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 15:53:10 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	search_command_path(t_lsttoken *token, t_env *env)
 
 	if (ft_strchr(token->data, '/'))
 		return (1);
-	idx = msh_env_search(env->data, "PATH");
+	idx = env_search(env->data, "PATH");
 	path_value = ft_split(&env->data[idx][5], ':');
 	idx= 0;
 	while (path_value[idx] != NULL)

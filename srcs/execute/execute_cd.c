@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 23:13:44 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/18 15:52:31 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ static void	cd_update_envpwd(t_env *env)
 	int	old_idx;
 	int	idx;
 
-	idx = msh_env_search(env->data, "PWD");
-	if (env->oldpwd_flag != -1) /* OLDPWDの更新*/
+	idx = env_search(env->data, "PWD");
+	if (env->oldpwd_flag != -1)
 	{
-		old_idx = msh_env_search(env->data, "OLDPWD");
+		old_idx = env_search(env->data, "OLDPWD");
 		free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
 		{
@@ -37,7 +37,7 @@ static void	cd_update_envpwd(t_env *env)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
 		}
 	}
-	msh_env_update_pwddata(env); /*env->pwd_dataの更新*/
+	env_update_pwddata(env);
 	if  (env->pwd_flag != -1)
 	{
 		free(env->data[idx]);
@@ -50,7 +50,7 @@ int	cd_home(t_env *env)
 	char	*env_home;
 	int		idx;
 
-	idx = msh_env_search(env->data, "HOME");
+	idx = env_search(env->data, "HOME");
 	if (idx == -1)
 	{
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);

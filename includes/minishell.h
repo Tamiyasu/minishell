@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 16:28:04 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/18 15:37:13 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <fcntl.h>
 # include "libft.h"
 
+extern int	exit_status;
+
 typedef struct	s_env
 {
 	char		**data;
@@ -38,12 +40,12 @@ typedef struct	s_env
 void		free_args(char **args);
 
 /*
-** msh_env.c
+** enviroment.c
 */
-void	msh_env_init(t_env *env);
-void	msh_env_make_data(t_env *env, char **envp);
-int		msh_env_search(char **env_data, char *variable_name);
-void	msh_env_update_pwddata(t_env *env);
-void	msh_env_free(t_env *env);
+void	env_init(t_env *env);
+void	env_make_data(t_env *env, char **envp);
+int		env_search(char **env_data, char *variable_name);
+void	env_update_pwddata(t_env *env);
+void	env_free(t_env *env);
 
 #endif
