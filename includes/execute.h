@@ -6,12 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:50:31 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 14:41:15 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTE_H
 # define EXECUTE_H
+
+# define FD_MAX	255
 
 # define EXIT_COMMAND_NOT_EXECUTED 126
 # define EXIT_COMMAND_NOT_FOUND 127
