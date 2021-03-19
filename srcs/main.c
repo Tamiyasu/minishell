@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:35:26 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 21:09:33 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,29 @@ t_lsttoken *find_first_commnd_node(t_parser_node *node)
 	return (node->content);
 }
 
+char *error_str(char *str)
+{
+	static char *s_str;
+	char *tmp;
+
+	if (str)
+	{
+		if(s_str)
+		{
+			tmp = s_str;
+			s_str = ft_strjoin(str, s_str);
+			free(tmp);
+		}
+		else
+		s_str = ft_strdup(str);
+	}
+	else
+	{
+		free(s_str);
+		s_str = NULL;
+	}
+	return s_str;
+}
 
 void	msh_loop(t_env *env)
 {
@@ -85,9 +108,16 @@ void	msh_loop(t_env *env)
 		}
 		// print_token(token_list, "check token");
 
-		node = parser(token_list);
-		//node_print(node, 0);
-		//printf("----------------------------end node_print\n\n");
+		int result = parser(token_list, &node);
+		if(!result)
+		{
+			free(line);
+			ft_putendl_fd(error_str("minishell: "), 2);
+			error_str(NULL);
+			continue;
+		}
+		// node_print(node, 0);
+		// printf("----------------------------end node_print\n\n");
 
 		expansion(node, env);
 		// print_token(token_list, "check token");

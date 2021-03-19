@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 15:41:34 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 21:10:26 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "parser.h"
 #include "libft.h"
 
@@ -197,7 +198,40 @@ t_parser_node   *find_redirect_node(t_parser_node   *node)
     return (ret_node);
 }
 
-t_parser_node   *parser(t_lsttoken *token_list)
+int check_input(int c_type, int last_type)
+{
+    if (last_type == FT_EMPTY_F || 
+        last_type == FT_PIPE_F ||
+        last_type == FT_SEMICOLON_F ||
+        is_redirect(last_type)
+    )
+    {
+        if(c_type == FT_PIPE_F)
+            return (0);
+        if(c_type == FT_SEMICOLON_F)
+            return (0);
+    }
+    if (is_redirect(last_type))
+    {
+        if(is_redirect(c_type))
+        {
+            return (0);
+        }
+    }
+    return (1);
+}
+
+int check_last_input(int c_type)
+{
+    if(c_type == FT_PIPE_F)
+        return (0);
+    if(is_redirect(c_type))
+        return (0);
+    return (1);
+}
+
+
+int parser(t_lsttoken *token_list, t_parser_node **node_p)
 {
     t_parser_node *node;
     t_lsttoken *token;
@@ -224,6 +258,17 @@ t_parser_node   *parser(t_lsttoken *token_list)
         token->next = NULL;
 
         c_type = check_token_type(token, last_type);
+        if (!check_input(c_type, last_type))
+        {
+            error_str("'");
+            error_str(token->data);
+            error_str("syntax error near unexpected token `");
+            free_lst(&next);
+            free_lst(&token);
+            free_tree(&node);
+            return (0);
+        }
+
         //printf("last_type : %d\n", c_type);
         //printf("token: %s\n", token->data);
         token->flag = c_type;
@@ -303,5 +348,13 @@ t_parser_node   *parser(t_lsttoken *token_list)
         last_type = c_type;
     }
     //node_print(node, 0);
-    return (node);
+    if (!check_last_input(c_type))
+    {
+        error_str("syntax error near unexpected token `newline'");
+        free_lst(&token);
+        free_tree(&node);
+        return (0);
+    }
+    *node_p = node;
+    return (1);
 }
