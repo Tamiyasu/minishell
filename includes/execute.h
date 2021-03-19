@@ -6,16 +6,12 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:56:17 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:00:31 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTE_H
 # define EXECUTE_H
-
-# define EXIT_COMMAND_NOT_EXECUTED 126
-# define EXIT_COMMAND_NOT_FOUND 127
-# define EXIT_OUT_OF_RANGE_STATUS 255
 
 # include "minishell.h"
 # include "parser.h"

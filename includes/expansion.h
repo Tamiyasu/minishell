@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:13:02 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 22:13:54 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:58:34 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define EXPANSION_H
 
 # include "minishell.h"
-# include "parser.h"
 
 void	expansion(t_parser_node *node, t_env *env);
 #endif

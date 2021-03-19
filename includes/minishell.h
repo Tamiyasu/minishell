@@ -6,12 +6,17 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:00:52 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define FD_MAX 255
+# define EXIT_COMMAND_NOT_EXECUTED 126
+# define EXIT_COMMAND_NOT_FOUND 127
+# define EXIT_OUT_OF_RANGE_STATUS 255
 
 # include <unistd.h>
 # include <stdio.h>

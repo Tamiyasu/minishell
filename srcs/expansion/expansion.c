@@ -6,18 +6,13 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
-=======
-/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
->>>>>>> origin
+/*   Updated: 2021/03/19 16:58:53 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
 #include "expansion.h"
+#include "parser.h"
 #include "execute.h"
-#include "libft.h"
 
 char	*replace_variables_with_values(char *new_data, char *env_data)
 {
