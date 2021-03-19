@@ -6,10 +6,11 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 16:56:54 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/19 17:29:55 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "parser.h"
 #include "libft.h"
 
@@ -259,6 +260,9 @@ int parser(t_lsttoken *token_list, t_parser_node **node_p)
         c_type = check_token_type(token, last_type);
         if (!check_input(c_type, last_type))
         {
+            error_str("'");
+            error_str(token->data);
+            error_str("syntax error near unexpected token `");
             free_lst(&next);
             free_lst(&token);
             free_tree(&node);
@@ -346,6 +350,7 @@ int parser(t_lsttoken *token_list, t_parser_node **node_p)
     //node_print(node, 0);
     if (!check_last_input(c_type))
     {
+        error_str("syntax error near unexpected token `newline'");
         free_lst(&token);
         free_tree(&node);
         return (0);
