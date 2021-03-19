@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 22:24:41 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 22:29:42 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,40 @@ t_parser_node   *find_redirect_node(t_parser_node   *node)
     return (ret_node);
 }
 
-t_parser_node   *parser(t_token *token_list)
+int check_input(int c_type, int last_type)
+{
+    if (last_type == FT_EMPTY_F ||
+        last_type == FT_PIPE_F ||
+        last_type == FT_SEMICOLON_F ||
+        is_redirect(last_type)
+    )
+    {
+        if(c_type == FT_PIPE_F)
+            return (0);
+        if(c_type == FT_SEMICOLON_F)
+            return (0);
+    }
+    if (is_redirect(last_type))
+    {
+        if(is_redirect(c_type))
+        {
+            return (0);
+        }
+    }
+    return (1);
+}
+
+int check_last_input(int c_type)
+{
+    if(c_type == FT_PIPE_F)
+        return (0);
+    if(is_redirect(c_type))
+        return (0);
+    return (1);
+}
+
+
+int parser(t_token *token_list, t_parser_node **node_p)
 {
     t_parser_node *node;
     t_token *token;
