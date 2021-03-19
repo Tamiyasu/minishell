@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 16:30:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/19 16:56:54 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,8 +224,6 @@ int check_last_input(int c_type)
 {
     if(c_type == FT_PIPE_F)
         return (0);
-    if(c_type == FT_SEMICOLON_F)
-        return (0);
     if(is_redirect(c_type))
         return (0);
     return (1);
@@ -261,6 +259,9 @@ int parser(t_lsttoken *token_list, t_parser_node **node_p)
         c_type = check_token_type(token, last_type);
         if (!check_input(c_type, last_type))
         {
+            free_lst(&next);
+            free_lst(&token);
+            free_tree(&node);
             return (0);
         }
 
@@ -345,6 +346,8 @@ int parser(t_lsttoken *token_list, t_parser_node **node_p)
     //node_print(node, 0);
     if (!check_last_input(c_type))
     {
+        free_lst(&token);
+        free_tree(&node);
         return (0);
     }
     *node_p = node;

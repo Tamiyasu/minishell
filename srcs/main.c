@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:28:37 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/19 16:58:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	msh_loop(t_env *env)
 		int result = parser(token_list, &node);
 		if(!result)
 		{
-			free_tree(&node);
+			free(line);
 			printf("error \n");
 			continue;
 		}
