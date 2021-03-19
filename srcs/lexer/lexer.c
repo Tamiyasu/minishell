@@ -6,25 +6,13 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 19:36:34 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:08:16 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "libft.h"
 #include "get_next_line.h"
-
-void	token_print(t_token *token)
-{
-	int	i;
-
-	i = 0;
-	while (token != NULL)
-	{
-		printf("token->data[%d]=[%s]\n", i, token->data);
-		token = token->next;
-	}
-}
 
 void	lexer_inc(t_lexer *lexer)
 {
