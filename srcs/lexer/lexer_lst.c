@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:29:51 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:09:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:10:19 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_token	*token_list_new(void *content)
 	return (return_p);
 }
 
-void print_token(t_token *token, char *header)
+void	print_token(t_token *token, char *header)
 {
 	if (header)
 		printf("%s", header);
