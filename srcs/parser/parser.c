@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 01:00:44 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/19 15:41:34 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,18 @@ void indent(int i)
 
 void    node_print(t_parser_node *node, int deepness)
 {
-    //indent(deepness);
-    //printf("pointer : %p\n", node);
+    indent(deepness);
+    printf("pointer : %p\n", node);
     if(node)
     {
         indent(deepness);
         print_token(node->content, "token_list : ");
-        //printf("\n");
-        //indent(deepness);
-        //printf("r_node : %p\n", node->r_node);
+        printf("\n");
+        indent(deepness);
+        printf("r_node : %p\n", node->r_node);
         node_print(node->r_node, deepness + 1);
-        //indent(deepness);
-        //printf("l_node : %p\n", node->l_node);
+        indent(deepness);
+        printf("l_node : %p\n", node->l_node);
         node_print(node->l_node, deepness + 1);
     }
 }

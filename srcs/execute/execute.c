@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 15:22:27 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:23:37 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ char	*redirect_format_fdnum(char *data)
 		i++;
 	}
 	format_data = ft_substr(data, 0, i);
-	printf("format_data=[%s]\n", format_data);
+	//printf("format_data=[%s]\n", format_data);
 	free(data);
 	return (format_data);
 }
@@ -142,7 +142,7 @@ int	 redirect_check_fdnum(char *data, int redirect_flag)
 	int	fd_num;
 
 	fd_num = ft_atoi(data);
-	printf("fd_num=[%d]\n", fd_num);
+	//printf("fd_num=[%d]\n", fd_num);
 	if (fd_num == 0 && redirect_flag == FT_REDIRECT_O_F)
 	{
 		fd_num = 1;
@@ -193,8 +193,6 @@ int	redirect_file_open(char *file, int flag)
 		open_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	else
 		open_fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if (open_fd == -1)
-		output_error(file, strerror(errno));
 	return (open_fd);
 }
 
@@ -234,7 +232,7 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 	if (open_fd == -1 || fd_num > FD_MAX || fd_num < 0)
 	{
 		if (open_fd == -1)
-			output_error("open", strerror(errno));
+			output_error(node->r_node->content->data, strerror(errno));
 		else if (fd_num > FD_MAX)
 		{
 			node->content->data = redirect_format_fdnum(node->content->data);

@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:35:26 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ void	msh_loop(t_env *env)
 		// print_token(token_list, "check token");
 
 		node = parser(token_list);
-		// node_print(node, 0);
-		// printf("----------------------------end node_print\n\n");
+		//node_print(node, 0);
+		//printf("----------------------------end node_print\n\n");
 
 		expansion(node, env);
 		// print_token(token_list, "check token");
