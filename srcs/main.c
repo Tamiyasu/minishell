@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 18:19:41 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:55:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 #include "lexer.h"
 #include "expansion.h"
 #include "execute.h"
-#include "libft.h"
 #include "get_next_line.h"
 #include "parser.h"
 #include "signal_handler.h"
+
+int	g_exit_status;
 
 void	free_args(char **args)
 {
@@ -48,7 +49,7 @@ t_token *find_first_commnd_node(t_parser_node *node)
 }
 
 
-void	msh_loop(t_env *env, int *exit_status)
+void	msh_loop(t_env *env)
 {
 	char			*line;
 	t_token		*token_list;
@@ -68,8 +69,10 @@ void	msh_loop(t_env *env, int *exit_status)
 		if (gnl_result == GNL_ERR)
 		{
 			// printf("here !\n");
-		} else if (gnl_result == GNL_EOF && ft_strlen(line) == 0){
-			*exit_status = 0;
+		}
+		else if (gnl_result == GNL_EOF && ft_strlen(line) == 0)
+		{
+			g_exit_status = 0;
 			write(1, "exit\n", 5);
 			break;
 		}
@@ -86,12 +89,12 @@ void	msh_loop(t_env *env, int *exit_status)
 		// node_print(node, 0);
 		// printf("----------------------------end node_print\n\n");
 
-		expansion(node, env, exit_status);
+		expansion(node, env);
 		// print_token(token_list, "check token");
 		// printf("----------------------------end expansion_print\n\n");
 
 		msh_fd = NULL;
-		execute(node, env, exit_status, msh_fd); //exitコマンド実行時にreturn(0)がくる
+		execute(node, env, msh_fd); //exitコマンド実行時にreturn(0)がくる
 		free_tree(&node);
 		free(line);
 		line = NULL;
@@ -101,18 +104,17 @@ void	msh_loop(t_env *env, int *exit_status)
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_env	env;
-	int		exit_status;
 
 	argc -= argc;//del
 	argv -= (long)argv;//del
-	exit_status = 0;//de;
-	msh_env_init(&env);
-	msh_env_make_data(&env, envp);
+	g_exit_status = 0;
+	env_init(&env);
+	env_make_data(&env, envp);
 	if (env.data == NULL)
 	{
 		return (EXIT_FAILURE);
 	}
-	msh_loop(&env, &exit_status);
-	msh_env_free(&env);
-	return (exit_status);
+	msh_loop(&env);
+	env_free(&env);
+	return (g_exit_status);
 }

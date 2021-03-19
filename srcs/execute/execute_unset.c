@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:54:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 ** 指定された変数名[0]が文字or'_'で始まっているか、かつ、使用していい文字の変数名かチェック。
 ** 変数名にエラーあり→token->flag = -1代入し、エラー文出力。
 */
-static void	unset_check_args(t_token *token, int *exit_status)
+static void	unset_check_args(t_lsttoken *token, int *g_exit_status)
 {
 	int	idx;
 
@@ -41,7 +41,7 @@ static void	unset_check_args(t_token *token, int *exit_status)
 					token->flag = -1;
 					//unset_output_error(token->data);
 					output_error("unset", "not a valid identifier");
-					*exit_status = 1;
+					*g_exit_status = 1;
 					break ;
 				}
 			}
@@ -52,7 +52,7 @@ static void	unset_check_args(t_token *token, int *exit_status)
 					token->flag = -1;
 					//unset_output_error(token->data);
 					output_error("unset", "not a valid identifier");
-					*exit_status = 1;
+					*g_exit_status = 1;
 					break ;
 				}
 			}
@@ -159,15 +159,15 @@ static void	unset_make_new_envdata(t_env *env, char **split_env)
 int		execute_unset(t_token *token, t_env *env)
 {
 	char	**split_env;
-	int		exit_status;
+	int		g_exit_status;
 
 	token = token->next;
-	exit_status = 0;
+	g_exit_status = 0;
 	if (token == NULL)
 	{
-		return (exit_status);
+		return (g_exit_status);
 	}
-	unset_check_args(token,  &exit_status);
+	unset_check_args(token,  &g_exit_status);
 	split_env = execute_split_env(env);
 	if (split_env == NULL) //malloc失敗時
 	{
@@ -176,5 +176,5 @@ int		execute_unset(t_token *token, t_env *env)
 	unset_compare_token_with_env(token, env, split_env);
 	unset_make_new_envdata(env, split_env);
 	free_args(split_env);
-	return (exit_status);
+	return (g_exit_status);
 }

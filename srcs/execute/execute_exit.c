@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:54:00 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static long long exit_atoi(t_token *token)
 	return (num);
 }
 
-void	execute_exit(t_token *token, int *exit_status)
+void	execute_exit(t_lsttoken *token)
 {
 	long long  num;
 
@@ -95,7 +95,7 @@ void	execute_exit(t_token *token, int *exit_status)
 	if (exit_check_argsnum(token) != 1)
 	{
 		output_error("exit", "too many arguments");
-		*exit_status = 1;
+		g_exit_status = 1;
 		return ;
 	}
 	num = exit_atoi(token);
@@ -105,9 +105,9 @@ void	execute_exit(t_token *token, int *exit_status)
 		output_error_exit_args(token->data);
 		exit(EXIT_OUT_OF_RANGE_STATUS);
 	}
-	*exit_status = num % 256;
-	if (*exit_status < 0)
-		*exit_status += 256;
+	g_exit_status = num % 256;
+	if (g_exit_status < 0)
+		g_exit_status += 256;
 	ft_putendl_fd("exit", STDOUT_FILENO);
-	exit (*exit_status);
+	exit (g_exit_status);
 }

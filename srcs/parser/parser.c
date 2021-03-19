@@ -6,21 +6,24 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:55:13 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "libft.h"
 
+// echo a | > a.txt cat
+
 t_token	*lexer_lstadd_back(t_token **token, t_token *new)
 {
     t_token *token_i;
 
-    // printf("in add_back new : %s\n", new->data);
+    //printf("in add_back new : %s\n", new->data);
+
     if (!(*token))
     {
-        // printf("it ________________________new!");
+        //printf("it ________________________new!\n");
         *token = new;
         return(new);
     }
@@ -120,6 +123,14 @@ t_parser_node   *find_command_node(t_parser_node *node)
         if(node->r_node)
         {
             ret_node = find_command_node(node->r_node);
+            if(!ret_node)
+            {
+                node->r_node = malloc(sizeof(t_parser_node));
+                node->r_node->content = NULL;
+                node->r_node->r_node = NULL;
+                node->r_node->l_node = NULL;
+                ret_node = node->r_node;
+            }
         }
         else
         {
@@ -132,8 +143,16 @@ t_parser_node   *find_command_node(t_parser_node *node)
     }
     else if (is_redirect(node->content->flag))
     {
-        while(node && node->content && node->content->flag != FT_COMMAND_F)
+        while(node && node->content && is_redirect(node->content->flag))
         {
+            //printf("node->c->d : %s \n", node->content->data);
+            if (!node->l_node)
+            {
+                node->l_node = malloc(sizeof(t_parser_node));
+                node->l_node->content = NULL;
+                node->l_node->r_node = NULL;
+                node->l_node->l_node = NULL;
+            }
             node = node->l_node;
         }
         ret_node = node;
@@ -159,28 +178,6 @@ t_parser_node   *find_parent_node(t_parser_node   *node)
     }
     return (ret_node);
 }
-
-/*
-t_parser_node   *find_parent_node_of_pipe(t_parser_node   *node)
-{
-    t_parser_node *ret_node;
-    ret_node = NULL;
-
-    if  (node->content->flag == FT_SEMICOLON_F)
-    {
-        if(node->r_node)
-        {
-            ret_node = find_parent_node(node->r_node);
-        }
-        if(!ret_node)
-        {
-            ret_node = node;
-        }
-    }
-    if (ret_node)
-        printf("in_find_parent_node_of_pipe : ret_node->content->flag(expect 7) : %d", ret_node->content->flag );
-    return (ret_node);
-}*/
 
 t_parser_node   *find_redirect_node(t_parser_node   *node)
 {
@@ -228,14 +225,16 @@ t_parser_node   *parser(t_token *token_list)
 
         c_type = check_token_type(token, last_type);
         //printf("last_type : %d\n", c_type);
+        //printf("token: %s\n", token->data);
         token->flag = c_type;
         if(c_type == FT_COMMAND_F)
         {
             //printf("token: %s\n", token->data);
             command_node = find_command_node(node);
-            //printf("node: %p\n", node);
             //printf("command_node: %p\n", command_node);
+            //printf("command_node->content: %p\n", command_node->content);
             command_node->content = lexer_lstadd_back(&command_node->content, token);
+            //printf("command_node->content: %p\n", command_node->content);
         }
         else if(c_type == FT_SEMICOLON_F){
             new_node = malloc(sizeof(t_parser_node));
@@ -263,17 +262,31 @@ t_parser_node   *parser(t_token *token_list)
         }
         else if(is_redirect(c_type))
         {
-            new_node = malloc(sizeof(t_parser_node));
-            new_node->content = token;
-            new_node->r_node = NULL;
             command_node = find_parent_node(node);
+            //printf("command_node p : %p : %s \n", command_node, command_node->content->data);
             if(command_node)
             {
-                new_node->l_node = command_node->r_node;
-                command_node->r_node = new_node;
+                if (!command_node->r_node)
+                {
+                    command_node->r_node = malloc(sizeof(t_parser_node));
+                    command_node->r_node->content = token;
+                    command_node->r_node->r_node = NULL;
+                    command_node->r_node->l_node = NULL;
+                }
+                else
+                {
+                    new_node = malloc(sizeof(t_parser_node));
+                    new_node->content = token;
+                    new_node->r_node = NULL;
+                    new_node->l_node = command_node->r_node;
+                    command_node->r_node = new_node;
+                }
             }
             else
             {
+                new_node = malloc(sizeof(t_parser_node));
+                new_node->content = token;
+                new_node->r_node = NULL;
                 new_node->l_node = node;
                 node = new_node;
             }
@@ -289,5 +302,6 @@ t_parser_node   *parser(t_token *token_list)
         token = next;
         last_type = c_type;
     }
+    //node_print(node, 0);
     return (node);
 }

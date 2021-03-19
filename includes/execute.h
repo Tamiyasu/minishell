@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:56:17 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ typedef struct	s_info_fd
 	struct s_info_fd	*next;
 }				t_info_fd;
 
-void	execute(t_parser_node *node, t_env *env, int *exit_status, t_info_fd *fd);
+void	execute(t_parser_node *node, t_env *env, t_info_fd *fd);
 int		exec_check_builtin(char *token_data);
 int		execute_cd(t_token *token, t_env *env);
 int		execute_echo(t_token *token);
 void	command_execve(t_token *token, t_env *env);
-void	execute_exit(t_token *token, int *exit_status);
+void	execute_exit(t_token *token);
 int		execute_export(t_token *token, t_env *env);
 int		execute_env(char **env_data);
 int		execute_pwd(void);
