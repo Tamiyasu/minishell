@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 23:29:24 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 23:36:40 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int	lexer(char *input, t_token **token_list_p)
 				error_str(&input[data->idx]);
 				error_str("quotation marks error near token `");
 				free_lst(&token_list);
+				g_exit_status = EXIT_SYNTAX_ERROR;
 				return (0);
 			}
 		}

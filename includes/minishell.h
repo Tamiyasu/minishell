@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 22:24:00 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 23:36:13 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # define EXIT_COMMAND_NOT_EXECUTED 126
 # define EXIT_COMMAND_NOT_FOUND 127
 # define EXIT_OUT_OF_RANGE_STATUS 255
+# define EXIT_SYNTAX_ERROR 258
 
 # include <unistd.h>
 # include <stdio.h>

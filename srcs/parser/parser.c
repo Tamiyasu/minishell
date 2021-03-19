@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 22:29:42 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 23:36:59 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,7 @@ int parser(t_token *token_list, t_parser_node **node_p)
             free_lst(&next);
             free_lst(&token);
             free_tree(&node);
+            g_exit_status = EXIT_SYNTAX_ERROR;
             return (0);
         }
 
@@ -353,6 +354,7 @@ int parser(t_token *token_list, t_parser_node **node_p)
         error_str("syntax error near unexpected token `newline'");
         free_lst(&token);
         free_tree(&node);
+        g_exit_status = EXIT_SYNTAX_ERROR;
         return (0);
     }
     *node_p = node;
