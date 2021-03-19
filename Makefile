@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/18 16:08:32 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/19 17:40:45 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,10 @@ SRC_FILE	+= enviroment.c
 SRC_FILE	+= signal_handler.c
 SRC_FILE	+= lexer/lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
+SRC_FILE	+= lexer/lexer_quote.c
+SRC_FILE	+= lexer/lexer_set_redirect.c
+SRC_FILE	+= lexer/lexer_set_char.c
+SRC_FILE	+= lexer/lexer_skip_space.c
 SRC_FILE    += parser/parser.c
 SRC_FILE	+= expansion/expansion.c
 SRC_FILE	+= execute/execute.c

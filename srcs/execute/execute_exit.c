@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:54:00 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:24:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static long long exit_atoi(t_token *token)
 	return (num);
 }
 
-void	execute_exit(t_lsttoken *token)
+void	execute_exit(t_token *token)
 {
 	long long  num;
 

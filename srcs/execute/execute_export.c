@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:54:11 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:24:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static char	**execute_split_and_classify_tokend(t_token *token,  t_env *env)
 	return (split_tokend);
 }
 
-static void	export_check_args(t_lsttoken *token, char **split_tokend, int *g_exit_status)
+static void	export_check_args(t_token *token, char **split_tokend, int *g_exit_status)
 {
 	int	i;
 	int	j;

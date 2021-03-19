@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:54:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:24:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 ** 指定された変数名[0]が文字or'_'で始まっているか、かつ、使用していい文字の変数名かチェック。
 ** 変数名にエラーあり→token->flag = -1代入し、エラー文出力。
 */
-static void	unset_check_args(t_lsttoken *token, int *g_exit_status)
+static void	unset_check_args(t_token *token, int *g_exit_status)
 {
 	int	idx;
 

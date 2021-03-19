@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:53:30 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:24:43 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,6 @@ int	check_path_directory(char *command)
 	return (0);
 }
 
-<<<<<<< HEAD
-int	search_command_path(t_token *token, t_env *env)
-=======
 int	check_permission_exec(char *command)
 {
 	struct stat		stat_buf;
@@ -80,8 +77,7 @@ int	check_permission_exec(char *command)
 	return (0);
 }
 
-int	search_command_path(t_lsttoken *token, t_env *env)
->>>>>>> origin
+int	search_command_path(t_token *token, t_env *env)
 {
 	char			**path_value;
 	int				idx;

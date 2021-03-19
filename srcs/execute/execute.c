@@ -6,11 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/03/18 18:20:21 by ysaito           ###   ########.fr       */
-=======
-/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
->>>>>>> origin
+/*   Updated: 2021/03/19 17:24:17 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +100,7 @@ int	exec_check_builtin(char *token_data)
 	return (0);
 }
 
-void	command_builtin(t_lsttoken *token, t_env *env)
+void	command_builtin(t_token *token, t_env *env)
 {
 	if (ft_strcmp(token->data, "cd") == 0)
 		g_exit_status = execute_cd(token, env);
@@ -135,7 +131,7 @@ int	 redirect_check_fdnum(char *data, int redirect_flag)
 	return (fd_num);
 }
 
-void	exec_command(t_lsttoken *token, t_env *env, int child_flag)
+void	exec_command(t_token *token, t_env *env, int child_flag)
 {
 	pid_t	child_p;
 	int		pid_status;

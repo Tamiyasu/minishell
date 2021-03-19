@@ -6,12 +6,11 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:29:51 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:10:19 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 17:39:12 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-#include "libft.h"
 
 void	free_lst(t_token **token)
 {

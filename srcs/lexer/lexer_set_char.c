@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion.h                                        :+:      :+:    :+:   */
+/*   lexer_set_char.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/22 10:13:02 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:23:27 by ysaito           ###   ########.fr       */
+/*   Created: 2021/03/19 17:35:15 by ysaito            #+#    #+#             */
+/*   Updated: 2021/03/19 17:35:27 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANSION_H
-# define EXPANSION_H
+#include "lexer.h"
 
-# include "minishell.h"
-# include "parser.h"
+t_token	*lexer_set_char(t_token *token_list, t_lexer *lexer, char *input)
+{
+	char	*set_token;
 
-void	expansion(t_parser_node *node, t_env *env);
-#endif
+	token_list = lexer_check_tokenlen(token_list, lexer, input);
+	lexer->token_len++;
+	set_token = ft_substr(&input[lexer->start], 0, lexer->token_len);
+	token_list = lexer_set_token(token_list, lexer, set_token);
+	lexer->start = ++lexer->idx;
+	return (token_list);
+}
