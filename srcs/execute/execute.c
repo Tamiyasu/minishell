@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:24:17 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 22:24:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,30 @@ void	command_builtin(t_token *token, t_env *env)
 	return ;
 }
 
+char	*redirect_format_fdnum(char *data)
+{
+	char *format_data;
+	int	i;
+
+	i = 0;
+	while (data[i])
+	{
+		if (!ft_isdigit(data[i]))
+			break ;
+		i++;
+	}
+	format_data = ft_substr(data, 0, i);
+	//printf("format_data=[%s]\n", format_data);
+	free(data);
+	return (format_data);
+}
+
 int	 redirect_check_fdnum(char *data, int redirect_flag)
 {
 	int	fd_num;
 
 	fd_num = ft_atoi(data);
+	//printf("fd_num=[%d]\n", fd_num);
 	if (fd_num == 0 && redirect_flag == FT_REDIRECT_O_F)
 	{
 		fd_num = 1;
@@ -174,8 +193,6 @@ int	redirect_file_open(char *file, int flag)
 		open_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	else
 		open_fd = open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if (open_fd == -1)
-		output_error(file, strerror(errno));
 	return (open_fd);
 }
 
@@ -212,8 +229,17 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 
 	fd_num = redirect_check_fdnum(node->content->data, node->content->flag);
 	open_fd = redirect_file_open(node->r_node->content->data, node->content->flag);
-	if (open_fd == -1)
+	if (open_fd == -1 || fd_num > FD_MAX || fd_num < 0)
 	{
+		if (open_fd == -1)
+			output_error(node->r_node->content->data, strerror(errno));
+		else if (fd_num > FD_MAX)
+		{
+			node->content->data = redirect_format_fdnum(node->content->data);
+			output_error(node->content->data, "Bad file descriptor");
+		}
+		else
+			output_error("file descriptor out of range", "Bad file descriptor");
 		g_exit_status = 1;
 		return ;
 	}
@@ -222,7 +248,6 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 		msh_fd = redirect_save_fd(msh_fd, fd_num, node->content->flag);
 		dup2(open_fd, fd_num);
 	}
-	//close(open_fd);
 	func(node->l_node, env, msh_fd);
 }
 

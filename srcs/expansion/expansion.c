@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:23:42 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 22:23:46 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,7 @@ char	*save_env_data(t_env *env, char *new_data, char *token_data, int *start, in
 	*data_len = 0;
 	env_idx = env_search(env->data, env_key);
 	if (env_idx == -1)
-	{
 		*start = (*start + ft_strlen(env_key));
-	}
 	else
 	{
 		env_value = ft_strdup(&env->data[env_idx][ft_strlen(env_key) + 1]);
@@ -162,7 +160,7 @@ void	expansion_check(t_token *token_list, t_env *env)
 	int		start;
 	int		idx;
 
-	while (token_list != NULL)
+	while (token_list)
 	{
 		new_data = NULL;
 		data_len = 0;
@@ -187,33 +185,19 @@ void	expansion_check(t_token *token_list, t_env *env)
 			}
 		}
 		new_data = save_reading_data(token_list->data, new_data, &start, &data_len, &idx);
-		if (new_data)
-		{
-			free(token_list->data);
-			token_list->data = new_data;
-		}
-		else
-		{
-			free(token_list->data);
-			token_list->data = ft_strdup("");
-		}
+		set_expansion_data(token_list, new_data);
 		token_list = token_list->next;
 	}
 }
 
 void	expansion(t_parser_node *node, t_env *env)
 {
-	if (node == NULL)
+	if (!node || !(node->content))
 		return ;
-
 	if (node->content->flag == FT_COMMAND_F)
-	{
 		expansion_check(node->content, env);
-	}
 	expansion(node->l_node, env);
 	if (node->content->flag == FT_SEMICOLON_F)
-	{
 		return ;
-	}
 	expansion(node->r_node, env);
 }

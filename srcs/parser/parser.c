@@ -6,10 +6,11 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 16:59:34 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 22:24:41 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "parser.h"
 #include "libft.h"
 
@@ -59,18 +60,18 @@ void indent(int i)
 
 void    node_print(t_parser_node *node, int deepness)
 {
-    //indent(deepness);
-    //printf("pointer : %p\n", node);
+    indent(deepness);
+    printf("pointer : %p\n", node);
     if(node)
     {
         indent(deepness);
         print_token(node->content, "token_list : ");
-        //printf("\n");
-        //indent(deepness);
-        //printf("r_node : %p\n", node->r_node);
+        printf("\n");
+        indent(deepness);
+        printf("r_node : %p\n", node->r_node);
         node_print(node->r_node, deepness + 1);
-        //indent(deepness);
-        //printf("l_node : %p\n", node->l_node);
+        indent(deepness);
+        printf("l_node : %p\n", node->l_node);
         node_print(node->l_node, deepness + 1);
     }
 }
@@ -224,6 +225,17 @@ t_parser_node   *parser(t_token *token_list)
         token->next = NULL;
 
         c_type = check_token_type(token, last_type);
+        if (!check_input(c_type, last_type))
+        {
+            error_str("'");
+            error_str(token->data);
+            error_str("syntax error near unexpected token `");
+            free_lst(&next);
+            free_lst(&token);
+            free_tree(&node);
+            return (0);
+        }
+
         //printf("last_type : %d\n", c_type);
         //printf("token: %s\n", token->data);
         token->flag = c_type;
@@ -303,5 +315,13 @@ t_parser_node   *parser(t_token *token_list)
         last_type = c_type;
     }
     //node_print(node, 0);
-    return (node);
+    if (!check_last_input(c_type))
+    {
+        error_str("syntax error near unexpected token `newline'");
+        free_lst(&token);
+        free_tree(&node);
+        return (0);
+    }
+    *node_p = node;
+    return (1);
 }

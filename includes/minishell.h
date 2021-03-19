@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:00:52 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 22:24:00 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void		free_args(char **args);
 /*
 ** enviroment.c
 */
+char	*error_str(char *str);
 void	env_init(t_env *env);
 void	env_make_data(t_env *env, char **envp);
 int		env_search(char **env_data, char *variable_name);
