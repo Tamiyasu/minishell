@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 22:32:30 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 22:48:50 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,21 +117,7 @@ char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_le
 	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
 	while (token_data[*idx] !=  '\"')
 	{
-		if (token_data[*idx] == '\\' && token_data[*idx + 1] == '\\')
-			new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-		else if (token_data[*idx] == '\\' && token_data[*idx + 1] == '$')
-		{
-			new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-			*data_len = (*data_len + 1);
-			*idx = (*idx + 1);
-		}
-		else if (token_data[*idx] == '\\' && token_data[*idx + 1] == '\"')
-		{
-			new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-			*data_len = (*data_len + 1);
-			*idx = (*idx + 1);
-		}
-		else if (token_data[*idx] == '$')
+		if (token_data[*idx] == '$')
 		{
 			new_data = set_environment_data(token_data, new_data, start, data_len, idx, env);
 		}
@@ -145,13 +131,13 @@ char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_le
 	return (new_data);
 }
 
-char	*set_escape_data(char *token_data, char *new_data, int *start, int *data_len, int *idx)
-{
-	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-	*data_len = (*data_len + 1);
-	*idx = (*idx + 1);
-	return (new_data);
-}
+// char	*set_escape_data(char *token_data, char *new_data, int *start, int *data_len, int *idx)
+// {
+// 	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
+// 	*data_len = (*data_len + 1);
+// 	*idx = (*idx + 1);
+// 	return (new_data);
+// }
 
 void	set_expansion_data(t_token *token_list, char *new_data)
 {
@@ -189,9 +175,9 @@ void	expansion_check(t_token *token_list, t_env *env)
 				new_data = set_dquote_data(token_list->data, new_data, &start, &data_len, &idx, env);
 			else if (token_list->data[idx] == '$')
 				new_data = set_environment_data(token_list->data, new_data, &start, &data_len, &idx, env);
-			else if (token_list->data[idx] == '\\' && token_list->data[idx + 1] != ' '
-					&& token_list->data[idx] != '\t' && token_list->data[idx + 1])
-				new_data = set_escape_data(token_list->data, new_data, &start, &data_len, &idx);
+			// else if (/*token_list->data[idx] == '\\' && */token_list->data[idx + 1] != ' '
+			// 		&& token_list->data[idx] != '\t' && token_list->data[idx + 1])
+			// 	new_data = set_escape_data(token_list->data, new_data, &start, &data_len, &idx);
 			else
 			{
 				data_len++;

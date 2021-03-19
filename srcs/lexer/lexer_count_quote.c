@@ -1,43 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_quote.c                                      :+:      :+:    :+:   */
+/*   lexer_count_quote.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/19 17:17:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:18:46 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 23:22:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-void	lexer_squote_count_tokenlen(t_lexer *lexer, char *input)
+int	lexer_count_quote(t_data *data, char *input, char quote)
 {
-	while (input[lexer->idx] != '\0')
-	{
-		lexer->idx = (lexer->idx + 1);
-		lexer->token_len++;
-		if (input[lexer->idx] == '\'')
-		{
-			lexer->token_len++;
-			break ;
-		}
-	}
-	lexer->idx++;
-}
+	int	save_idx;
 
-void	lexer_dquote_count_tokenlen(t_lexer *lexer, char *input)
-{
-	while (input[lexer->idx] != '\0')
+	save_idx = data->idx;
+	while (input[data->idx] != '\0')
 	{
-		lexer->idx = (lexer->idx + 1);
-		lexer->token_len++;
-		if (input[lexer->idx] == '\"' && input[lexer->idx - 1] != '\\')
+		data->idx++;
+		data->length++;
+		if (input[data->idx] == quote)
 		{
-			lexer->token_len++;
-			break ;
+			data->length++;
+			return (1) ;
 		}
 	}
-	lexer->idx++;
+	data->idx = save_idx;
+	return (0);
 }
