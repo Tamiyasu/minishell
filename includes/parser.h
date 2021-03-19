@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/06 16:12:45 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 15:32:52 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct	s_parser_node
     t_lsttoken *content;
 }				t_parser_node;
 
-t_parser_node   *parser(t_lsttoken *token_list);
+int parser(t_lsttoken *token_list, t_parser_node **node_p);
 t_parser_node   *free_tree(t_parser_node **node);
 void node_print(t_parser_node *node, int deepness);
 

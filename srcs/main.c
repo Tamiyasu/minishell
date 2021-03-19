@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 16:28:37 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,13 @@ void	msh_loop(t_env *env)
 		}
 		// print_token(token_list, "check token");
 
-		node = parser(token_list);
+		int result = parser(token_list, &node);
+		if(!result)
+		{
+			free_tree(&node);
+			printf("error \n");
+			continue;
+		}
 		// node_print(node, 0);
 		// printf("----------------------------end node_print\n\n");
 
