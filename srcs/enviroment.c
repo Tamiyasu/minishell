@@ -6,24 +6,19 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 13:10:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:34:05 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
 
 void	env_free(t_env *env)
 {
 	free_args(env->data);
 	if (env->pwd_data != NULL)
-	{
 		free(env->pwd_data);
-	}
 	if (env->unset_pwd != NULL)
-	{
 		free(env->unset_pwd);
-	}
 }
 
 void	env_init(t_env *env)
@@ -88,12 +83,49 @@ int	env_check_data(t_env *env, char **envp)
 	if (env->pwd_flag == -1)
 		env_num++;
 	env->shlvl_flag = env_search(envp, "SHLVL");
-	if (env->shlvl_flag == -1)
+    if (env->shlvl_flag == -1)
 		env_num++;
 	return (env_num);
 }
 
-void	env_make_data(t_env *env, char **envp)
+int		env_set_shlvl(t_env *env, int idx)
+{
+	if (env->shlvl_flag == -1)
+		env->data[idx++] = ft_strdup("SHLVL=1");
+	else
+	{
+		int shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
+		if(shlvl_num < 0)
+			shlvl_num = 0;
+		else
+		{
+			if (shlvl_num == INT_MAX)
+				shlvl_num = 0;
+			else
+				shlvl_num += 1;
+        }
+		free(env->data[env->shlvl_flag]);
+		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
+	}
+	return (idx);
+}
+
+int		env_set_pwd(t_env * env, int idx)
+{
+	if (env->oldpwd_flag == -1)
+		env->data[idx++] = ft_strdup("OLDPWD");
+	env_update_pwddata(env);
+	if (env->pwd_flag == -1)
+		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
+	else
+	{
+		free(env->data[env->pwd_flag]);
+		env->data[env->pwd_flag] = ft_strjoin("PWD=", env->pwd_data);
+	}
+	return (idx);
+}
+
+void	env_set_data(t_env *env, char **envp)
 {
 	int	idx;
 
@@ -107,33 +139,35 @@ void	env_make_data(t_env *env, char **envp)
 		env->data[idx] = ft_strdup(envp[idx]);
 		idx++;
 	}
-	if (env->oldpwd_flag == -1)
-		env->data[idx++] = ft_strdup("OLDPWD");
-	env_update_pwddata(env);
-	if (env->pwd_flag == -1)
-		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
-	else
-	{
-		free(env->data[env->pwd_flag]);
-		env->data[env->pwd_flag] = ft_strjoin("PWD=", env->pwd_data);
-	}
-	if (env->shlvl_flag == -1)
-	{
-		env->data[idx++] = ft_strjoin("SHLVL=1", env->pwd_data);
-	}
-	else
-	{
-		int shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
-		//printf("SHLVL_NUM=[%d]\n", shlvl_num);
-		//numチェック
-		if(shlvl_num < 0)
-			shlvl_num = 0;
-		else
-			shlvl_num += 1;
-		free(env->data[env->shlvl_flag]);
-		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
-	}
-
+	// if (env->oldpwd_flag == -1)
+	// 	env->data[idx++] = ft_strdup("OLDPWD");
+	// env_update_pwddata(env);
+	// if (env->pwd_flag == -1)
+	// 	env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
+	// else
+	// {
+	// 	free(env->data[env->pwd_flag]);
+	// 	env->data[env->pwd_flag] = ft_strjoin("PWD=", env->pwd_data);
+	// }
+	idx = env_set_pwd(env, idx);
+	idx = env_set_shlvl(env, idx);
+	// if (env->shlvl_flag == -1)
+	// 	env->data[idx++] = ft_strdup("SHLVL=1");
+	// else
+	// {
+	// 	int shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
+	// 	if(shlvl_num < 0)
+	// 		shlvl_num = 0;
+	// 	else
+	// 	{
+	// 		if (shlvl_num == INT_MAX)
+	// 			shlvl_num = 0;
+	// 		else
+	// 			shlvl_num += 1;
+    //     }
+	// 	free(env->data[env->shlvl_flag]);
+	// 	env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
+	// }
 	env->oldpwd_flag = 1;
 	env->pwd_flag = 1;
 	env->data[idx] = NULL;
