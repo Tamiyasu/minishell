@@ -6,11 +6,12 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 16:04:00 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 16:52:31 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 
 void	env_free(t_env *env)
 {
@@ -59,10 +60,9 @@ void	env_update_pwddata(t_env *env)
 		free(env->pwd_data);
 		env->pwd_data = NULL;
 	}
-	cwdir = getcwd(NULL, 0);
+	cwdir = cwd_wrapper();
 	if (cwdir == NULL)
 	{
-		error_str("getcwd: cannot access parent directories: No such file or directory");
 		error_str("error retrieving current directory: ");
 	}
 	env->pwd_data = cwdir;

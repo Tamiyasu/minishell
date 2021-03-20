@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 22:23:57 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 16:49:14 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	free_fd(t_info_fd **fd);
 void	output_error(char *err_command, char *err_string);
 void	output_no_filename(void);
 void	output_error_exit_args(char	*exit_args);
+char	*cwd_wrapper();
 
 /*
 ** unset, export

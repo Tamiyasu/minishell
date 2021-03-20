@@ -6,21 +6,36 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 16:32:04 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 16:51:02 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
+char *cwd_wrapper()
+{
+	char *ret_str;
+
+	ret_str = getcwd(NULL, 0);
+	if(ret_str == NULL)
+	{
+		error_str("No such file or directory");
+		error_str("getcwd: cannot access parent directories: ");
+	}
+	return (ret_str);
+}
+
 int	execute_pwd(void)
 {
 	char	*cwdir;
 
-	cwdir = getcwd(NULL, 0);//このように引数を指定してあげると、getcwdの方で、buf[1024]で取ってくれる。
+	cwdir = cwd_wrapper();
 	if (cwdir == NULL)
 	{
-		ft_putendl_fd("pwd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
+		error_str("error retrieving current directory: ");
+		ft_putendl_fd(error_str("pwd: "), 2);
+		error_str(NULL);
 		//ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
