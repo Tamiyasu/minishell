@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 19:32:31 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:50:22 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 	int	old_idx;
 	int	idx;
 	char *tmp;
-	int	all_flag;
-	size_t i;
+	//int	all_flag;
+	//size_t i;
 
 	idx = env_search(env->data, "PWD");
 	if (env->oldpwd_flag != -1)
@@ -53,6 +53,7 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 		}
 		else if (arg_str)
 		{
+			/*
 			all_flag = 1;
 			i = 0;
 			while (i < ft_strlen(arg_str))
@@ -65,7 +66,7 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 				i++;
 			}
 			if (all_flag)
-			{
+			{*/
 				tmp = env->data[idx];
 				if(ft_strlen(tmp) > 4 && tmp[ft_strlen(tmp) - 1] != '/')
 				{
@@ -75,7 +76,7 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 				}
 				env->data[idx] = ft_strjoin(tmp, arg_str);
 				free(tmp);
-			}
+			//}
 		}
 	}
 }
