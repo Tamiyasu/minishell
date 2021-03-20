@@ -6,7 +6,7 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/20 12:33:08 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/03/20 12:48:49 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC_FILE	+= lexer/lexer_set_redirect.c
 SRC_FILE	+= lexer/lexer_set_char.c
 SRC_FILE	+= lexer/lexer_skip_space.c
 SRC_FILE    += parser/parser.c
+SRC_FILE    += parser/parser_check_type.c
 SRC_FILE    += parser/node.c
 SRC_FILE	+= expansion/expansion.c
 SRC_FILE	+= execute/execute.c

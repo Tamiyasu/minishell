@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 12:44:47 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:49:51 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,8 @@ t_parser_node	*make_node(t_token *con, t_parser_node *l, t_parser_node *r);
 int             parser(t_token *token_list, t_parser_node **node_p);
 void            node_print(t_parser_node *node, int deepness);
 t_parser_node	*find_c_node(t_parser_node *node);
+int				is_redirect(int flag);
+int				check_input(int c_type, int last_type);
+int				check_last_input(int c_type);
 
 #endif

@@ -6,21 +6,13 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 12:44:16 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:49:29 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 #include "libft.h"
-
-int				is_redirect(int flag)
-{
-	return (
-		flag == FT_REDIRECT_O_F ||
-		flag == FT_REDIRECT_A_F ||
-		flag == FT_REDIRECT_I_F);
-}
 
 int				check_token_type(t_token *token, int last_type)
 {
@@ -77,7 +69,7 @@ t_parser_node	*find_c_node(t_parser_node *node)
 		ret_node = node;
 	else if (node->content->flag == FT_PIPE_F
 			|| node->content->flag == FT_SEMICOLON_F)
-	ret_node = find_c_node_p_and_sc(node);
+		ret_node = find_c_node_p_and_sc(node);
 	else if (is_redirect(node->content->flag))
 	{
 		while (node && node->content && is_redirect(node->content->flag))
@@ -128,37 +120,6 @@ t_parser_node	*find_redirect_node(t_parser_node *node)
 		}
 	}
 	return (ret_node);
-}
-
-int				check_input(int c_type, int last_type)
-{
-	if (last_type == FT_EMPTY_F ||
-		last_type == FT_PIPE_F ||
-		last_type == FT_SEMICOLON_F ||
-		is_redirect(last_type))
-	{
-		if (c_type == FT_PIPE_F)
-			return (0);
-		if (c_type == FT_SEMICOLON_F)
-			return (0);
-	}
-	if (is_redirect(last_type))
-	{
-		if (is_redirect(c_type))
-		{
-			return (0);
-		}
-	}
-	return (1);
-}
-
-int				check_last_input(int c_type)
-{
-	if (c_type == FT_PIPE_F)
-		return (0);
-	if (is_redirect(c_type))
-		return (0);
-	return (1);
 }
 
 int				parser(t_token *token, t_parser_node **node_p)
