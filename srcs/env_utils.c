@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 13:55:36 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 16:04:00 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,8 @@ void	env_update_pwddata(t_env *env)
 	cwdir = getcwd(NULL, 0);
 	if (cwdir == NULL)
 	{
-		strerror(errno);
-		return ;
+		error_str("getcwd: cannot access parent directories: No such file or directory");
+		error_str("error retrieving current directory: ");
 	}
-	env->pwd_data = ft_strdup(cwdir);
-	free(cwdir);
+	env->pwd_data = cwdir;
 }
