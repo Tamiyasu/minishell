@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 15:24:46 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 15:26:13 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char	*replace_variables_with_values(char *new_data, char *env_data)
 char	*save_reading_data(char *token_data, char *new_data, int *start, int *data_len, int *idx)
 {
 	char	*tmp;
+	char    *tmp2;
 
 	if(*data_len)
 	{
@@ -41,9 +42,11 @@ char	*save_reading_data(char *token_data, char *new_data, int *start, int *data_
 		else
 		{
 			tmp = ft_strdup(new_data);
+			tmp2 = ft_substr(token_data, *start, *data_len);
 			free(new_data);
-			new_data = ft_strjoin(tmp, ft_substr(token_data, *start, *data_len));
+			new_data = ft_strjoin(tmp, tmp2);
 			free(tmp);
+			free(tmp2);
 		}
 	}
 	*data_len = 0;
