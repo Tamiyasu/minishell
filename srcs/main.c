@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:36:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:38:21 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char *error_str(char *str)
 
 	if (str)
 	{
-		if(s_str)
+		if (s_str)
 		{
 			tmp = s_str;
 			s_str = ft_strjoin(str, s_str);
@@ -115,7 +115,7 @@ void	msh_loop(t_env *env)
 			continue ;
 		}
 		result = parser(token_list, &node);
-		if(!result)
+		if (!result)
 		{
 			free(line);
 			g_exit_status = EXIT_SYNTAX_ERROR;
