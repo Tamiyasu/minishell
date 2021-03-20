@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:24:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:42:03 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,9 +136,7 @@ static void	unset_make_new_envdata(t_env *env, char **split_env)
 
 	new_env = malloc(sizeof(char *) * (env->num + 1));
 	if (new_env == NULL)
-	{
-		return ;
-	}
+		ft_enomem();
 	idx = 0;
 	int	new_idx = 0;;
 	while (split_env[idx] != NULL)
@@ -170,9 +168,7 @@ int		execute_unset(t_token *token, t_env *env)
 	unset_check_args(token,  &g_exit_status);
 	split_env = execute_split_env(env);
 	if (split_env == NULL) //malloc失敗時
-	{
-		return (EXIT_FAILURE);
-	}
+		ft_enomem();
 	unset_compare_token_with_env(token, env, split_env);
 	unset_make_new_envdata(env, split_env);
 	free_args(split_env);

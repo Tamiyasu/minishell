@@ -6,11 +6,12 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 22:25:59 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 22:32:11 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:37:51 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <string.h>
 #include <errno.h>
 
 void ft_enomem()
