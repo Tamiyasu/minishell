@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 14:02:59 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 14:04:12 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char			*ft_strjoin_and_free(char *s1, char *s2)
 	int			j;
 
 	if (s1 == NULL || s2 == NULL)
-	return (NULL);
+		return (NULL);
 	strlen = ft_strlen(s1) + ft_strlen(s2);
 	newstr = (char *)malloc(sizeof(char) * (strlen + 1));
 	if (newstr == NULL)
@@ -33,11 +33,7 @@ static char			*ft_strjoin_and_free(char *s1, char *s2)
 		i++;
 	}
 	while (s2[j] != '\0')
-	{
-		newstr[i] = s2[j];
-		i++;
-		j++;
-	}
+		newstr[i++] = s2[j++];
 	newstr[i] = '\0';
 	free(s1);
 	return (newstr);
