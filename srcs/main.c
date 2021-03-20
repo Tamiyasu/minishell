@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:04:22 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:07:10 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,58 +19,6 @@
 #include "signal_handler.h"
 
 int	g_exit_status;
-
-void	free_args(char **args)
-{
-	int	idx;
-
-	idx = 0;
-	if (args == NULL)
-	{
-		return ;
-	}
-	while (args[idx] != NULL)
-	{
-		free(args[idx]);
-		idx++;
-	}
-	free(args);
-	args = NULL;
-}
-
-t_token	*find_first_commnd_node(t_parser_node *node)
-{
-	printf("node : %p\n", node);
-	printf("content : %p\n", node->content);
-	printf("flag : %d\n", node->content->flag);
-	while (node->content->flag != FT_COMMAND_F)
-		node = node->l_node;
-	return (node->content);
-}
-
-char	*error_str(char *str)
-{
-	static char	*s_str;
-	char		*tmp;
-
-	if (str)
-	{
-		if (s_str)
-		{
-			tmp = s_str;
-			s_str = ft_strjoin(str, s_str);
-			free(tmp);
-		}
-		else
-			s_str = ft_strdup(str);
-	}
-	else
-	{
-		free(s_str);
-		s_str = NULL;
-	}
-	return (s_str);
-}
 
 int		faile_func(int result, char **line)
 {
