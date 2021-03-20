@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 14:04:12 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 14:05:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,23 +104,12 @@ int				get_next_line(char **line)
 	{
 		buf = ft_read_or_save(&save, &rc);
 		if (buf == NULL)
-		{
 			return (GNL_ERR);
-		}
 		if (buf_join == NULL)
-		{
 			buf_join = ft_strdup(buf);
-		}
 		else
-		{
 			buf_join = ft_strjoin_and_free(buf_join, buf);
-		}
-		if (ft_strchr(buf, '\n'))
-		{
-			free(buf);
-			break;
-		}
-		else if(ft_strlen(buf) == 0 && rc == GNL_EOF)
+		if (ft_strchr(buf, '\n') || (ft_strlen(buf) == 0 && rc == GNL_EOF))
 		{
 			free(buf);
 			break;
