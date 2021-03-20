@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 10:40:08 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 11:01:30 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ int check_input(int c_type, int last_type)
 	return (1);
 }
 
-int check_last_input(int c_type)
+int				check_last_input(int c_type)
 {
 	if (c_type == FT_PIPE_F)
 		return (0);
@@ -197,23 +197,32 @@ int check_last_input(int c_type)
 	return (1);
 }
 
+t_parser_node	*make_node(t_token *con, t_parser_node *l, t_parser_node *r)
+{
+	t_parser_node	*ret_p;
+
+	if((ret_p = malloc(sizeof(t_parser_node))))
+	{
+		ret_p->content = con;
+		ret_p->l_node = l;
+		ret_p->r_node = r;
+	}
+	return (ret_p);
+}
+
 int				parser(t_token *token_list, t_parser_node **node_p)
 {
 	t_parser_node	*node;
 	t_token			*token;
 	t_token			*next;
 	t_parser_node	*c_node;
-	t_parser_node	*new_node;
 	int				last_type;
 	int				c_type;
 
 	last_type = FT_EMPTY_F;
 	c_type = FT_EMPTY_F;
 	token = token_list;
-	node = malloc(sizeof(t_parser_node));
-	node->content = NULL;
-	node->r_node = NULL;
-	node->l_node = NULL;
+	node = make_node(NULL, NULL, NULL);
 	while (token)
 	{
 		next = token->next;
@@ -227,7 +236,6 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 			free_lst(&next);
 			free_lst(&token);
 			free_tree(&node);
-			g_exit_status = EXIT_SYNTAX_ERROR;
 			return (0);
 		}
 		token->flag = c_type;
@@ -237,67 +245,26 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 			c_node->content = lexer_lstadd_back(&c_node->content, token);
 		}
 		else if (c_type == FT_SEMICOLON_F)
-		{
-			new_node = malloc(sizeof(t_parser_node));
-			new_node->l_node = node;
-			new_node->content = token;
-			new_node->r_node = NULL;
-			node = new_node;
-		}
+			node = make_node(token, node, NULL);
 		else if (c_type == FT_PIPE_F)
 		{
-			new_node = malloc(sizeof(t_parser_node));
-			new_node->content = token;
-			new_node->r_node = NULL;
 			if (node && node->content->flag == FT_SEMICOLON_F)
-			{
-				c_node = node;
-				new_node->l_node = c_node->r_node;
-				c_node->r_node = new_node;
-			}
+				c_node->r_node = make_node(token, node->r_node, NULL);
 			else
-			{
-				new_node->l_node = node;
-				node = new_node;
-			}
+				node = make_node(token, node, NULL);
 		}
 		else if (is_redirect(c_type))
 		{
 			c_node = find_parent_node(node);
 			if (c_node)
-			{
-				if (!c_node->r_node)
-				{
-					c_node->r_node = malloc(sizeof(t_parser_node));
-					c_node->r_node->content = token;
-					c_node->r_node->r_node = NULL;
-					c_node->r_node->l_node = NULL;
-				}
-				else
-				{
-					new_node = malloc(sizeof(t_parser_node));
-					new_node->content = token;
-					new_node->r_node = NULL;
-					new_node->l_node = c_node->r_node;
-					c_node->r_node = new_node;
-				}
-			}
+				c_node->r_node = make_node(token, c_node->r_node, NULL);
 			else
-			{
-				new_node = malloc(sizeof(t_parser_node));
-				new_node->content = token;
-				new_node->r_node = NULL;
-				new_node->l_node = node;
-				node = new_node;
-			}
+				node = make_node(token, node, NULL);
 		}
 		else if (c_type == FT_FILENAME_F)
 		{
 			c_node = find_redirect_node(node);
-			c_node->r_node = malloc(sizeof(t_parser_node));
-			c_node->r_node->content = token;
-			c_node->r_node->l_node = NULL;
-			c_node->r_node->r_node = NULL;
+			c_node->r_node = make_node(token, NULL, NULL);
 		}
 		token = next;
 		last_type = c_type;
@@ -307,7 +274,6 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 		error_str("syntax error near unexpected token `newline'");
 		free_lst(&token);
 		free_tree(&node);
-		g_exit_status = EXIT_SYNTAX_ERROR;
 		return (0);
 	}
 	*node_p = node;
