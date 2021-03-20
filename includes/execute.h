@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:13:25 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:20:34 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 # include "parser.h"
 
-enum pipe_in_out
+enum			e_pipe_in_out
 {
 	READ,
 	WRITE
