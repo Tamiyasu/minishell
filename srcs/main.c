@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:57:20 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:14:14 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,41 @@ char	*error_str(char *str)
 	return (s_str);
 }
 
-void	faile_func()
+int		faile_func(int result, char **line)
 {
-	g_exit_status = EXIT_SYNTAX_ERROR;
-	ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
-	error_str(NULL);
+	free(*line);
+	*line = NULL;
+	if (!result)
+	{
+		g_exit_status = EXIT_SYNTAX_ERROR;
+		ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
+		error_str(NULL);
+	}
+	return (result);
+}
+
+int		get_line(char **line)
+{
+	int result;
+
+	signal(SIGINT, sig_handler_p);
+	signal(SIGQUIT, sig_handler_p);
+	result = get_next_line(line);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	if (result == GNL_ERR)
+	{
+		free(*line);
+		exit(1);
+	}
+	else if (result == GNL_EOF && ft_strlen(*line) == 0)
+	{
+		free(*line);
+		g_exit_status = 0;
+		write(1, "exit\n", 5);
+		return (-1) ;
+	}
+	return (0);
 }
 
 void	msh_loop(t_env *env)
@@ -90,34 +120,17 @@ void	msh_loop(t_env *env)
 	while (1)
 	{
 		ft_putstr_fd("minishell>> ", 1);
-		signal(SIGINT, sig_handler_p);
-		signal(SIGQUIT, sig_handler_p);
-		result = get_next_line(&line);
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
-		if (result == GNL_ERR)
-			exit(1);
-		else if (result == GNL_EOF && ft_strlen(line) == 0)
-		{
-			g_exit_status = 0;
-			write(1, "exit\n", 5);
+		if(get_line(&line) == -1)
 			break ;
-		}
 		result = lexer(line, &token_list);
 		if (token_list == NULL)
 		{
-			if (!result)
-				faile_func();
-			free(line);
+			faile_func(result, &line);
 			continue ;
 		}
 		result = parser(token_list, &node);
-		if (!result)
-		{
-			faile_func();
-			free(line);
+		if (!faile_func(result, &line))
 			continue ;
-		}
 		expansion(node, env);
 		msh_fd = NULL;
 		execute(node, env, msh_fd);

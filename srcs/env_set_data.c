@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:24:38 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:04:22 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int		env_check_data(t_env *env, char **envp)
 int		env_set_shlvl(t_env *env, int idx)
 {
 	int shlvl_num;
+	char *shlvl_str;
 
 	if (env->shlvl_flag == -1)
 		env->data[idx++] = ft_strdup("SHLVL=1");
@@ -50,7 +51,9 @@ int		env_set_shlvl(t_env *env, int idx)
 				shlvl_num += 1;
 		}
 		free(env->data[env->shlvl_flag]);
-		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
+		shlvl_str = ft_itoa(shlvl_num);
+		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", shlvl_str);
+		free(shlvl_str);
 	}
 	return (idx);
 }
