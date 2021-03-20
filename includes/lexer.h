@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 16:59:25 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 15:38:04 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 23:14:03 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ t_token			*lexer_skip_space(t_token *token, t_data *lexer, char *input);
 t_token			*token_list_new(void *content);
 t_token			*token_list_last(t_token *token);
 void			token_list_addback(t_token **token, t_token *new);
+int				token_lstsize(t_token *token);
 void			free_lst(t_token **token);
 #endif

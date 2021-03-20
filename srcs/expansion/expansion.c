@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:33:37 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 00:03:43 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,15 @@ void	exps_check_command(t_token *token, t_env *env)
 	}
 }
 
+void	print_token(t_token *token)
+{
+	while (token)
+	{
+		printf("token->data[%s]\n", token->data);
+		token = token->next;
+	}
+}
+
 void	expansion(t_parser_node *node, t_env *env)
 {
 	if (!node || !(node->content))
@@ -88,7 +97,10 @@ void	expansion(t_parser_node *node, t_env *env)
 	if (node->content->flag == FT_COMMAND_F)
 	{
 		exps_check_command(node->content, env);
+		print_token(node->content);
 		node->content = exps_format(node->content);
+		printf("-----------------------\n");
+		print_token(node->content);
 	}
 	expansion(node->l_node, env);
 	if (node->content->flag == FT_SEMICOLON_F)

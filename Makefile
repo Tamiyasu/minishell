@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/20 22:14:24 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/21 02:10:35 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,11 @@ SRC_FILE	+= execute/command_exit.c
 SRC_FILE	+= execute/command_export.c
 SRC_FILE	+= execute/command_pwd.c
 SRC_FILE	+= execute/command_unset.c
+SRC_FILE	+= execute/export_format_variable.c
+SRC_FILE	+= execute/export_check_dupl.c
+SRC_FILE	+= execute/export_cmp_args.c
+SRC_FILE	+= execute/export_sort.c
+SRC_FILE	+= execute/export_shape_putenv.c
 SRC_FILE	+= execute/export_putenv.c
 SRC_FILE	+= execute/exec_split_env.c
 SRC_FILE	+= execute/error.c

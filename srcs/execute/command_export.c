@@ -6,81 +6,15 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:58:33 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 01:20:33 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "lexer.h"
 #include "execute.h"
-#include "libft.h"
 
-// static void	execute_output_error(char *token_data)
-// {
-// 	ft_putstr_fd("minishell: unset: `",  STDERR_FILENO);
-// 	ft_putstr_fd(token_data, STDERR_FILENO);
-// 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
-// }
-
-static int	msh_lstsize(t_token *token)
-{
-	int i;
-
-	i = 0;
-	while (token)
-	{
-		i++;
-		token = token->next;
-	}
-	return (i);
-}
-
-
-static char	**execute_split_and_classify_tokend(t_token *token,  t_env *env)
-{
-	char	**split_tokend;
-	char	**tmp_split;
-	int		i;
-
-	split_tokend = malloc(sizeof(char *) * (msh_lstsize(token) + 1));
-	if (split_tokend == NULL)
-		ft_enomem();
-	i = 0;
-	while (token != NULL)
-	{
-		if (token->data[0] == '=')
-		{
-			split_tokend[i] = ft_strdup("0");
-			token->flag = -1;
-		}
-		else if (ft_strchr(token->data, '=') == 0)//'='がなかったら
-		{
-			split_tokend[i] = ft_strdup(token->data);
-			token->flag = 1;
-		}
-		else
-		{
-			tmp_split = ft_split(token->data, '=');
-			split_tokend[i] = ft_strdup(tmp_split[0]);
-			free_args(tmp_split);
-			token->flag = 2;
-		}
-		/* env->pwd_flag && oldpwd_flagの更新 */
-		if (ft_strcmp(split_tokend[i], "PWD")== 0)
-		{
-			env->pwd_flag = 1;
-		}
-		if (ft_strcmp(split_tokend[i], "OLDPWD")== 0)
-		{
-			env->oldpwd_flag = 1;
-		}
-		i++;
-		token = token->next;
-	}
-	split_tokend[i] = NULL;
-	return (split_tokend);
-}
-
-static void	export_check_args(t_token *token, char **split_tokend, int *g_exit_status)
+void	export_check_args(t_token *token, char **split_tokend, int *status)
 {
 	int	i;
 	int	j;
@@ -91,131 +25,37 @@ static void	export_check_args(t_token *token, char **split_tokend, int *g_exit_s
 		j = 0;
 		while (split_tokend[i][j] != '\0')
 		{
-			if (token->flag == -1)
+			if ((token->flag == -1)
+				|| (j == 0 && (!ft_isalpha(split_tokend[i][j])
+					&& split_tokend[i][j] != '_'))
+				|| (j != 0 && (!ft_isalnum(split_tokend[i][j])
+					&& split_tokend[i][j] != '_')))
 			{
-				//execute_output_error(token->data);
-				output_error("export", "not a valid identifier");
-				*g_exit_status = 1;
+				printf("in export err=[%s]\n", token->data);
+				unset_error(token, "export", split_tokend[i], status);
 				break ;
-			}
-			else if (j == 0)
-			{
-				if (ft_isalpha(split_tokend[i][j]) == 0 && split_tokend[i][j] != '_')
-				{
-					token->flag = -1;
-					//execute_output_error(token->data);
-					output_error("export", "not a valid identifier");
-					*g_exit_status = 1;
-					break ;
-				}
-			}
-			else
-			{
-				if (ft_isalnum(split_tokend[i][j]) == 0 && split_tokend[i][j] != '_')
-				{
-					token->flag = -1;
-					//execute_output_error(token->data);
-					output_error("export", "not a valid identifier");
-					*g_exit_status = 1;
-					break ;
-				}
 			}
 			j++;
 		}
 		i++;
-		token = token->next;//token->data/token->flagとsplit_tokendが対応する様に動かす
-	}
-}
-
-static int	check_duplication_token(char *fwd_tokend, char **bwd_tokend, t_token *token)
-{
-	int	save_flag;
-	int	idx;
-
-	save_flag = token->flag;
-	idx = 0;
-
-	token = token->next; //bwd_tokenとtoken->flagを対応させる。
-	while (bwd_tokend[idx] !=  NULL)
-	{
-		if (token->flag != -1) /*比較する*/
-		{
-			if (ft_strcmp(fwd_tokend, bwd_tokend[idx]) == 0)
-			{
-				if (save_flag <= token->flag) /* flag1,2はflag2に上書きされる。flag2はflag1に上書きされない */
-				{
-					return (-1);
-				}
-			}
-		}
-		idx++;
-		token = token->next;
-	}
-	return (save_flag);
-}
-
-static void	export_check_duplication_of_token(t_token *token, char **split_tokend)
-{
-	int	idx;
-
-	idx = 0;
-	while (split_tokend[idx + 1] != NULL)
-	{
-		token->flag = check_duplication_token(split_tokend[idx], &split_tokend[idx + 1], token);
-		token = token->next;
-		idx++;
-	}
-}
-
-static void	export_compare_args_with_env(t_token *token, char **split_tokend, t_env *env, char **split_env)
-{
-	int	idx;
-	int	envidx;
-
-	idx = 0;
-	while (split_tokend[idx] != NULL)
-	{
-		envidx = 0;
-		if (token->flag == 1)
-		{
-			while (split_env[envidx] != NULL)
-			{
-				if (ft_strcmp(split_tokend[idx], split_env[envidx]) == 0)/*上書きできない*/
-				{
-					token->flag = -1;
-					break ;
-				}
-				envidx++;
-			}
-			if (split_env[envidx] ==  NULL) /* 同じ名前の環境変数がなかったので、新しく追加される*/
-			{
-				env->num++;
-			}
-		}
-		else if (token->flag == 2)
-		{
-			while (split_env[envidx] != NULL)
-			{
-				if (ft_strcmp(split_tokend[idx], split_env[envidx]) == 0)
-				{
-					free(env->data[envidx]);
-					env->data[envidx] = ft_strdup(token->data);
-					token->flag = 0;
-					break ;
-				}
-				envidx++;
-			}
-			if (split_env[envidx] ==  NULL) /* 同じ名前の環境変数がなかったので、新しく追加される*/
-			{
-				env->num++;
-			}
-		}
-		idx++;
 		token = token->next;
 	}
 }
 
-static void	export_make_new_envdata(t_token *token, t_env *env)
+void	set_pwd(t_token *token, t_env *env)
+{
+	if (ft_strncmp(token->data, "PWD", 3) == 0
+		&& token->data[3] == '\0' && token->flag == 1)
+	{
+		if (ft_strcmp(env->pwd_data, env->unset_pwd) != 0)
+		{
+			free(token->data);
+			token->data = ft_strjoin("PWD=", env->pwd_data);
+		}
+	}
+}
+
+void	export_make_new_envdata(t_token *token, t_env *env)
 {
 	char	**new_env;
 	int		idx;
@@ -229,17 +69,10 @@ static void	export_make_new_envdata(t_token *token, t_env *env)
 		new_env[idx] = ft_strdup(env->data[idx]);
 		idx++;
 	}
-	while(token != NULL)
+	while (token != NULL)
 	{
-		if (ft_strncmp(token->data, "PWD", 3) == 0 && token->data[3] == '\0' && token->flag == 1)
-		{
-			if (ft_strcmp(env->pwd_data,  env->unset_pwd) != 0) //PWD -> PWD=cwdirにする
-			{
-				free(token->data);
-				token->data = ft_strjoin("PWD=", env->pwd_data);
-			}
-		}
-		if (token->flag > 0)/* 新しく追加されるやつ */
+		set_pwd(token, env);
+		if (token->flag > 0)
 		{
 			new_env[idx] = ft_strdup(token->data);
 			idx++;
@@ -251,32 +84,26 @@ static void	export_make_new_envdata(t_token *token, t_env *env)
 	env->data = new_env;
 }
 
-int			command_export(t_token *token, t_env *env)
+int		command_export(t_token *token, t_env *env)
 {
 	char	**split_tokend;
 	char	**split_env;
-	int		g_exit_status;
+	int		status;
 
-	g_exit_status = 0;
+	status = 0;
 	token = token->next;
-	if (token == NULL) /* exportのみ --->ascii順に環境変数表示*/
+	if (token == NULL)
 	{
-		g_exit_status = export_putenv(env);
-		return (g_exit_status);
+		status = export_putenv(env);
+		return (status);
 	}
-	split_tokend = execute_split_and_classify_tokend(token, env);
-	export_check_args(token, split_tokend, &g_exit_status);
-	export_check_duplication_of_token(token, split_tokend);
+	split_tokend = export_format_variable(token, env);
+	export_check_args(token, split_tokend, &status);
+	export_check_dupl(token, split_tokend);
 	split_env = exec_split_env(env);
-	if (split_env == NULL)//execute_split_env()内でmallocエラー
-	{
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		g_exit_status = 1;
-		return (g_exit_status);
-	}
-	export_compare_args_with_env(token, split_tokend, env, split_env);
+	export_cmp_args(token, split_tokend, env, split_env);
 	export_make_new_envdata(token, env);
 	free_args(split_tokend);
 	free_args(split_env);
-	return (g_exit_status);
+	return (status);
 }

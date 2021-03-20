@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:42:44 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 02:00:52 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ typedef struct	s_info_fd
 	struct s_info_fd	*next;
 }				t_info_fd;
 
+typedef struct	s_sort
+{
+	int	count;
+	int left;
+	int	right;
+	int	loop_count;
+}				t_sort;
+
 void	execute(t_parser_node *node, t_env *env, t_info_fd *fd);
 void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 					void (*func)(t_parser_node *node,
@@ -49,7 +57,7 @@ int		command_unset(t_token *token, t_env *env);
 void	output_error(char *err_command, char *err_string);
 void	output_no_filename(void);
 void	output_error_exit_args(char	*exit_args);
-void	unset_error(t_token *token, int *status);
+void	unset_error(t_token *token, char *command, char *err, int *status);
 char	*cwd_wrapper(t_env *env, char *cd);
 
 /*
@@ -69,6 +77,11 @@ char		**exec_split_env(t_env *env);
 /*
 ** export
 */
+char		**export_format_variable(t_token *token,  t_env *env);
+void		export_check_dupl(t_token *token, char **split_tokend);
+void		export_cmp_args(t_token *token, char **split_tokend, t_env *env, char **split_env);
+void		export_sort(char **envp, int *idx, int num);
+char		**export_shape_putenv(char *env);
 int			export_putenv(t_env *env);
 
 #endif

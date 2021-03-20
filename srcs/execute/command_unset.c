@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:08:48 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 23:56:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void	unset_check_args(t_token *token, int *status)
 			if (idx == 0 &&
 				(!ft_isalpha(token->data[idx]) && token->data[idx] != '_'))
 			{
-				unset_error(token, status);
+				unset_error(token, "unset", token->data, status);
 				break ;
 			}
 			else if (!ft_isalnum(token->data[idx]) && token->data[idx] != '_')
 			{
-				unset_error(token, status);
+				unset_error(token, "unset", token->data, status);
 				break ;
 			}
 			idx++;
