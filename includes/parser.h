@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 12:49:51 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:52:32 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,10 @@ t_parser_node	*find_c_node(t_parser_node *node);
 int				is_redirect(int flag);
 int				check_input(int c_type, int last_type);
 int				check_last_input(int c_type);
+t_parser_node	*find_c_node_p_and_sc(t_parser_node *node);
+t_parser_node	*find_c_node(t_parser_node *node);
+t_parser_node	*find_parent_node(t_parser_node *node);
+t_parser_node	*find_redirect_node(t_parser_node *node);
+
 
 #endif
