@@ -6,13 +6,40 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 11:15:24 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:05:33 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 #include "libft.h"
+
+/*remove here*/
+void indent(int i)
+{
+	while(i--)
+		printf("  ");
+}
+
+void    node_print(t_parser_node *node, int deepness)
+{
+	indent(deepness);
+	printf("pointer : %p\n", node);
+	if(node)
+	{
+		indent(deepness);
+		print_token(node->content, "token_list : ");
+		printf("\n");
+		indent(deepness);
+		printf("r_node : %p\n", node->r_node);
+		node_print(node->r_node, deepness + 1);
+		indent(deepness);
+		printf("l_node : %p\n", node->l_node);
+		node_print(node->l_node, deepness + 1);
+	}
+}
+/*remove here END*/
+
 
 t_token			*lexer_lstadd_back(t_token **token, t_token *new)
 {
@@ -234,7 +261,7 @@ int				parser(t_token *token, t_parser_node **node_p)
 		else if (c_type == FT_PIPE_F)
 		{
 			if (node && node->content->flag == FT_SEMICOLON_F)
-				c_node->r_node = make_node(token, node->r_node, NULL);
+				node->r_node = make_node(token, node->r_node, NULL);
 			else
 				node = make_node(token, node, NULL);
 		}
