@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 12:19:47 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:21:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,6 @@
 #include "parser.h"
 #include "libft.h"
 
-/*
-**remove here
-*/
-void			indent(int i)
-{
-	while (i--)
-		printf("  ");
-}
-
-void			node_print(t_parser_node *node, int deepness)
-{
-	indent(deepness);
-	printf("pointer : %p\n", node);
-	if (node)
-	{
-		indent(deepness);
-		print_token(node->content, "token_list : ");
-		printf("\n");
-		indent(deepness);
-		printf("r_node : %p\n", node->r_node);
-		node_print(node->r_node, deepness + 1);
-		indent(deepness);
-		printf("l_node : %p\n", node->l_node);
-		node_print(node->l_node, deepness + 1);
-	}
-}
-
-/*
-**remove here END
-*/
 t_token			*lexer_lstadd_back(t_token **token, t_token *new)
 {
 	t_token *token_i;
@@ -85,7 +55,7 @@ t_parser_node	*make_node(t_token *con, t_parser_node *l, t_parser_node *r)
 {
 	t_parser_node	*ret_p;
 
-	if((ret_p = malloc(sizeof(t_parser_node))))
+	if ((ret_p = malloc(sizeof(t_parser_node))))
 	{
 		ret_p->content = con;
 		ret_p->l_node = l;

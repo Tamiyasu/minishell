@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 11:47:09 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:21:34 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	msh_loop(t_env *env)
 			error_str(NULL);
 			continue;
 		}
-		node_print(node, 0);
+		//node_print(node, 0);
 		// printf("----------------------------end node_print\n\n");
 
 		expansion(node, env);
