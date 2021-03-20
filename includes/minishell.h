@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 23:36:13 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:56:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,22 @@ typedef struct	s_env
 {
 	char		**data;
 	int			num;
-	char		*pwd_data; //PWD存在しようがしないが、cdされるごとに常にcwdirに更新される。unset PWDされた際は、空文字が入る
-	char		*unset_pwd; //unset PWD が実行されたcwdirを保存する
-	int			oldpwd_flag; //存在しない時は-1となる.
-	int			pwd_flag; //存在しない時は-1となる.
+	char		*pwd_data;
+	char		*unset_pwd;
+	int			oldpwd_flag;
+	int			pwd_flag;
+	int			shlvl_flag;
 }				t_env;
 
 void		free_args(char **args);
+char	*error_str(char *str);
 
 /*
-** enviroment.c
+** enviroment
 */
-char	*error_str(char *str);
 void	env_init(t_env *env);
-void	env_make_data(t_env *env, char **envp);
+void	env_free(t_env *env);
 int		env_search(char **env_data, char *variable_name);
 void	env_update_pwddata(t_env *env);
-void	env_free(t_env *env);
-
+void	env_set_data(t_env *env, char **envp);
 #endif

@@ -6,12 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:44:22 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 14:54:03 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:29:37 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
+# define INT_MAX 2147483647
 
 # include <stdlib.h>
 # include <unistd.h>

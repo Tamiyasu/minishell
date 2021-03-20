@@ -148,7 +148,7 @@ int	main(int argc, char *argv[], char *envp[])
 	argv -= (long)argv;//del
 	g_exit_status = 0;
 	env_init(&env);
-	env_make_data(&env, envp);
+	env_set_data(&env, envp);
 	if (env.data == NULL)
 	{
 		return (EXIT_FAILURE);

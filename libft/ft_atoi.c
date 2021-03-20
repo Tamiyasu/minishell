@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 14:29:24 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/19 14:54:07 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:29:37 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_atoi(const char *str)
 	while ('0' <= *str && *str <= '9')
 	{
 		return_int = return_int * 10 + *(str++) - '0';
-		if (return_int > 2147483647)
+		if (return_int > INT_MAX)
 			return (-1);
 	}
 	return (input_sign * return_int);
