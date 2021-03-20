@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:38:21 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:41:29 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char *error_str(char *str)
 void	msh_loop(t_env *env)
 {
 	char			*line;
-	t_token		*token_list;
+	t_token			*token_list;
 	t_parser_node	*node;
 	t_info_fd		*msh_fd;
 	int				result;
@@ -87,18 +87,16 @@ void	msh_loop(t_env *env)
 		ft_putstr_fd("minishell>> ", 1);
 		signal(SIGINT, sig_handler_p);
 		signal(SIGQUIT, sig_handler_p);
-		int gnl_result = get_next_line(&line);
+		result = get_next_line(&line);
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
-		if (gnl_result == GNL_ERR)
-		{
-			exit (1);
-		}
-		else if (gnl_result == GNL_EOF && ft_strlen(line) == 0)
+		if (result == GNL_ERR)
+			exit(1);
+		else if (result == GNL_EOF && ft_strlen(line) == 0)
 		{
 			g_exit_status = 0;
 			write(1, "exit\n", 5);
-			break;
+			break ;
 		}
 		result = lexer(line, &token_list);
 		if (!result)
