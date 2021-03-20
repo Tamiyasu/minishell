@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 10:37:06 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 10:40:08 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ t_parser_node	*find_c_node(t_parser_node *node)
 	{
 		ret_node = node;
 	}
-	else if (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F)
+	else if (node->content->flag == FT_PIPE_F 
+			|| node->content->flag == FT_SEMICOLON_F)
 	{
 		if (node->r_node)
 		{
@@ -196,7 +197,6 @@ int check_last_input(int c_type)
 	return (1);
 }
 
-
 int				parser(t_token *token_list, t_parser_node **node_p)
 {
 	t_parser_node	*node;
@@ -218,7 +218,6 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 	{
 		next = token->next;
 		token->next = NULL;
-
 		c_type = check_token_type(token, last_type);
 		if (!check_input(c_type, last_type))
 		{
@@ -231,7 +230,6 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 			g_exit_status = EXIT_SYNTAX_ERROR;
 			return (0);
 		}
-
 		token->flag = c_type;
 		if (c_type == FT_COMMAND_F)
 		{
