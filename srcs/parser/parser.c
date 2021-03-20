@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 10:26:13 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 10:29:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parser.h"
 #include "libft.h"
 
-t_token	*lexer_lstadd_back(t_token **token, t_token *new)
+t_token			*lexer_lstadd_back(t_token **token, t_token *new)
 {
 	t_token *token_i;
 
@@ -30,7 +30,7 @@ t_token	*lexer_lstadd_back(t_token **token, t_token *new)
 	return (*token);
 }
 
-t_parser_node *free_tree(t_parser_node **node)
+t_parser_node	*free_tree(t_parser_node **node)
 {
 	if ((*node))
 	{
@@ -43,16 +43,15 @@ t_parser_node *free_tree(t_parser_node **node)
 	return (*node);
 }
 
-int is_redirect(int flag)
+int				is_redirect(int flag)
 {
 	return (
 		flag == FT_REDIRECT_O_F ||
 		flag == FT_REDIRECT_A_F ||
-		flag == FT_REDIRECT_I_F
-	);
+		flag == FT_REDIRECT_I_F);
 }
 
-int check_token_type(t_token *token, int last_type)
+int				check_token_type(t_token *token, int last_type)
 {
 	int type_i;
 	int token_length;
@@ -77,7 +76,7 @@ int check_token_type(t_token *token, int last_type)
 		type_i = FT_COMMAND_F;
 	return (type_i);
 }
-t_parser_node   *find_command_node(t_parser_node *node)
+t_parser_node	*find_command_node(t_parser_node *node)
 {
 	t_parser_node *ret_node;
 	ret_node = NULL;
@@ -127,7 +126,7 @@ t_parser_node   *find_command_node(t_parser_node *node)
 	return (ret_node);
 }
 
-t_parser_node   *find_parent_node(t_parser_node   *node)
+t_parser_node	*find_parent_node(t_parser_node   *node)
 {
 	t_parser_node *ret_node;
 	ret_node = NULL;
@@ -146,7 +145,7 @@ t_parser_node   *find_parent_node(t_parser_node   *node)
 	return (ret_node);
 }
 
-t_parser_node   *find_redirect_node(t_parser_node   *node)
+t_parser_node	*find_redirect_node(t_parser_node   *node)
 {
 	t_parser_node *ret_node;
 	ret_node = NULL;
@@ -197,7 +196,7 @@ int check_last_input(int c_type)
 }
 
 
-int parser(t_token *token_list, t_parser_node **node_p)
+int				parser(t_token *token_list, t_parser_node **node_p)
 {
 	t_parser_node *node;
 	t_token *token;
