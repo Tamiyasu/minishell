@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 14:26:29 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 15:24:46 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,10 +175,13 @@ void	expansion_check(t_token *token_list, t_env *env)
 			else if (token_list->data[idx] == '\"')
 				new_data = set_dquote_data(token_list->data, new_data, &start, &data_len, &idx, env);
 			else if (token_list->data[idx] == '$')
+			{
 				new_data = set_environment_data(token_list->data, new_data, &start, &data_len, &idx, env);
+
 			// else if (/*token_list->data[idx] == '\\' && */token_list->data[idx + 1] != ' '
 			// 		&& token_list->data[idx] != '\t' && token_list->data[idx + 1])
 			// 	new_data = set_escape_data(token_list->data, new_data, &start, &data_len, &idx);
+			}
 			else
 			{
 				data_len++;
