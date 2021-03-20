@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 22:48:50 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 14:26:29 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ char	*save_env_data(t_env *env, char *new_data, char *token_data, int *start, in
 	{
 		env_value = ft_strdup(&env->data[env_idx][ft_strlen(env_key) + 1]);
 		new_data = replace_variables_with_values(new_data, env_value);
+		free(env_value);
 		*start = (*start + ft_strlen(env_key));
 	}
 	free(env_key);
