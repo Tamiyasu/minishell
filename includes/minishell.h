@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 13:34:15 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:56:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,14 @@ typedef struct	s_env
 }				t_env;
 
 void		free_args(char **args);
+char	*error_str(char *str);
 
 /*
-** enviroment.c
+** enviroment
 */
-char	*error_str(char *str);
 void	env_init(t_env *env);
-void	env_set_data(t_env *env, char **envp);
+void	env_free(t_env *env);
 int		env_search(char **env_data, char *variable_name);
 void	env_update_pwddata(t_env *env);
-void	env_free(t_env *env);
-
+void	env_set_data(t_env *env, char **envp);
 #endif

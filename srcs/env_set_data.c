@@ -1,73 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enviroment.c                                       :+:      :+:    :+:   */
+/*   env_set_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 13:49:40 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:55:24 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	env_free(t_env *env)
-{
-	free_args(env->data);
-	if (env->pwd_data != NULL)
-		free(env->pwd_data);
-	if (env->unset_pwd != NULL)
-		free(env->unset_pwd);
-}
-
-void	env_init(t_env *env)
-{
-	env->num = 0;
-	env->oldpwd_flag = 0;
-	env->pwd_flag = 0;
-	env->shlvl_flag = 0;
-	env->pwd_data = NULL;
-	env->unset_pwd = NULL;
-}
-
-void	env_update_pwddata(t_env *env)
-{
-	char *cwdir;
-
-	if (env->pwd_data != NULL)
-	{
-		free(env->pwd_data);
-		env->pwd_data = NULL;
-	}
-	cwdir = getcwd(NULL, 0);
-	if (cwdir == NULL)
-	{
-		strerror(errno);
-		return ;
-	}
-	env->pwd_data = ft_strdup(cwdir);
-	free(cwdir);
-}
-
-int		env_search(char **env_data, char *variable_name)
-{
-	int	varlen;
-	int	idx;
-
-	varlen = ft_strlen(variable_name);
-	idx = 0;
-	while (env_data[idx] != NULL)
-	{
-		if (ft_strncmp(env_data[idx], variable_name, varlen) == 0 &&
-			(env_data[idx][varlen] == '=' || env_data[idx][varlen] == '\0'))
-		{
-			return (idx);
-		}
-		idx++;
-	}
-	return (-1);
-}
 
 int	env_check_data(t_env *env, char **envp)
 {
@@ -83,14 +26,14 @@ int	env_check_data(t_env *env, char **envp)
 	if (env->pwd_flag == -1)
 		env_num++;
 	env->shlvl_flag = env_search(envp, "SHLVL");
-    if (env->shlvl_flag == -1)
+	if (env->shlvl_flag == -1)
 		env_num++;
 	return (env_num);
 }
 
 int		env_set_shlvl(t_env *env, int idx)
 {
-    int shlvl_num;
+	int shlvl_num;
 
 	if (env->shlvl_flag == -1)
 		env->data[idx++] = ft_strdup("SHLVL=1");
@@ -105,7 +48,7 @@ int		env_set_shlvl(t_env *env, int idx)
 				shlvl_num = 0;
 			else
 				shlvl_num += 1;
-        }
+		}
 		free(env->data[env->shlvl_flag]);
 		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
 	}
