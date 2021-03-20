@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:19:30 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 16:32:04 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	execute_pwd(void)
 	cwdir = getcwd(NULL, 0);//このように引数を指定してあげると、getcwdの方で、buf[1024]で取ってくれる。
 	if (cwdir == NULL)
 	{
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		ft_putendl_fd("pwd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
+		//ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	ft_putendl_fd(cwdir, STDOUT_FILENO);
