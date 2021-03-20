@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/18 15:46:29 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 11:00:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	env_init(t_env *env)
 	env->num = 0;
 	env->oldpwd_flag = 0;
 	env->pwd_flag = 0;
+	env->shlvl_flag = 0;
 	env->pwd_data = NULL;
 	env->unset_pwd=  NULL;
 }
@@ -79,19 +80,16 @@ int	env_check_data(t_env *env, char **envp)
 
 	env_num = 0;
 	while (envp[env_num] != NULL)
-	{
 		env_num++;
-	}
 	env->oldpwd_flag =  env_search(envp, "OLDPWD");
 	if  (env->oldpwd_flag == -1)
-	{
 		env_num++;
-	}
 	env->pwd_flag = env_search(envp, "PWD");
 	if (env->pwd_flag == -1)
-	{
 		env_num++;
-	}
+	env->shlvl_flag = env_search(envp, "SHLVL");
+	if (env->shlvl_flag == -1)
+		env_num++;
 	return (env_num);
 }
 
@@ -119,6 +117,23 @@ void	env_make_data(t_env *env, char **envp)
 		free(env->data[env->pwd_flag]);
 		env->data[env->pwd_flag] = ft_strjoin("PWD=", env->pwd_data);
 	}
+	if (env->shlvl_flag == -1)
+	{
+		env->data[idx++] = ft_strjoin("SHLVL=1", env->pwd_data);
+	}
+	else
+	{
+		int shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
+		printf("SHLVL_NUM=[%d]\n", shlvl_num);
+		//numチェック
+		if(shlvl_num < 0)
+			shlvl_num = 0;
+		else
+			shlvl_num += 1;
+		free(env->data[env->shlvl_flag]);
+		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
+	}
+
 	env->oldpwd_flag = 1;
 	env->pwd_flag = 1;
 	env->data[idx] = NULL;
