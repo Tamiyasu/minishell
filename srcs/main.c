@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 23:38:47 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:09:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ void	msh_loop(t_env *env)
 		if(!result)
 		{
 			free(line);
+			g_exit_status = EXIT_SYNTAX_ERROR;
 			ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
 			error_str(NULL);
 			continue;
