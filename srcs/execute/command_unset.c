@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:54:12 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 23:08:48 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,33 +68,29 @@ void	unset_check_pwd(char *token_data, t_env *env)
 		env->oldpwd_flag = -1;
 }
 
-void	unset_cmp_token_with_env(t_token *token, t_env *env, char **split_env)
+void	unset_cmp_token_env(t_token *token, t_env *env, char **split_env)
 {
 	int		idx;
 
 	while (token != NULL)
 	{
-		if (token->flag == -1)
+		if (token->flag != -1)
 		{
-			token = token->next;
-			continue ;
-		}
-		unset_check_pwd(token->data, env);
-		idx = 0;
-		while (split_env[idx] != NULL)
-		{
-			if (split_env[idx][0] == '0')
+			unset_check_pwd(token->data, env);
+			idx = 0;
+			while (split_env[idx] != NULL)
 			{
+				if (split_env[idx][0] != '0')
+				{
+					if (ft_strcmp(split_env[idx], token->data) == 0)
+					{
+						env->num--;
+						free(split_env[idx]);
+						split_env[idx] = ft_strdup("0");
+					}
+				}
 				idx++;
-				continue ;
 			}
-			if (ft_strcmp(split_env[idx], token->data) == 0)
-			{
-				env->num--;
-				free(split_env[idx]);
-				split_env[idx] = ft_strdup("0");
-			}
-			idx++;
 		}
 		token = token->next;
 	}
@@ -136,9 +132,7 @@ int		command_unset(t_token *token, t_env *env)
 		return (status);
 	unset_check_args(token, &status);
 	split_env = exec_split_env(env);
-	if (split_env == NULL)
-		ft_enomem();
-	unset_cmp_token_with_env(token, env, split_env);
+	unset_cmp_token_env(token, env, split_env);
 	unset_make_new_envdata(env, split_env);
 	free_args(split_env);
 	return (status);

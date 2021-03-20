@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/25 17:11:47 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:05:05 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 23:02:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ int	command_env(char **env_data)
 			x++;
 		}
 		if (env_data[idx][x] != '\0')
-		{
 			ft_putendl_fd(env_data[idx], 1);
-		}
 		idx++;
 	}
 	return (EXIT_SUCCESS);
