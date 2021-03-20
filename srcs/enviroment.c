@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 11:00:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:07:27 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,14 @@ void	env_make_data(t_env *env, char **envp)
 	else
 	{
 		int shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
-		printf("SHLVL_NUM=[%d]\n", shlvl_num);
+		//printf("SHLVL_NUM=[%d]\n", shlvl_num);
 		//numチェック
 		if(shlvl_num < 0)
 			shlvl_num = 0;
 		else
 			shlvl_num += 1;
 		free(env->data[env->shlvl_flag]);
-		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
+		env->data[idx++] = ft_strjoin("SHLVL=", ft_itoa(shlvl_num));
 	}
 
 	env->oldpwd_flag = 1;
