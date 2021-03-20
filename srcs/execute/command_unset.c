@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:46:40 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:54:12 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	unset_check_pwd(char *token_data, t_env *env)
 		cwdir = getcwd(NULL, 0);
 		if (cwdir == NULL)
 		{
-			strerror(errno);
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
 			return ;
 		}
 		env->unset_pwd = ft_strdup(cwdir);
@@ -108,7 +108,7 @@ void	unset_make_new_envdata(t_env *env, char **split_env)
 
 	new_env = malloc(sizeof(char *) * (env->num + 1));
 	if (new_env == NULL)
-		return ;
+		ft_enomem();
 	idx = 0;
 	new_idx = 0;
 	while (split_env[idx] != NULL)
@@ -136,8 +136,8 @@ int		command_unset(t_token *token, t_env *env)
 		return (status);
 	unset_check_args(token, &status);
 	split_env = exec_split_env(env);
-	if (split_env == NULL)//malloc失敗時
-		return (EXIT_FAILURE);
+	if (split_env == NULL)
+		ft_enomem();
 	unset_cmp_token_with_env(token, env, split_env);
 	unset_make_new_envdata(env, split_env);
 	free_args(split_env);
