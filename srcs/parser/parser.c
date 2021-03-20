@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 12:33:21 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:35:29 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,9 @@ t_parser_node	*find_c_node(t_parser_node *node)
 	else if (is_redirect(node->content->flag))
 	{
 		while (node && node->content && is_redirect(node->content->flag))
-		{
-			if (!node->l_node)
-				node->l_node = make_node(NULL, NULL, NULL);
 			node = node->l_node;
-		}
+		if (!node->l_node)
+			node->l_node = make_node(NULL, NULL, NULL);
 		ret_node = node;
 	}
 	return (ret_node);
