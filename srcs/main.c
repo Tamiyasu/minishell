@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:16:50 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:04:22 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,13 @@ int		get_line(char **line)
 	return (0);
 }
 
+void	loop_end_func(char **line, t_parser_node **node)
+{
+	free_tree(node);
+	free(*line);
+	*line = NULL;
+}
+
 void	msh_loop(t_env *env)
 {
 	char			*line;
@@ -134,9 +141,7 @@ void	msh_loop(t_env *env)
 		expansion(node, env);
 		msh_fd = NULL;
 		execute(node, env, msh_fd);
-		free_tree(&node);
-		free(line);
-		line = NULL;
+		loop_end_func(&line, &node);
 	}
 }
 
