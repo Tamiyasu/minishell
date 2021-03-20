@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_split_env.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 19:44:14 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/06 21:46:16 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:41:40 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ char **execute_split_env(t_env *env)
 
 	split_env = malloc(sizeof(char *) * (env->num + 1));
 	if (split_env == NULL)
-	{
-		return (NULL);
-	}
+		ft_enomem();
 	i = 0;
 	while (env->data[i] != NULL)
 	{

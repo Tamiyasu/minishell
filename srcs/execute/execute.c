@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 19:44:30 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:42:17 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ t_info_fd	*fd_list_new(int fd_num, int fd_save, int flag)
 		msh_fd->flag = flag;
 		msh_fd->next = NULL;
 	}
+	else
+		ft_enomem();
 	return (msh_fd);
 }
 

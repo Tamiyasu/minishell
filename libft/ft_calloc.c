@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 14:36:11 by tmurakam          #+#    #+#             */
-/*   Updated: 2020/10/29 01:23:56 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:33:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,7 @@ void	*ft_calloc(size_t count, size_t size)
 	return_p = malloc(count * size);
 	if (return_p)
 		ft_bzero(return_p, count * size);
+	else
+		ft_enomem();
 	return ((void *)return_p);
 }
