@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/20 12:52:49 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/03/20 14:59:51 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRC_FILE	+= env_utils.c
 SRC_FILE	+= signal_handler.c
 SRC_FILE	+= lexer/lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
-SRC_FILE	+= lexer/lexer_count_quote.c
+SRC_FILE	+= lexer/lexer_quote.c
 SRC_FILE	+= lexer/lexer_set_redirect.c
 SRC_FILE	+= lexer/lexer_set_char.c
 SRC_FILE	+= lexer/lexer_skip_space.c
