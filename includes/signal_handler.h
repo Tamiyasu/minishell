@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:45:39 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/18 15:30:59 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:51:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 #ifndef SIGNAL_HANDLER_H
 # define SIGNAL_HANDLER_H
 
-pid_t c_pid(pid_t t);
-void sig_handler_c(int signo);
-void sig_handler_p(int signo);
-
+pid_t   c_pid(pid_t t);
+void    sig_handler_c(int signo);
+void    sig_handler_p(int signo);
 #endif
