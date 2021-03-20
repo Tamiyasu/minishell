@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:48:02 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/18 22:13:47 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:59:30 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,21 @@
 #include <stdio.h>
 #include "libft.h"
 
-pid_t c_pid(pid_t t)
+pid_t	c_pid(pid_t t)
 {
 	static pid_t c_pid;
-	if(0 <= t)
+
+	if (0 <= t)
 		c_pid = t;
-	return c_pid;
+	return (c_pid);
 }
 
-void sig_handler_c(int signo)
+void	sig_handler_c(int signo)
 {
 	if (c_pid(-1))
-		kill (c_pid(-1), signo);
+		kill(c_pid(-1), signo);
 }
-void sig_handler_p(int signo)
+void	sig_handler_p(int signo)
 {
 	if (!c_pid(-1))
 	{
