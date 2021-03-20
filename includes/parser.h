@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:40:42 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 13:39:41 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:42:54 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 # include "lexer.h"
 
-enum	input_type
+enum	e_input_type
 {
 	FT_EMPTY_F,
 	FT_FILENAME_F,
