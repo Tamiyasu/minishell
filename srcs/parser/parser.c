@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 13:22:07 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:23:15 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int				error_2(t_token *token, t_parser_node *node)
 	return (0);
 }
 
-void a(int c_type, t_parser_node **node, t_token *token)
+void			parser_main_func(int c_type, t_parser_node **node, t_token *token)
 {
 	t_parser_node	*c_node;
 
@@ -109,8 +109,7 @@ int				parser(t_token *token, t_parser_node **node_p)
 		if (!check_input(c_type, last_type))
 			return(error_1(token, next, node));
 		token->flag = c_type;
-		a(c_type, &node, token);
-
+		parser_main_func(c_type, &node, token);
 		token = next;
 		last_type = c_type;
 	}
