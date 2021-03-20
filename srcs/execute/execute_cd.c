@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 16:53:52 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 18:08:30 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static void	cd_update_envpwd(t_env *env)
+static void	cd_update_envpwd(t_env *env, char *arg_str)
 {
 	int	old_idx;
 	int	idx;
+	char *tmp;
+	int	all_flag;
+	size_t i;
 
 	idx = env_search(env->data, "PWD");
 	if (env->oldpwd_flag != -1)
@@ -37,11 +40,48 @@ static void	cd_update_envpwd(t_env *env)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
 		}
 	}
-	env_update_pwddata(env);
+	if (env->data[idx][4] == '/')
+	{
+		env_update_pwddata(env);
+		if(ft_strlen(error_str("")) > 0)
+			ft_putendl_fd(error_str("cd: "), 2);
+		error_str(NULL);
+		//free(env->data[idx]);
+		//env->data[idx] = ft_strjoin("PWD=", "");
+	}	
 	if  (env->pwd_flag != -1)
 	{
-		free(env->data[idx]);
-		env->data[idx] = ft_strjoin("PWD=", env->pwd_data);
+		if(env->pwd_data)
+		{
+			free(env->data[idx]);
+			env->data[idx] = ft_strjoin("PWD=", env->pwd_data);
+		}
+		else if (arg_str)
+		{
+			all_flag = 1;
+			i = 0;
+			while (i < ft_strlen(arg_str))
+			{
+				if (*(arg_str + i) != '.' && *(arg_str + i) != '/')
+				{
+					all_flag = 0;
+					break ;
+				}
+				i++;
+			}
+			if (all_flag)
+			{
+				tmp = env->data[idx];
+				if(ft_strlen(tmp) > 4 && tmp[ft_strlen(tmp) - 1] != '/')
+				{
+					env->data[idx] = ft_strjoin(tmp, "/");
+					free(tmp);
+					tmp = env->data[idx];
+				}
+				env->data[idx] = ft_strjoin(tmp, arg_str);
+				free(tmp);
+			}
+		}
 	}
 }
 
@@ -64,7 +104,7 @@ int	cd_home(t_env *env)
 		return (EXIT_FAILURE);
 	}
 	free(env_home);
-	cd_update_envpwd(env);
+	cd_update_envpwd(env, NULL);
 	return (EXIT_SUCCESS);
 }
 
@@ -89,6 +129,6 @@ int	execute_cd(t_token *token, t_env *env)
 		free(err_str);
 		return (EXIT_FAILURE);
 	}
-	cd_update_envpwd(env);
+	cd_update_envpwd(env, token->data);
 	return (EXIT_SUCCESS);
 }
