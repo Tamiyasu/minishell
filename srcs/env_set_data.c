@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:57:47 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:10:39 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int		env_check_data(t_env *env, char **envp)
 
 int		env_set_shlvl(t_env *env, int idx)
 {
-	int shlvl_num;
-	char *shlvl_str;
+	int		shlvl_num;
+	char	*shlvl_str;
 
 	if (env->shlvl_flag == -1)
 		env->data[idx++] = ft_strdup("SHLVL=1");
@@ -70,7 +70,7 @@ int		env_set_pwd(t_env *env, int idx)
 	else
 	{
 		tmp_cwd = env->data[env->pwd_flag];
-		if(env->pwd_data)
+		if (env->pwd_data)
 		{
 			env->data[env->pwd_flag] = ft_strjoin("PWD=", env->pwd_data);
 			free(tmp_cwd);
@@ -94,7 +94,7 @@ void	env_set_data(t_env *env, char **envp)
 		idx++;
 	}
 	idx = env_set_pwd(env, idx);
-	if(0 < ft_strlen(error_str("")))
+	if (0 < ft_strlen(error_str("")))
 		ft_putendl_fd(error_str("shell-init: "), 2);
 	error_str(NULL);
 	idx = env_set_shlvl(env, idx);
