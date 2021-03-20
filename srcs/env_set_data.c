@@ -6,13 +6,13 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 13:55:24 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 14:00:54 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	env_check_data(t_env *env, char **envp)
+int		env_check_data(t_env *env, char **envp)
 {
 	int	env_num;
 
