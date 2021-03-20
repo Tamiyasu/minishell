@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 10:33:14 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 10:37:06 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int				check_token_type(t_token *token, int last_type)
 		type_i = FT_COMMAND_F;
 	return (type_i);
 }
-t_parser_node	*find_command_node(t_parser_node *node)
+t_parser_node	*find_c_node(t_parser_node *node)
 {
 	t_parser_node	*ret_node;
 
@@ -89,7 +89,7 @@ t_parser_node	*find_command_node(t_parser_node *node)
 	{
 		if (node->r_node)
 		{
-			ret_node = find_command_node(node->r_node);
+			ret_node = find_c_node(node->r_node);
 			if (!ret_node)
 			{
 				node->r_node = malloc(sizeof(t_parser_node));
@@ -202,7 +202,7 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 	t_parser_node	*node;
 	t_token			*token;
 	t_token			*next;
-	t_parser_node	*command_node;
+	t_parser_node	*c_node;
 	t_parser_node	*new_node;
 	int				last_type;
 	int				c_type;
@@ -235,10 +235,11 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 		token->flag = c_type;
 		if (c_type == FT_COMMAND_F)
 		{
-			command_node = find_command_node(node);
-			command_node->content = lexer_lstadd_back(&command_node->content, token);
+			c_node = find_c_node(node);
+			c_node->content = lexer_lstadd_back(&c_node->content, token);
 		}
-		else if (c_type == FT_SEMICOLON_F){
+		else if (c_type == FT_SEMICOLON_F)
+		{
 			new_node = malloc(sizeof(t_parser_node));
 			new_node->l_node = node;
 			new_node->content = token;
@@ -252,9 +253,9 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 			new_node->r_node = NULL;
 			if (node && node->content->flag == FT_SEMICOLON_F)
 			{
-				command_node = node;
-				new_node->l_node = command_node->r_node;
-				command_node->r_node = new_node;
+				c_node = node;
+				new_node->l_node = c_node->r_node;
+				c_node->r_node = new_node;
 			}
 			else
 			{
@@ -264,23 +265,23 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 		}
 		else if (is_redirect(c_type))
 		{
-			command_node = find_parent_node(node);
-			if (command_node)
+			c_node = find_parent_node(node);
+			if (c_node)
 			{
-				if (!command_node->r_node)
+				if (!c_node->r_node)
 				{
-					command_node->r_node = malloc(sizeof(t_parser_node));
-					command_node->r_node->content = token;
-					command_node->r_node->r_node = NULL;
-					command_node->r_node->l_node = NULL;
+					c_node->r_node = malloc(sizeof(t_parser_node));
+					c_node->r_node->content = token;
+					c_node->r_node->r_node = NULL;
+					c_node->r_node->l_node = NULL;
 				}
 				else
 				{
 					new_node = malloc(sizeof(t_parser_node));
 					new_node->content = token;
 					new_node->r_node = NULL;
-					new_node->l_node = command_node->r_node;
-					command_node->r_node = new_node;
+					new_node->l_node = c_node->r_node;
+					c_node->r_node = new_node;
 				}
 			}
 			else
@@ -294,11 +295,11 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 		}
 		else if (c_type == FT_FILENAME_F)
 		{
-			command_node = find_redirect_node(node);
-			command_node->r_node = malloc(sizeof(t_parser_node));
-			command_node->r_node->content = token;
-			command_node->r_node->l_node = NULL;
-			command_node->r_node->r_node = NULL;
+			c_node = find_redirect_node(node);
+			c_node->r_node = malloc(sizeof(t_parser_node));
+			c_node->r_node->content = token;
+			c_node->r_node->l_node = NULL;
+			c_node->r_node->r_node = NULL;
 		}
 		token = next;
 		last_type = c_type;
