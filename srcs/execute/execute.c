@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:44:35 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 21:25:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	command_builtin(t_token *token, t_env *env)
 	else if (ft_strcmp(token->data, "export") == 0)
 		g_exit_status = execute_export(token, env);
 	else if (ft_strcmp(token->data, "pwd") == 0)
-		g_exit_status = execute_pwd();
+		g_exit_status = execute_pwd(env);
 	else if (ft_strcmp(token->data, "unset") == 0)
 		g_exit_status = execute_unset(token, env);
 	else if (ft_strcmp(token->data, "exit") == 0)
