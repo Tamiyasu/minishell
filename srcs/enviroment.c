@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 13:38:14 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 13:49:40 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	env_init(t_env *env)
 	env->pwd_flag = 0;
 	env->shlvl_flag = 0;
 	env->pwd_data = NULL;
-	env->unset_pwd=  NULL;
+	env->unset_pwd = NULL;
 }
 
 void	env_update_pwddata(t_env *env)
@@ -76,8 +76,8 @@ int	env_check_data(t_env *env, char **envp)
 	env_num = 0;
 	while (envp[env_num] != NULL)
 		env_num++;
-	env->oldpwd_flag =  env_search(envp, "OLDPWD");
-	if  (env->oldpwd_flag == -1)
+	env->oldpwd_flag = env_search(envp, "OLDPWD");
+	if (env->oldpwd_flag == -1)
 		env_num++;
 	env->pwd_flag = env_search(envp, "PWD");
 	if (env->pwd_flag == -1)
@@ -90,12 +90,14 @@ int	env_check_data(t_env *env, char **envp)
 
 int		env_set_shlvl(t_env *env, int idx)
 {
+    int shlvl_num;
+
 	if (env->shlvl_flag == -1)
 		env->data[idx++] = ft_strdup("SHLVL=1");
 	else
 	{
-		int shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
-		if(shlvl_num < 0)
+		shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
+		if (shlvl_num < 0)
 			shlvl_num = 0;
 		else
 		{
@@ -110,7 +112,7 @@ int		env_set_shlvl(t_env *env, int idx)
 	return (idx);
 }
 
-int		env_set_pwd(t_env * env, int idx)
+int		env_set_pwd(t_env *env, int idx)
 {
 	if (env->oldpwd_flag == -1)
 		env->data[idx++] = ft_strdup("OLDPWD");
