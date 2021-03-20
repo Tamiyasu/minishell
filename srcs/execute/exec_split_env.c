@@ -6,14 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 19:44:14 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:59:29 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 02:36:18 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
-char **exec_split_env(t_env *env)
+char	**exec_split_env(t_env *env)
 {
 	char	**split_env;
 	int		i;

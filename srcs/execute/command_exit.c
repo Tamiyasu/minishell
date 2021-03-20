@@ -6,14 +6,14 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:05:13 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 02:22:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "libft.h"
 
-static int	exit_check_integer(char *args)
+int			exit_check_integer(char *args)
 {
 	int	idx;
 
@@ -34,7 +34,7 @@ static int	exit_check_integer(char *args)
 	return (1);
 }
 
-static int	exit_check_argsnum(t_token *token)
+int			exit_check_argsnum(t_token *token)
 {
 	int	num;
 
@@ -47,11 +47,11 @@ static int	exit_check_argsnum(t_token *token)
 	return (num);
 }
 
-static long long exit_atoi(t_token *token)
+long long	exit_atoi(t_token *token)
 {
 	long long	num;
-	int		sign;
-	int		idx;
+	int			sign;
+	int			idx;
 
 	num = 0;
 	sign = 1;
@@ -75,20 +75,31 @@ static long long exit_atoi(t_token *token)
 	return (num);
 }
 
-void	command_exit(t_token *token)
+void		exit_check_status(t_token *token)
 {
-	long long  num;
+	long long	status;
 
+	status = exit_atoi(token);
+	if (token->flag == -1)
+	{
+		output_error_exit_args(token->data);
+		exit(EXIT_OUT_OF_RANGE_STATUS);
+	}
+	g_exit_status = status % 256;
+	if (g_exit_status < 0)
+		g_exit_status += 256;
+}
+
+void		command_exit(t_token *token)
+{
 	token = token->next;
 	if (token == NULL)
 	{
 		ft_putendl_fd("exit", STDOUT_FILENO);
-		//すべてのfree処理
 		exit(EXIT_SUCCESS);
 	}
 	if (exit_check_integer(token->data) != 1)
 	{
-		//すべてのfree処理
 		output_error_exit_args(token->data);
 		exit(EXIT_OUT_OF_RANGE_STATUS);
 	}
@@ -98,16 +109,7 @@ void	command_exit(t_token *token)
 		g_exit_status = 1;
 		return ;
 	}
-	num = exit_atoi(token);
-	if (token->flag == -1)
-	{
-		//すべてのfree処理
-		output_error_exit_args(token->data);
-		exit(EXIT_OUT_OF_RANGE_STATUS);
-	}
-	g_exit_status = num % 256;
-	if (g_exit_status < 0)
-		g_exit_status += 256;
+	exit_check_status(token);
 	ft_putendl_fd("exit", STDOUT_FILENO);
-	exit (g_exit_status);
+	exit(g_exit_status);
 }

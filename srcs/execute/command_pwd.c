@@ -6,17 +6,43 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:05:38 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 02:33:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
-char *cwd_wrapper(t_env *env, char *cd)
+void	set_cwd_str(t_env *env, char **cwd_str, char *tmp)
 {
-	static char *cwd_str;
-	char *tmp;
+	if (env->pwd_data)
+		*cwd_str = ft_strdup(env->pwd_data);
+	else if (tmp == NULL)
+	{
+		error_str("No such file or directory");
+		error_str("getcwd: cannot access parent directories: ");
+		*cwd_str = ft_strdup("");
+	}
+}
+
+void	set_cwd_str2(char **cwd_str, char *cd, char *tmp)
+{
+	if (ft_strlen(*cwd_str) > 0
+		&& *cwd_str[ft_strlen(*cwd_str) - 1] != '/')
+	{
+		tmp = *cwd_str;
+		*cwd_str = ft_strjoin(tmp, "/");
+		free(tmp);
+	}
+	tmp = *cwd_str;
+	*cwd_str = ft_strjoin(tmp, cd);
+	free(tmp);
+}
+
+char	*cwd_wrapper(t_env *env, char *cd)
+{
+	static char	*cwd_str;
+	char		*tmp;
 
 	tmp = getcwd(NULL, 0);
 	if (tmp)
@@ -26,34 +52,15 @@ char *cwd_wrapper(t_env *env, char *cd)
 	}
 	else
 	{
-		if(cwd_str == NULL)
-		{
-			if(env->pwd_data)
-				cwd_str = ft_strdup(env->pwd_data);
-			else if(tmp == NULL)
-			{
-				error_str("No such file or directory");
-				error_str("getcwd: cannot access parent directories: ");
-				cwd_str = ft_strdup("");
-			}
-		}
-		if(cd)
-		{
-			if(ft_strlen(cwd_str) > 0 && cwd_str[ft_strlen(cwd_str) - 1] != '/')
-			{
-				tmp = cwd_str;
-				cwd_str = ft_strjoin(tmp, "/");
-				free(tmp);
-			}
-			tmp = cwd_str;
-			cwd_str = ft_strjoin(tmp, cd);
-			free(tmp);
-		}
+		if (cwd_str == NULL)
+			set_cwd_str(env, &cwd_str, tmp);
+		if (cd)
+			set_cwd_str2(&cwd_str, cd, tmp);
 	}
 	return (cwd_str);
 }
 
-int	command_pwd(t_env *env)
+int		command_pwd(t_env *env)
 {
 	char	*cwdir;
 

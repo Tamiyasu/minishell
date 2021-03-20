@@ -6,30 +6,30 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/25 17:11:47 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:02:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 02:23:05 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-#include "libft.h"
 
 int	command_env(char **env_data)
 {
-	int	idx;
+	int	i;
+	int j;
 
-	idx = 0;
-	while  (env_data[idx] != NULL)
+	i = 0;
+	while (env_data[i] != NULL)
 	{
-		int x = 0;
-		while (env_data[idx][x] != '\0')
+		j = 0;
+		while (env_data[i][j] != '\0')
 		{
-			if (env_data[idx][x] == '=')
+			if (env_data[i][j] == '=')
 				break ;
-			x++;
+			j++;
 		}
-		if (env_data[idx][x] != '\0')
-			ft_putendl_fd(env_data[idx], 1);
-		idx++;
+		if (env_data[i][j] != '\0')
+			ft_putendl_fd(env_data[i], 1);
+		i++;
 	}
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 00:03:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 02:45:00 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,11 @@ void	expansion(t_parser_node *node, t_env *env)
 	if (node->content->flag == FT_COMMAND_F)
 	{
 		exps_check_command(node->content, env);
+		printf("----after exps_check_command-------------------\n");
 		print_token(node->content);
+
 		node->content = exps_format(node->content);
-		printf("-----------------------\n");
+		printf("-----after exps_format-------------------------\n");
 		print_token(node->content);
 	}
 	expansion(node->l_node, env);

@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:29:51 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:13:54 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 02:40:10 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,13 @@ void	token_list_addback(t_token **token_list, t_token *new)
 
 int		token_lstsize(t_token *token)
 {
-	int i;
+	int num;
 
-	i = 0;
+	num = 0;
 	while (token)
 	{
-		i++;
+		num++;
 		token = token->next;
 	}
-	return (i);
+	return (num);
 }
