@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:41:29 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:42:33 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char *error_str(char *str)
 		free(s_str);
 		s_str = NULL;
 	}
-	return s_str;
+	return (s_str);
 }
 
 void	msh_loop(t_env *env)
@@ -81,7 +81,7 @@ void	msh_loop(t_env *env)
 	int				result;
 
 	line = NULL;
-	token_list =  NULL;
+	token_list = NULL;
 	while (1)
 	{
 		ft_putstr_fd("minishell>> ", 1);
