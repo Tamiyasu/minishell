@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 13:23:15 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:26:10 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,12 @@ int				error_2(t_token *token, t_parser_node *node)
 	return (0);
 }
 
-void			parser_main_func(int c_type, t_parser_node **node, t_token *token)
+void			parser_main(int c_type, t_parser_node **node, t_token *token)
 {
 	t_parser_node	*c_node;
 
 	if (c_type == FT_COMMAND_F)
-	{
-		c_node = find_c_node(*node);
-		token_list_addback(&c_node->content, token);
-	}
+		token_list_addback(&(find_c_node(*node))->content, token);
 	else if (c_type == FT_SEMICOLON_F)
 		*node = make_node(token, *node, NULL);
 	else if (c_type == FT_PIPE_F)
@@ -86,10 +83,7 @@ void			parser_main_func(int c_type, t_parser_node **node, t_token *token)
 			*node = make_node(token, *node, NULL);
 	}
 	else if (c_type == FT_FILENAME_F)
-	{
-		c_node = find_redirect_node(*node);
-		c_node->r_node = make_node(token, NULL, NULL);
-	}
+		(find_redirect_node(*node))->r_node = make_node(token, NULL, NULL);
 }
 
 int				parser(t_token *token, t_parser_node **node_p)
@@ -107,14 +101,14 @@ int				parser(t_token *token, t_parser_node **node_p)
 		token->next = NULL;
 		c_type = check_token_type(token, last_type);
 		if (!check_input(c_type, last_type))
-			return(error_1(token, next, node));
+			return (error_1(token, next, node));
 		token->flag = c_type;
-		parser_main_func(c_type, &node, token);
+		parser_main(c_type, &node, token);
 		token = next;
 		last_type = c_type;
 	}
 	if (!check_last_input(c_type))
-		return(error_2(token, node));
+		return (error_2(token, node));
 	*node_p = node;
 	return (1);
 }
