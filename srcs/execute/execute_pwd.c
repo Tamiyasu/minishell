@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 16:51:02 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:40:41 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,23 @@ char *cwd_wrapper()
 	return (ret_str);
 }
 
-int	execute_pwd(void)
+int	execute_pwd(t_env *env)
 {
 	char	*cwdir;
+	int		idx;
 
+	idx = env_search(env->data, "PWD");
+	if(idx >= 0)
+	{
+		ft_putendl_fd(env->data[idx] + 4, STDOUT_FILENO);
+		return (EXIT_SUCCESS);
+	}
 	cwdir = cwd_wrapper();
 	if (cwdir == NULL)
 	{
 		error_str("error retrieving current directory: ");
 		ft_putendl_fd(error_str("pwd: "), 2);
 		error_str(NULL);
-		//ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	ft_putendl_fd(cwdir, STDOUT_FILENO);

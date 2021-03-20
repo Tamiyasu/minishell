@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 18:08:30 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:32:31 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,10 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
 		}
 	}
-	if (env->data[idx][4] == '/')
-	{
-		env_update_pwddata(env);
-		if(ft_strlen(error_str("")) > 0)
-			ft_putendl_fd(error_str("cd: "), 2);
-		error_str(NULL);
-		//free(env->data[idx]);
-		//env->data[idx] = ft_strjoin("PWD=", "");
-	}	
+	env_update_pwddata(env);
+	if(ft_strlen(error_str("")) > 0)
+		ft_putendl_fd(error_str("cd: "), 2);
+	error_str(NULL);
 	if  (env->pwd_flag != -1)
 	{
 		if(env->pwd_data)

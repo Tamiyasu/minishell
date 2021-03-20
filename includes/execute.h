@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 16:49:14 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:44:05 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	command_execve(t_token *token, t_env *env);
 void	execute_exit(t_token *token);
 int		execute_export(t_token *token, t_env *env);
 int		execute_env(char **env_data);
-int		execute_pwd(void);
+int		execute_pwd(t_env *env);
 int		execute_unset(t_token *token, t_env *env);
 void	init_fd(t_info_fd *fd);
 void	reset_fd(t_info_fd *fd);
