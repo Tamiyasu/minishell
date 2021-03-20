@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:48:02 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 13:59:30 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:59:55 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	sig_handler_c(int signo)
 	if (c_pid(-1))
 		kill(c_pid(-1), signo);
 }
+
 void	sig_handler_p(int signo)
 {
 	if (!c_pid(-1))
