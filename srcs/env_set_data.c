@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_set_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 14:00:54 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 20:24:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,21 @@ int		env_set_shlvl(t_env *env, int idx)
 
 int		env_set_pwd(t_env *env, int idx)
 {
+	char *tmp_cwd;
+
 	if (env->oldpwd_flag == -1)
 		env->data[idx++] = ft_strdup("OLDPWD");
-	env_update_pwddata(env);
-	if (env->pwd_flag == -1)
+	env_update_pwddata(env, NULL);
+	if (env->pwd_flag == -1 && env->pwd_data)
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
 	else
 	{
-		free(env->data[env->pwd_flag]);
-		env->data[env->pwd_flag] = ft_strjoin("PWD=", env->pwd_data);
+		tmp_cwd = env->data[env->pwd_flag];
+		if(env->pwd_data)
+		{
+			env->data[env->pwd_flag] = ft_strjoin("PWD=", env->pwd_data);
+			free(tmp_cwd);
+		}
 	}
 	return (idx);
 }
@@ -85,6 +91,9 @@ void	env_set_data(t_env *env, char **envp)
 		idx++;
 	}
 	idx = env_set_pwd(env, idx);
+	if(0 < ft_strlen(error_str("")))
+		ft_putendl_fd(error_str("shell-init: "), 2);
+	error_str(NULL);
 	idx = env_set_shlvl(env, idx);
 	env->oldpwd_flag = 1;
 	env->pwd_flag = 1;
