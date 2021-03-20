@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_env.c                                      :+:      :+:    :+:   */
+/*   command_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/25 17:11:47 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 16:41:40 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:05:05 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "libft.h"
 
-int	execute_env(char **env_data)
+int	command_env(char **env_data)
 {
 	int	idx;
 

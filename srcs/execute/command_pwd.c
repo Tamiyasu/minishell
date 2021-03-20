@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_pwd.c                                      :+:      :+:    :+:   */
+/*   command_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:36:18 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:05:38 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char *cwd_wrapper(t_env *env, char *cd)
 	return (cwd_str);
 }
 
-int	execute_pwd(t_env *env)
+int	command_pwd(t_env *env)
 {
 	char	*cwdir;
 

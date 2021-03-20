@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_export.c                                   :+:      :+:    :+:   */
+/*   command_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:24:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:28:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ static void	export_make_new_envdata(t_token *token, t_env *env)
 	env->data = new_env;
 }
 
-int			execute_export(t_token *token, t_env *env)
+int			command_export(t_token *token, t_env *env)
 {
 	char	**split_tokend;
 	char	**split_env;
@@ -271,7 +271,7 @@ int			execute_export(t_token *token, t_env *env)
 	split_tokend = execute_split_and_classify_tokend(token, env);
 	export_check_args(token, split_tokend, &g_exit_status);
 	export_check_duplication_of_token(token, split_tokend);
-	split_env = execute_split_env(env);
+	split_env = exec_split_env(env);
 	if (split_env == NULL)//execute_split_env()内でmallocエラー
 	{
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);

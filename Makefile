@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/20 21:25:15 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/20 22:14:24 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,17 +32,19 @@ SRC_FILE	+= expansion/exps_format.c
 SRC_FILE	+= expansion/exps_set_envdata.c
 SRC_FILE	+= expansion/exps_quote.c
 SRC_FILE	+= execute/execute.c
+SRC_FILE	+= execute/exec_fd.c
 SRC_FILE	+= execute/exec_redirect.c
-SRC_FILE	+= execute/execute_cd.c
-SRC_FILE	+= execute/execute_echo.c
-SRC_FILE	+= execute/execute_env.c
+SRC_FILE	+= execute/exec_redirect_save.c
+SRC_FILE	+= execute/command_cd.c
+SRC_FILE	+= execute/command_echo.c
+SRC_FILE	+= execute/command_env.c
 SRC_FILE	+= execute/command_execve.c
-SRC_FILE	+= execute/execute_exit.c
-SRC_FILE	+= execute/execute_export.c
-SRC_FILE	+= execute/execute_pwd.c
-SRC_FILE	+= execute/execute_unset.c
+SRC_FILE	+= execute/command_exit.c
+SRC_FILE	+= execute/command_export.c
+SRC_FILE	+= execute/command_pwd.c
+SRC_FILE	+= execute/command_unset.c
 SRC_FILE	+= execute/export_putenv.c
-SRC_FILE	+= execute/execute_split_env.c
+SRC_FILE	+= execute/exec_split_env.c
 SRC_FILE	+= execute/error.c
 
 

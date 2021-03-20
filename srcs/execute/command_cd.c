@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_cd.c                                       :+:      :+:    :+:   */
+/*   command_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:35:01 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:08:46 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static void	cd_update_envpwd(t_env *env, char *arg_str)
+void	cd_update_envpwd(t_env *env, char *arg_str)
 {
 	int	old_idx;
 	int	idx;
@@ -29,21 +29,17 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 		old_idx = env_search(env->data, "OLDPWD");
 		free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
-		{
 			env->data[old_idx] = ft_strjoin("OLDPWD=", &env->data[idx][4]);
-		}
 		else
-		{
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
-		}
 	}
 	env_update_pwddata(env, arg_str);
-	if(ft_strlen(error_str("")) > 0)
+	if (ft_strlen(error_str("")) > 0)
 		ft_putendl_fd(error_str("cd: "), 2);
 	error_str(NULL);
-	if  (env->pwd_flag != -1)
+	if (env->pwd_flag != -1)
 	{
-		if(env->pwd_data && idx >= 0)
+		if (env->pwd_data && idx >= 0)
 		{
 			free(env->data[idx]);
 			env->data[idx] = ft_strjoin("PWD=", env->pwd_data);
@@ -51,7 +47,7 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 	}
 }
 
-int	cd_home(t_env *env)
+int		cd_home(t_env *env)
 {
 	char	*env_home;
 	int		idx;
@@ -74,21 +70,20 @@ int	cd_home(t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-int	execute_cd(t_token *token, t_env *env)
+int		command_cd(t_token *token, t_env *env)
 {
-	char *err_str;
-	struct stat stat_buf;
-	int err_cord;
+	char		*err_str;
+	struct stat	stat_buf;
+	int			err_cord;
 
 	token = token->next;
 	if (token == NULL)
-	{
 		return (cd_home(env));
-	}
 	else if (chdir(token->data) == -1)
 	{
 		err_cord = ENOENT;
-		if(!stat(token->data, &stat_buf) && (stat_buf.st_mode & S_IFMT) != S_IFDIR)
+		if (!stat(token->data, &stat_buf)
+			&& (stat_buf.st_mode & S_IFMT) != S_IFDIR)
 			err_cord = ENOTDIR;
 		err_str = ft_strjoin("cd: ", token->data);
 		output_error(err_str, strerror(err_cord));
