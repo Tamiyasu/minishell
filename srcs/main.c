@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:42:33 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:43:31 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	free_args(char **args)
 	args = NULL;
 }
 
-t_token *find_first_commnd_node(t_parser_node *node)
+t_token	*find_first_commnd_node(t_parser_node *node)
 {
 	printf("node : %p\n", node);
 	printf("content : %p\n", node->content);
@@ -48,7 +48,7 @@ t_token *find_first_commnd_node(t_parser_node *node)
 	return (node->content);
 }
 
-char *error_str(char *str)
+char	*error_str(char *str)
 {
 	static char *s_str;
 	char *tmp;
@@ -130,7 +130,7 @@ void	msh_loop(t_env *env)
 	}
 }
 
-int	main(int argc, char *argv[], char *envp[])
+int		main(int argc, char *argv[], char *envp[])
 {
 	t_env	env;
 
