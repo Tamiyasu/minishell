@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 15:26:13 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 16:55:58 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,115 +30,121 @@ char	*replace_variables_with_values(char *new_data, char *env_data)
 	return (new_data);
 }
 
-char	*save_reading_data(char *token_data, char *new_data, int *start, int *data_len, int *idx)
+char	*save_reading_data(char *token_data, char *new_data, t_data *data)
 {
 	char	*tmp;
 	char    *tmp2;
 
-	if(*data_len)
+	if(data->length)
 	{
 		if (new_data == NULL)
-			new_data = ft_substr(token_data, *start, *data_len);
+			new_data = ft_substr(token_data, data->start, data->length);
 		else
 		{
 			tmp = ft_strdup(new_data);
-			tmp2 = ft_substr(token_data, *start, *data_len);
+			tmp2 = ft_substr(token_data, data->start, data->length);
 			free(new_data);
 			new_data = ft_strjoin(tmp, tmp2);
 			free(tmp);
 			free(tmp2);
 		}
 	}
-	*data_len = 0;
-	*idx = (*idx + 1);
-	*start = *idx;
+	data->length = 0;
+	// *idx = (*idx + 1);
+	// *start = *idx;
+	data->start = ++data->idx;
 	return (new_data);
 }
 
-char	*save_env_data(t_env *env, char *new_data, char *token_data, int *start, int *data_len, int *idx)
+char	*save_env_data(t_env *env, char *new_data, char *token_data, t_data *data)
 {
 	char	*env_key;
 	char	*env_value;
 	int		env_idx;
 
-	while (token_data[*idx] != '$' && token_data[*idx] != '\''
-			&& token_data[*idx] != '\"' && token_data[*idx] != ' '
-			&& token_data[*idx] != '\t' && token_data[*idx])
+	while (token_data[data->idx] != '$' && token_data[data->idx] != '\''
+			&& token_data[data->idx] != '\"' && token_data[data->idx] != ' '
+			&& token_data[data->idx] != '\t' && token_data[data->idx])
 	{
-		*data_len = (*data_len + 1);
-		*idx = (*idx + 1);
+		// *length = (*length + 1);
+		// *idx = (*idx + 1);
+		data_increment(data);
 	}
-	env_key = ft_substr(token_data, *start, *data_len);
-	*data_len = 0;
+	env_key = ft_substr(token_data, data->start, data->length);
+	data->length = 0;
 	env_idx = env_search(env->data, env_key);
 	if (env_idx == -1)
-		*start = (*start + ft_strlen(env_key));
+		data->start += ft_strlen(env_key);
 	else
 	{
 		env_value = ft_strdup(&env->data[env_idx][ft_strlen(env_key) + 1]);
 		new_data = replace_variables_with_values(new_data, env_value);
 		free(env_value);
-		*start = (*start + ft_strlen(env_key));
+		// *start = (*start + ft_strlen(env_key));
+		data->start += ft_strlen(env_key);
 	}
 	free(env_key);
 	return (new_data);
 }
 
-char	*set_environment_data(char *token_data, char *new_data, int *start, int *data_len, int *idx, t_env *env)
+char	*set_environment_data(char *token_data, char *new_data, t_data *data, t_env *env)
 {
 	char *exit_status_str;
 
-	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-	if (token_data[*idx] == '?')
+	new_data = save_reading_data(token_data, new_data, data);
+	if (token_data[data->idx] == '?')
 	{
 		exit_status_str = ft_itoa(g_exit_status);
 		new_data = replace_variables_with_values(new_data, exit_status_str);
 		free(exit_status_str);
-		*idx = (*idx + 1);
-		*start = *idx;
+		// *idx = (*idx + 1);
+		// *start = *idx;
+		data->start = ++data->idx;
 	}
 	else
 	{
-		new_data = save_env_data(env, new_data, token_data, start, data_len, idx);
+		new_data = save_env_data(env, new_data, token_data, data);
 	}
 	return (new_data);
 }
 
-char	*set_squote_data(char *token_data, char *new_data, int *start, int *data_len, int *idx)
+char	*set_squote_data(char *token_data, char *new_data, t_data *data)
 {
-	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-	while (token_data[*idx] !=  '\'')
+	new_data = save_reading_data(token_data, new_data, data);
+	while (token_data[data->idx] !=  '\'')
 	{
-		*data_len = (*data_len + 1);
-		*idx = (*idx + 1);
+		// *length = (*length + 1);
+		// *idx = (*idx + 1);
+		data_increment(data);
 	}
-	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
+	new_data = save_reading_data(token_data, new_data, data);
 	return (new_data);
 }
 
-char	*set_dquote_data(char *token_data, char *new_data, int *start, int *data_len, int *idx, t_env *env)
+char	*set_dquote_data(char *token_data, char *new_data, t_data *data, t_env *env)
 {
-	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-	while (token_data[*idx] !=  '\"')
+	new_data = save_reading_data(token_data, new_data, data);
+	while (token_data[data->idx] !=  '\"')
 	{
-		if (token_data[*idx] == '$')
+		if (token_data[data->idx] == '$')
 		{
-			new_data = set_environment_data(token_data, new_data, start, data_len, idx, env);
+			new_data = set_environment_data(token_data, new_data, data, env);
 		}
 		else
 		{
-			*data_len = (*data_len + 1);
-			*idx = (*idx + 1);
+			// *length = (*length + 1);
+			// *idx = (*idx + 1);
+			data_increment(data);
 		}
 	}
-	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
+	new_data = save_reading_data(token_data, new_data, data);
 	return (new_data);
 }
 
-// char	*set_escape_data(char *token_data, char *new_data, int *start, int *data_len, int *idx)
+// char	*set_escape_data(char *token_data, char *new_data, int *start, int *length, int *idx)
 // {
-// 	new_data = save_reading_data(token_data, new_data, start, data_len, idx);
-// 	*data_len = (*data_len + 1);
+// 	new_data = save_reading_data(token_data, new_data, start, length, idx);
+// 	*length = (*length + 1);
 // 	*idx = (*idx + 1);
 // 	return (new_data);
 // }
@@ -159,42 +165,108 @@ void	set_expansion_data(t_token *token_list, char *new_data)
 
 void	expansion_check(t_token *token_list, t_env *env)
 {
+	t_token	*new_token_list;
+	t_data	*data;
 	char	*new_data;
-	int		data_len;
-	int		start;
-	int		idx;
+	// int		length;
+	// int		start;
+	// int		idx;
 
+	new_token_list = NULL;
 	while (token_list)
 	{
+		data = data_init();
 		new_data = NULL;
-		data_len = 0;
-		start = 0;
-		idx = 0;
+		// length = 0;
+		// start = 0;
+		// idx = 0;
 
-		while (token_list->data[idx] != '\0')
+		while (token_list->data[data->idx] != '\0')
 		{
-			if (token_list->data[idx] == '\'')
-				new_data = set_squote_data(token_list->data, new_data, &start, &data_len, &idx);
-			else if (token_list->data[idx] == '\"')
-				new_data = set_dquote_data(token_list->data, new_data, &start, &data_len, &idx, env);
-			else if (token_list->data[idx] == '$')
+			if (token_list->data[data->idx] == '\'')
+				new_data = set_squote_data(token_list->data, new_data, data);
+			else if (token_list->data[data->idx] == '\"')
+				new_data = set_dquote_data(token_list->data, new_data, data, env);
+			else if (token_list->data[data->idx] == '$')
 			{
-				new_data = set_environment_data(token_list->data, new_data, &start, &data_len, &idx, env);
-
+				new_data = set_environment_data(token_list->data, new_data, data, env);
+				token_list->flag = FT_EXPANSION_ENV;
+				// new_data = format_data(token_list, new_data);
 			// else if (/*token_list->data[idx] == '\\' && */token_list->data[idx + 1] != ' '
 			// 		&& token_list->data[idx] != '\t' && token_list->data[idx + 1])
-			// 	new_data = set_escape_data(token_list->data, new_data, &start, &data_len, &idx);
+			// 	new_data = set_escape_data(token_list->data, new_data, &start, &length, &idx);
 			}
 			else
 			{
-				data_len++;
-				idx++;
+				// length++;
+				// idx++;
+				data_increment(data);
 			}
 		}
-		new_data = save_reading_data(token_list->data, new_data, &start, &data_len, &idx);
+		new_data = save_reading_data(token_list->data, new_data, data);
 		set_expansion_data(token_list, new_data);
+		free(data);
 		token_list = token_list->next;
 	}
+}
+
+void	print_token(t_token *token)
+{
+	while (token)
+	{
+		printf("token->data=[%s][%d]\n", token->data, token->flag);
+		token = token->next;
+	}
+}
+
+t_token	*expansion_format(t_token *token_list)
+{
+	t_token *token_list_p = token_list;
+	t_data *data;
+	char	*tmp_token_data;
+
+	while (token_list)
+	{
+		if (token_list->flag == FT_EXPANSION_ENV)//$ECHO="echo -n"
+		{
+			data = data_init();
+			tmp_token_data = ft_strdup(token_list->data);
+			free(token_list->data);
+			token_list->data = NULL;
+			token_list->flag = FT_COMMAND_F;
+			while (tmp_token_data[data->idx])//"echo -n"
+			{
+				if (tmp_token_data[data->idx] == ' ' || tmp_token_data[data->idx] == '\t')
+				{
+					if (data->length)
+					{
+						if (token_list->data == NULL)//まだ何も入っていない
+						{
+							token_list->data = ft_substr(tmp_token_data, data->start, data->length);
+						}
+						else
+						{
+							t_token *add_token_list;
+
+							add_token_list = token_list_new(ft_substr(tmp_token_data, data->start, data->length));
+							add_token_list->flag = FT_COMMAND_F;
+							add_token_list->next = token_list->next;
+							token_list->next = add_token_list;
+						}
+						data->length = 0;
+						data->start = ++data->idx;
+					}
+				}
+				else
+				{
+					data_increment(data);
+				}
+			}
+			free(data);
+		}
+		token_list = token_list->next;
+	}
+	return (token_list_p);
 }
 
 void	expansion(t_parser_node *node, t_env *env)
@@ -202,7 +274,14 @@ void	expansion(t_parser_node *node, t_env *env)
 	if (!node || !(node->content))
 		return ;
 	if (node->content->flag == FT_COMMAND_F)
+	{
 		expansion_check(node->content, env);
+		print_token(node->content);
+
+	 	node->content = expansion_format(node->content);
+		printf("---------------------after expansion format\n");
+		print_token(node->content);
+	}
 	expansion(node->l_node, env);
 	if (node->content->flag == FT_SEMICOLON_F)
 		return ;

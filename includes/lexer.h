@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 16:59:25 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 15:07:22 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 15:38:04 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct	s_data
 }				t_data;
 
 int				lexer(char *input, t_token **token_list_p);
+t_data			*data_init(void);
 void			data_increment(t_data *lexer);
 t_token			*lexer_check_len(t_token *token, t_data *lexer, char *input);
 t_token			*lexer_set_token(t_token *token, t_data *lexer, char *content);
