@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 19:44:05 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:13:25 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	free_fd(t_info_fd **fd);
 void	output_error(char *err_command, char *err_string);
 void	output_no_filename(void);
 void	output_error_exit_args(char	*exit_args);
-char	*cwd_wrapper();
+char	*cwd_wrapper(t_env *env, char *cd);
 
 /*
 ** unset, export

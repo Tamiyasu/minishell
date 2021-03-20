@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 16:52:31 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:31:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,18 @@ int		env_search(char **env_data, char *variable_name)
 	return (-1);
 }
 
-void	env_update_pwddata(t_env *env)
+void	env_update_pwddata(t_env *env, char *cd)
 {
 	char *cwdir;
 
-	if (env->pwd_data != NULL)
-	{
-		free(env->pwd_data);
-		env->pwd_data = NULL;
-	}
-	cwdir = cwd_wrapper();
+	cwdir = cwd_wrapper(env, cd);
 	if (cwdir == NULL)
 	{
 		error_str("error retrieving current directory: ");
 	}
-	env->pwd_data = cwdir;
+	else
+	{
+		free(env->pwd_data);
+		env->pwd_data = ft_strdup(cwdir);
+	}
 }

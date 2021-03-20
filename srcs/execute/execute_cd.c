@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 19:50:22 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:35:01 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 {
 	int	old_idx;
 	int	idx;
-	char *tmp;
-	//int	all_flag;
-	//size_t i;
 
 	idx = env_search(env->data, "PWD");
 	if (env->oldpwd_flag != -1)
@@ -40,43 +37,16 @@ static void	cd_update_envpwd(t_env *env, char *arg_str)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
 		}
 	}
-	env_update_pwddata(env);
+	env_update_pwddata(env, arg_str);
 	if(ft_strlen(error_str("")) > 0)
 		ft_putendl_fd(error_str("cd: "), 2);
 	error_str(NULL);
 	if  (env->pwd_flag != -1)
 	{
-		if(env->pwd_data)
+		if(env->pwd_data && idx >= 0)
 		{
 			free(env->data[idx]);
 			env->data[idx] = ft_strjoin("PWD=", env->pwd_data);
-		}
-		else if (arg_str)
-		{
-			/*
-			all_flag = 1;
-			i = 0;
-			while (i < ft_strlen(arg_str))
-			{
-				if (*(arg_str + i) != '.' && *(arg_str + i) != '/')
-				{
-					all_flag = 0;
-					break ;
-				}
-				i++;
-			}
-			if (all_flag)
-			{*/
-				tmp = env->data[idx];
-				if(ft_strlen(tmp) > 4 && tmp[ft_strlen(tmp) - 1] != '/')
-				{
-					env->data[idx] = ft_strjoin(tmp, "/");
-					free(tmp);
-					tmp = env->data[idx];
-				}
-				env->data[idx] = ft_strjoin(tmp, arg_str);
-				free(tmp);
-			//}
 		}
 	}
 }

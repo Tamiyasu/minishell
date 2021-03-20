@@ -6,38 +6,58 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 19:40:41 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:36:18 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
-char *cwd_wrapper()
+char *cwd_wrapper(t_env *env, char *cd)
 {
-	char *ret_str;
+	static char *cwd_str;
+	char *tmp;
 
-	ret_str = getcwd(NULL, 0);
-	if(ret_str == NULL)
+	tmp = getcwd(NULL, 0);
+	if (tmp)
 	{
-		error_str("No such file or directory");
-		error_str("getcwd: cannot access parent directories: ");
+		free(cwd_str);
+		cwd_str = tmp;
 	}
-	return (ret_str);
+	else
+	{
+		if(cwd_str == NULL)
+		{
+			if(env->pwd_data)
+				cwd_str = ft_strdup(env->pwd_data);
+			else if(tmp == NULL)
+			{
+				error_str("No such file or directory");
+				error_str("getcwd: cannot access parent directories: ");
+				cwd_str = ft_strdup("");
+			}
+		}
+		if(cd)
+		{
+			if(ft_strlen(cwd_str) > 0 && cwd_str[ft_strlen(cwd_str) - 1] != '/')
+			{
+				tmp = cwd_str;
+				cwd_str = ft_strjoin(tmp, "/");
+				free(tmp);
+			}
+			tmp = cwd_str;
+			cwd_str = ft_strjoin(tmp, cd);
+			free(tmp);
+		}
+	}
+	return (cwd_str);
 }
 
 int	execute_pwd(t_env *env)
 {
 	char	*cwdir;
-	int		idx;
 
-	idx = env_search(env->data, "PWD");
-	if(idx >= 0)
-	{
-		ft_putendl_fd(env->data[idx] + 4, STDOUT_FILENO);
-		return (EXIT_SUCCESS);
-	}
-	cwdir = cwd_wrapper();
+	cwdir = cwd_wrapper(env, NULL);
 	if (cwdir == NULL)
 	{
 		error_str("error retrieving current directory: ");
@@ -46,6 +66,5 @@ int	execute_pwd(t_env *env)
 		return (EXIT_FAILURE);
 	}
 	ft_putendl_fd(cwdir, STDOUT_FILENO);
-	free(cwdir);
 	return (EXIT_SUCCESS);
 }

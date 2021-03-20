@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 16:22:36 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:24:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		env_set_pwd(t_env *env, int idx)
 
 	if (env->oldpwd_flag == -1)
 		env->data[idx++] = ft_strdup("OLDPWD");
-	env_update_pwddata(env);
+	env_update_pwddata(env, NULL);
 	if (env->pwd_flag == -1 && env->pwd_data)
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
 	else
