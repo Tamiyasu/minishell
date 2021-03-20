@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:44:34 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:54:31 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ t_token	*find_first_commnd_node(t_parser_node *node)
 
 char	*error_str(char *str)
 {
-	static char *s_str;
-	char *tmp;
+	static char	*s_str;
+	char		*tmp;
 
 	if (str)
 	{
@@ -72,6 +72,13 @@ char	*error_str(char *str)
 	return (s_str);
 }
 
+void lexser_faile_func()
+{
+	g_exit_status = EXIT_SYNTAX_ERROR;
+	ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
+	error_str(NULL);
+}
+
 void	msh_loop(t_env *env)
 {
 	char			*line;
@@ -80,8 +87,6 @@ void	msh_loop(t_env *env)
 	t_info_fd		*msh_fd;
 	int				result;
 
-	line = NULL;
-	token_list = NULL;
 	while (1)
 	{
 		ft_putstr_fd("minishell>> ", 1);
@@ -99,16 +104,10 @@ void	msh_loop(t_env *env)
 			break ;
 		}
 		result = lexer(line, &token_list);
-		if (!result)
-		{
-			free(line);
-			g_exit_status = EXIT_SYNTAX_ERROR;
-			ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
-			error_str(NULL);
-			continue;
-		}
 		if (token_list == NULL)
 		{
+			if (!result)
+				lexser_faile_func();
 			free(line);
 			continue ;
 		}
