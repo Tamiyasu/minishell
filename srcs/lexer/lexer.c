@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 23:36:40 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 10:03:59 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	lexer(char *input, t_token **token_list_p)
 				error_str("'");
 				error_str(&input[data->idx]);
 				error_str("quotation marks error near token `");
+				free(data);
 				free_lst(&token_list);
 				g_exit_status = EXIT_SYNTAX_ERROR;
 				return (0);
