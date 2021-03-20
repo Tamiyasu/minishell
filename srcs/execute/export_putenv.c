@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_putenv.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 18:11:32 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/16 17:21:11 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:43:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ static char	**putenv_shape(char *env)
 	int		idx;
 
 	shape_env = malloc(sizeof(char *) * 3);
+	if(!shape_env)
+		ft_enomem();
 	idx = 0;
 	while (env[idx] != '\0')
 	{
@@ -115,10 +117,7 @@ int		export_putenv(t_env *env)
 
 	idx_array = malloc(sizeof(int *) * (env->num + 1));
 	if (idx_array == NULL)
-	{
-		ft_putendl_fd(strerror(errno), 1);//mallocのエラー出力して?return(最初の入力待ち)に
-		return (EXIT_FAILURE);
-	}
+		ft_enomem();
 	i = 0;
 	while (i < env->num)
 	{

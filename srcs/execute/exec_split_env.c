@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/06 19:44:14 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:15:03 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:59:29 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char **exec_split_env(t_env *env)
 
 	split_env = malloc(sizeof(char *) * (env->num + 1));
 	if (split_env == NULL)
-		return (NULL);
+		ft_enomem();
 	i = 0;
 	while (env->data[i] != NULL)
 	{

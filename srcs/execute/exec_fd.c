@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 21:45:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:59:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 23:01:04 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ t_info_fd	*fd_list_new(int fd_num, int fd_save, int flag)
 		msh_fd->flag = flag;
 		msh_fd->next = NULL;
 	}
+	else
+		ft_enomem();
 	return (msh_fd);
 }
 

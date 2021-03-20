@@ -6,7 +6,7 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/25 17:27:06 by tmurakam          #+#    #+#              #
-#    Updated: 2020/10/26 23:42:36 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/03/20 22:34:15 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,8 @@ SRCS = \
 	./ft_lstdelone.c \
 	./ft_lstclear.c \
 	./ft_lstiter.c \
-	./ft_lstmap.c
+	./ft_lstmap.c \
+	./ft_enomem.c
 
 OBJS = ${SRCS:.c=.o}
 all: ${NAME}
