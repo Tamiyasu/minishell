@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 12:58:35 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:22:07 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,51 @@ int				error_1(t_token *token, t_token *next, t_parser_node *node)
 	return (0);
 }
 
+int				error_2(t_token *token, t_parser_node *node)
+{
+	error_str("syntax error near unexpected token `newline'");
+	free_lst(&token);
+	free_tree(&node);
+	return (0);
+}
+
+void a(int c_type, t_parser_node **node, t_token *token)
+{
+	t_parser_node	*c_node;
+
+	if (c_type == FT_COMMAND_F)
+	{
+		c_node = find_c_node(*node);
+		token_list_addback(&c_node->content, token);
+	}
+	else if (c_type == FT_SEMICOLON_F)
+		*node = make_node(token, *node, NULL);
+	else if (c_type == FT_PIPE_F)
+	{
+		if (*node && (*node)->content->flag == FT_SEMICOLON_F)
+			(*node)->r_node = make_node(token, (*node)->r_node, NULL);
+		else
+			*node = make_node(token, *node, NULL);
+	}
+	else if (is_redirect(c_type))
+	{
+		c_node = find_parent_node(*node);
+		if (c_node)
+			c_node->r_node = make_node(token, c_node->r_node, NULL);
+		else
+			*node = make_node(token, *node, NULL);
+	}
+	else if (c_type == FT_FILENAME_F)
+	{
+		c_node = find_redirect_node(*node);
+		c_node->r_node = make_node(token, NULL, NULL);
+	}
+}
+
 int				parser(t_token *token, t_parser_node **node_p)
 {
 	t_parser_node	*node;
 	t_token			*next;
-	t_parser_node	*c_node;
 	int				last_type;
 	int				c_type;
 
@@ -69,43 +109,13 @@ int				parser(t_token *token, t_parser_node **node_p)
 		if (!check_input(c_type, last_type))
 			return(error_1(token, next, node));
 		token->flag = c_type;
-		if (c_type == FT_COMMAND_F)
-		{
-			c_node = find_c_node(node);
-			token_list_addback(&c_node->content, token);
-		}
-		else if (c_type == FT_SEMICOLON_F)
-			node = make_node(token, node, NULL);
-		else if (c_type == FT_PIPE_F)
-		{
-			if (node && node->content->flag == FT_SEMICOLON_F)
-				node->r_node = make_node(token, node->r_node, NULL);
-			else
-				node = make_node(token, node, NULL);
-		}
-		else if (is_redirect(c_type))
-		{
-			c_node = find_parent_node(node);
-			if (c_node)
-				c_node->r_node = make_node(token, c_node->r_node, NULL);
-			else
-				node = make_node(token, node, NULL);
-		}
-		else if (c_type == FT_FILENAME_F)
-		{
-			c_node = find_redirect_node(node);
-			c_node->r_node = make_node(token, NULL, NULL);
-		}
+		a(c_type, &node, token);
+
 		token = next;
 		last_type = c_type;
 	}
 	if (!check_last_input(c_type))
-	{
-		error_str("syntax error near unexpected token `newline'");
-		free_lst(&token);
-		free_tree(&node);
-		return (0);
-	}
+		return(error_2(token, node));
 	*node_p = node;
 	return (1);
 }
