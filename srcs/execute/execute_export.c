@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 17:24:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:40:50 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ static char	**execute_split_and_classify_tokend(t_token *token,  t_env *env)
 
 	split_tokend = malloc(sizeof(char *) * (msh_lstsize(token) + 1));
 	if (split_tokend == NULL)
-	{
-		return (NULL);
-	}
+		ft_enomem();
 	i = 0;
 	while (token != NULL)
 	{
@@ -224,9 +222,7 @@ static void	export_make_new_envdata(t_token *token, t_env *env)
 
 	new_env = malloc(sizeof(char *) * (env->num + 1));
 	if (new_env == NULL)
-	{
-		return ;
-	}
+		ft_enomem();
 	idx = 0;
 	while (env->data[idx] != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 18:56:56 by tmurakam          #+#    #+#             */
-/*   Updated: 2020/06/28 17:43:20 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:39:09 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_strdup(const char *s1)
 	strlen = ft_strlen(s1);
 	return_p = malloc(sizeof(char) * strlen + 1);
 	if (!return_p)
-		return (return_p);
+		ft_enomem();
 	dest = return_p;
 	while (*s1)
 		*dest++ = *s1++;

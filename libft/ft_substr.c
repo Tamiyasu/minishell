@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/27 00:33:03 by tmurakam          #+#    #+#             */
-/*   Updated: 2020/06/28 15:48:00 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:39:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return_s = malloc(sizeof(char) * (c_len + 1));
 	if (return_s)
 		ft_strlcpy(return_s, s + start, c_len + 1);
+	else
+		ft_enomem();
 	return (return_s);
 }

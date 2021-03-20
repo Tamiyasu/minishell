@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_execve.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 19:58:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 22:40:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ static char	**execve_format_args(t_token *token, char *command)
 	lst_num = execve_count_lst(token);
 	args = malloc(sizeof(char *) * (lst_num + 1));
 	if (args == NULL)
-	{
-		return (NULL);
-	}
+		ft_enomem();
 	idx = 0;
 	args[idx] = ft_strdup(command);
 	idx++;
