@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:43:31 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:44:34 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*error_str(char *str)
 			free(tmp);
 		}
 		else
-		s_str = ft_strdup(str);
+			s_str = ft_strdup(str);
 	}
 	else
 	{
