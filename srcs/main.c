@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 21:54:31 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:57:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*error_str(char *str)
 	return (s_str);
 }
 
-void lexser_faile_func()
+void	faile_func()
 {
 	g_exit_status = EXIT_SYNTAX_ERROR;
 	ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
@@ -107,18 +107,16 @@ void	msh_loop(t_env *env)
 		if (token_list == NULL)
 		{
 			if (!result)
-				lexser_faile_func();
+				faile_func();
 			free(line);
 			continue ;
 		}
 		result = parser(token_list, &node);
 		if (!result)
 		{
+			faile_func();
 			free(line);
-			g_exit_status = EXIT_SYNTAX_ERROR;
-			ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
-			error_str(NULL);
-			continue;
+			continue ;
 		}
 		expansion(node, env);
 		msh_fd = NULL;
