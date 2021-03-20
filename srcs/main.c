@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 14:54:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/20 21:36:10 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	msh_loop(t_env *env)
 		signal(SIGQUIT, SIG_IGN);
 		if (gnl_result == GNL_ERR)
 		{
-			// printf("here !\n");
+			exit (1);
 		}
 		else if (gnl_result == GNL_EOF && ft_strlen(line) == 0)
 		{
@@ -100,7 +100,6 @@ void	msh_loop(t_env *env)
 			write(1, "exit\n", 5);
 			break;
 		}
-		// printf("gnl_result : %d\n", gnl_result);
 		result = lexer(line, &token_list);
 		if (!result)
 		{
@@ -110,13 +109,11 @@ void	msh_loop(t_env *env)
 			error_str(NULL);
 			continue;
 		}
-		if (token_list == NULL)//スペースかタブのみが入力された時
+		if (token_list == NULL)
 		{
 			free(line);
 			continue ;
 		}
-		//print_token(token_list, "check token");
-
 		result = parser(token_list, &node);
 		if(!result)
 		{
@@ -126,15 +123,9 @@ void	msh_loop(t_env *env)
 			error_str(NULL);
 			continue;
 		}
-		//node_print(node, 0);
-		// printf("----------------------------end node_print\n\n");
-
 		expansion(node, env);
-		// print_token(token_list, "check token");
-		// printf("----------------------------end expansion_print\n\n");
-
 		msh_fd = NULL;
-		execute(node, env, msh_fd); //exitコマンド実行時にreturn(0)がくる
+		execute(node, env, msh_fd);
 		free_tree(&node);
 		free(line);
 		line = NULL;
@@ -145,8 +136,8 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	t_env	env;
 
-	argc -= argc;//del
-	argv -= (long)argv;//del
+	argc -= argc;
+	argv -= (long)argv;
 	g_exit_status = 0;
 	env_init(&env);
 	env_set_data(&env, envp);
