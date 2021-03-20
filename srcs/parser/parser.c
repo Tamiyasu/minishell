@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 11:03:46 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 11:15:24 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,19 @@ int				is_redirect(int flag)
 		flag == FT_REDIRECT_I_F);
 }
 
+t_parser_node	*make_node(t_token *con, t_parser_node *l, t_parser_node *r)
+{
+	t_parser_node	*ret_p;
+
+	if((ret_p = malloc(sizeof(t_parser_node))))
+	{
+		ret_p->content = con;
+		ret_p->l_node = l;
+		ret_p->r_node = r;
+	}
+	return (ret_p);
+}
+
 int				check_token_type(t_token *token, int last_type)
 {
 	int	type_i;
@@ -58,12 +71,12 @@ int				check_token_type(t_token *token, int last_type)
 
 	token_length = ft_strlen(token->data);
 	if (token->data[token_length - 1] == '>')
-		{
-			if (token_length == 1 || token->data[token_length - 2] != '>')
-				type_i = FT_REDIRECT_O_F;
-			else
-				type_i = FT_REDIRECT_A_F;
-		}
+	{
+		if (token_length == 1 || token->data[token_length - 2] != '>')
+			type_i = FT_REDIRECT_O_F;
+		else
+			type_i = FT_REDIRECT_A_F;
+	}
 	else if (token->data[token_length - 1] == '|')
 		type_i = FT_PIPE_F;
 	else if (token->data[token_length - 1] == ';')
@@ -76,15 +89,14 @@ int				check_token_type(t_token *token, int last_type)
 		type_i = FT_COMMAND_F;
 	return (type_i);
 }
+
 t_parser_node	*find_c_node(t_parser_node *node)
 {
 	t_parser_node	*ret_node;
 
 	ret_node = NULL;
 	if (node->content == NULL || node->content->flag == FT_COMMAND_F)
-	{
 		ret_node = node;
-	}
 	else if (node->content->flag == FT_PIPE_F 
 			|| node->content->flag == FT_SEMICOLON_F)
 	{
@@ -93,19 +105,13 @@ t_parser_node	*find_c_node(t_parser_node *node)
 			ret_node = find_c_node(node->r_node);
 			if (!ret_node)
 			{
-				node->r_node = malloc(sizeof(t_parser_node));
-				node->r_node->content = NULL;
-				node->r_node->r_node = NULL;
-				node->r_node->l_node = NULL;
+				node->r_node = make_node(NULL, NULL, NULL);
 				ret_node = node->r_node;
 			}
 		}
 		else
 		{
-			node->r_node = malloc(sizeof(t_parser_node));
-			node->r_node->content = NULL;
-			node->r_node->r_node = NULL;
-			node->r_node->l_node = NULL;
+			node->r_node = make_node(NULL, NULL, NULL);
 			ret_node = node->r_node;
 		}
 	}
@@ -114,12 +120,7 @@ t_parser_node	*find_c_node(t_parser_node *node)
 		while (node && node->content && is_redirect(node->content->flag))
 		{
 			if (!node->l_node)
-			{
-				node->l_node = malloc(sizeof(t_parser_node));
-				node->l_node->content = NULL;
-				node->l_node->r_node = NULL;
-				node->l_node->l_node = NULL;
-			}
+				node->l_node = make_node(NULL, NULL, NULL);
 			node = node->l_node;
 		}
 		ret_node = node;
@@ -197,19 +198,6 @@ int				check_last_input(int c_type)
 	return (1);
 }
 
-t_parser_node	*make_node(t_token *con, t_parser_node *l, t_parser_node *r)
-{
-	t_parser_node	*ret_p;
-
-	if((ret_p = malloc(sizeof(t_parser_node))))
-	{
-		ret_p->content = con;
-		ret_p->l_node = l;
-		ret_p->r_node = r;
-	}
-	return (ret_p);
-}
-
 int				parser(t_token *token, t_parser_node **node_p)
 {
 	t_parser_node	*node;
@@ -219,7 +207,6 @@ int				parser(t_token *token, t_parser_node **node_p)
 	int				c_type;
 
 	last_type = FT_EMPTY_F;
-	c_type = FT_EMPTY_F;
 	node = make_node(NULL, NULL, NULL);
 	while (token)
 	{
