@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 14:07:52 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 14:09:36 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char			*ft_strjoin_and_free(char *s1, char *s2)
 	return (newstr);
 }
 
-static int				make_line(char *buf_join, char **save, char **line)
+static int			make_line(char *buf_join, char **save, char **line)
 {
 	int			i;
 
@@ -90,7 +90,7 @@ static char			*ft_read_or_save(char **save, int *rc)
 	return (buf);
 }
 
-int				get_next_line(char **line)
+int					get_next_line(char **line)
 {
 	static char	*save;
 	char		*buf;
@@ -112,7 +112,7 @@ int				get_next_line(char **line)
 		if (ft_strchr(buf, '\n') || (ft_strlen(buf) == 0 && rc == GNL_EOF))
 		{
 			free(buf);
-			break;
+			break ;
 		}
 		free(buf);
 	}
