@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 11:01:30 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 11:03:46 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,10 +210,9 @@ t_parser_node	*make_node(t_token *con, t_parser_node *l, t_parser_node *r)
 	return (ret_p);
 }
 
-int				parser(t_token *token_list, t_parser_node **node_p)
+int				parser(t_token *token, t_parser_node **node_p)
 {
 	t_parser_node	*node;
-	t_token			*token;
 	t_token			*next;
 	t_parser_node	*c_node;
 	int				last_type;
@@ -221,7 +220,6 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 
 	last_type = FT_EMPTY_F;
 	c_type = FT_EMPTY_F;
-	token = token_list;
 	node = make_node(NULL, NULL, NULL);
 	while (token)
 	{
