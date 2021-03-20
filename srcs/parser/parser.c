@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 12:51:12 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 12:58:35 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,17 @@ int				check_token_type(t_token *token, int last_type)
 	return (type_i);
 }
 
+int				error_1(t_token *token, t_token *next, t_parser_node *node)
+{
+	error_str("'");
+	error_str(token->data);
+	error_str("syntax error near unexpected token `");
+	free_lst(&next);
+	free_lst(&token);
+	free_tree(&node);
+	return (0);
+}
+
 int				parser(t_token *token, t_parser_node **node_p)
 {
 	t_parser_node	*node;
@@ -56,15 +67,7 @@ int				parser(t_token *token, t_parser_node **node_p)
 		token->next = NULL;
 		c_type = check_token_type(token, last_type);
 		if (!check_input(c_type, last_type))
-		{
-			error_str("'");
-			error_str(token->data);
-			error_str("syntax error near unexpected token `");
-			free_lst(&next);
-			free_lst(&token);
-			free_tree(&node);
-			return (0);
-		}
+			return(error_1(token, next, node));
 		token->flag = c_type;
 		if (c_type == FT_COMMAND_F)
 		{
