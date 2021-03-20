@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 10:29:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 10:33:14 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ int				is_redirect(int flag)
 
 int				check_token_type(t_token *token, int last_type)
 {
-	int type_i;
-	int token_length;
+	int	type_i;
+	int	token_length;
 
 	token_length = ft_strlen(token->data);
 	if (token->data[token_length - 1] == '>')
@@ -78,9 +78,9 @@ int				check_token_type(t_token *token, int last_type)
 }
 t_parser_node	*find_command_node(t_parser_node *node)
 {
-	t_parser_node *ret_node;
-	ret_node = NULL;
+	t_parser_node	*ret_node;
 
+	ret_node = NULL;
 	if (node->content == NULL || node->content->flag == FT_COMMAND_F)
 	{
 		ret_node = node;
@@ -128,9 +128,9 @@ t_parser_node	*find_command_node(t_parser_node *node)
 
 t_parser_node	*find_parent_node(t_parser_node   *node)
 {
-	t_parser_node *ret_node;
-	ret_node = NULL;
+	t_parser_node	*ret_node;
 
+	ret_node = NULL;
 	if (node && node->content && (node->content->flag == FT_PIPE_F || node->content->flag == FT_SEMICOLON_F))
 	{
 		if (node->r_node)
@@ -147,7 +147,8 @@ t_parser_node	*find_parent_node(t_parser_node   *node)
 
 t_parser_node	*find_redirect_node(t_parser_node   *node)
 {
-	t_parser_node *ret_node;
+	t_parser_node	*ret_node;
+
 	ret_node = NULL;
 	if (node && is_redirect(node->content->flag))
 	{
@@ -198,17 +199,16 @@ int check_last_input(int c_type)
 
 int				parser(t_token *token_list, t_parser_node **node_p)
 {
-	t_parser_node *node;
-	t_token *token;
-	t_token *next;
-	t_parser_node *command_node;
-	t_parser_node *new_node;
-	int last_type;
-	int c_type;
+	t_parser_node	*node;
+	t_token			*token;
+	t_token			*next;
+	t_parser_node	*command_node;
+	t_parser_node	*new_node;
+	int				last_type;
+	int				c_type;
 
 	last_type = FT_EMPTY_F;
 	c_type = FT_EMPTY_F;
-
 	token = token_list;
 	node = malloc(sizeof(t_parser_node));
 	node->content = NULL;
@@ -265,7 +265,6 @@ int				parser(t_token *token_list, t_parser_node **node_p)
 		else if (is_redirect(c_type))
 		{
 			command_node = find_parent_node(node);
-			//printf("command_node p : %p : %s \n", command_node, command_node->content->data);
 			if (command_node)
 			{
 				if (!command_node->r_node)
