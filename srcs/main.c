@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/19 22:24:57 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/19 23:38:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	msh_loop(t_env *env)
 	t_token		*token_list;
 	t_parser_node	*node;
 	t_info_fd		*msh_fd;
+	int				result;
 
 	line = NULL;
 	token_list =  NULL;
@@ -100,19 +101,26 @@ void	msh_loop(t_env *env)
 			break;
 		}
 		// printf("gnl_result : %d\n", gnl_result);
-		token_list = lexer(line);
-		if (token_list == NULL)
+		result = lexer(line, &token_list);
+		if (!result)
+		{
+			free(line);
+			ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
+			error_str(NULL);
+			continue;
+		}
+		if (token_list == NULL)//スペースかタブのみが入力された時
 		{
 			free(line);
 			continue ;
 		}
-		print_token(token_list, "check token");
+		//print_token(token_list, "check token");
 
-		int result = parser(token_list, &node);
+		result = parser(token_list, &node);
 		if(!result)
 		{
 			free(line);
-			ft_putendl_fd(error_str("minishell: "), 2);
+			ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
 			error_str(NULL);
 			continue;
 		}
