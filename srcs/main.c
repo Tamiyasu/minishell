@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 17:18:40 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 17:36:00 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void	msh_loop(t_env *env)
 		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;
 		result = parser(token_list, &node);
-		token_list = NULL;
 		if (!faile_func(result, &line))
 			continue ;
 		expansion(node, env);
