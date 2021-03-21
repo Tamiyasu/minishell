@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 02:49:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 11:46:38 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 11:46:49 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	format_cmd_path(t_token *token, DIR *dp, char *dir_path)
 	closedir(dp);
 }
 
-int		set_found_commandpath(t_token *token, 
+int		set_found_commandpath(t_token *token,
 			DIR *dp, char **path_value, int idx)
 {
 	format_cmd_path(token, dp, path_value[idx]);
