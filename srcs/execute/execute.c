@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:01:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 11:53:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "signal_handler.h"
 #include "expansion.h"
 
-int get_exit_status(int pid_status)
+int		get_exit_status(int pid_status)
 {
 	if (WIFSIGNALED(pid_status))
 		return (WTERMSIG(pid_status) + 128);
@@ -22,7 +22,7 @@ int get_exit_status(int pid_status)
 		return (WEXITSTATUS(pid_status));
 }
 
-int	exec_is_builtin(char *token_data)
+int		exec_is_builtin(char *token_data)
 {
 	if (ft_strcmp(token_data, "cd") == 0
 		|| ft_strcmp(token_data, "echo") == 0
@@ -56,6 +56,12 @@ void	command_builtin(t_token *token, t_env *env)
 	return ;
 }
 
+void	set_signals(void (*fc)(int))
+{
+	signal(SIGINT, fc);
+	signal(SIGQUIT, fc);
+}
+
 void	exec_command(t_token *token, t_env *env, int child_flag)
 {
 	pid_t	child_p;
@@ -71,8 +77,7 @@ void	exec_command(t_token *token, t_env *env, int child_flag)
 	}
 	if (child_flag)
 		command_execve(token, env);
-	signal(SIGINT, sig_handler_c);
-	signal(SIGQUIT, sig_handler_c);
+	set_signals(sig_handler_c);
 	child_p = fork();
 	if (child_p == 0)
 		command_execve(token, env);
