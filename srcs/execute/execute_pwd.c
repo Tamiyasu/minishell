@@ -6,12 +6,18 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:36:18 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:59:32 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
+
+void swap_str(char **s1, char *s2)
+{
+	free(*s1);
+	*s1 = s2;
+}
 
 char *cwd_wrapper(t_env *env, char *cd)
 {
@@ -20,10 +26,11 @@ char *cwd_wrapper(t_env *env, char *cd)
 
 	tmp = getcwd(NULL, 0);
 	if (tmp)
-	{
+		swap_str(&cwd_str, tmp);
+	/*{
 		free(cwd_str);
 		cwd_str = tmp;
-	}
+	}*/
 	else
 	{
 		if(cwd_str == NULL)

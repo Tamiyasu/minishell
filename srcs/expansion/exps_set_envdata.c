@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exps_set_envdata.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 19:49:42 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:28:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 01:52:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,14 @@ char
 	char	*env_value;
 	int		env_idx;
 
-	while ((ft_isalpha(token_data[data->idx]) || token_data[data->idx] == '_')
+	if ((ft_isalpha(token_data[data->idx]) || token_data[data->idx] == '_')
 			&& token_data[data->idx])
+	{
 		data_increment(data);
+		while ((ft_isalnum(token_data[data->idx]) || token_data[data->idx] == '_')
+			&& token_data[data->idx])
+			data_increment(data);
+	}
 	env_key = ft_substr(token_data, data->start, data->length);
 	data->length = 0;
 	env_idx = env_search(env->data, env_key);

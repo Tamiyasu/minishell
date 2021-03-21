@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:33:37 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 22:56:59 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,9 @@ void	set_expansion_data(t_token *token, char *new_data)
 
 void	exps_check_command(t_token *token, t_env *env)
 {
-	//t_token	*new_token;
 	t_data	*data;
 	char	*new_data;
 
-	//new_token = NULL;
 	while (token)
 	{
 		data = data_init();
