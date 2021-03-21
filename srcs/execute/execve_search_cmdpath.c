@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 02:49:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 11:46:26 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 11:46:38 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,8 @@ int		execve_search_cmdpath(t_token *token, t_env *env)
 		if (dp == NULL)
 			return (0);
 		while ((dirp = readdir(dp)) != NULL)
-		{
 			if (ft_strcmp(token->data, dirp->d_name) == 0)
 				return (set_found_commandpath(token, dp, path_value, idx));
-		}
 		closedir(dp);
 		idx++;
 	}
