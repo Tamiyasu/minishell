@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 12:39:32 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 14:50:13 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	exec_command(t_token *token, t_env *env, int child_flag)
 
 void	execute(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 {
-	if (node == NULL)
+	if (!node || !(node->content))
 		return ;
 	else if (node->content->flag == FT_SEMICOLON_F)
 	{

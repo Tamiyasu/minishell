@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exps_set_envdata.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 19:49:42 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 01:52:38 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 14:41:41 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,22 @@ char
 	return (new_data);
 }
 
+void
+	get_key_length(char *token_data, t_data *data)
+{
+	if ((ft_isalpha(token_data[data->idx]) || token_data[data->idx] == '_')
+		&& token_data[data->idx])
+	{
+		data_increment(data);
+		while ((ft_isalnum(token_data[data->idx])
+			|| token_data[data->idx] == '_')
+			&& token_data[data->idx])
+		{
+			data_increment(data);
+		}
+	}
+}
+
 char
 	*save_env_data(t_env *env, char *new_data, char *token_data, t_data *data)
 {
@@ -36,14 +52,7 @@ char
 	char	*env_value;
 	int		env_idx;
 
-	if ((ft_isalpha(token_data[data->idx]) || token_data[data->idx] == '_')
-			&& token_data[data->idx])
-	{
-		data_increment(data);
-		while ((ft_isalnum(token_data[data->idx]) || token_data[data->idx] == '_')
-			&& token_data[data->idx])
-			data_increment(data);
-	}
+	get_key_length(token_data, data);
 	env_key = ft_substr(token_data, data->start, data->length);
 	data->length = 0;
 	env_idx = env_search(env->data, env_key);

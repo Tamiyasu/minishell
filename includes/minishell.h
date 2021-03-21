@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:22:25 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 14:30:39 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,6 @@ typedef struct	s_env
 
 void			free_args(char **args);
 char			*error_str(char *str);
-
-/*
-** enviroment
-*/
 void			env_init(t_env *env);
 void			env_free(t_env *env);
 int				env_search(char **env_data, char *variable_name);

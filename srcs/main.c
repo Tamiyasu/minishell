@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:07:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 14:49:02 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	msh_loop(t_env *env)
 		expansion(node, env);
 		msh_fd = NULL;
 		execute(node, env, msh_fd);
+		reset_fd(msh_fd);
+		free_fd(&msh_fd);
 		loop_end_func(&line, &node);
 	}
 }
