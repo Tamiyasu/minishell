@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 12:26:22 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 12:30:24 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,12 @@ int		wait_and_getstatus(pid_t child_p1, pid_t child_p2)
 	return (status);
 }
 
+void	exec_pipe_command(t_parser_node *node, t_env *env, t_info_fd **msh_fd)
+{
+	exec_command(node->content, env, 1);
+	free_fd(msh_fd);
+}
+
 void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 {
 	int		pipe_fd[2];
@@ -136,11 +142,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 	if (node == NULL)
 		return ;
 	if (node->content->flag  == FT_COMMAND_F)
-	{
-		exec_command(node->content, env, 1);
-		free_fd(&msh_fd);
-		return ;
-	}
+		return (exec_pipe_command(node, env, &msh_fd));
 	else if (is_redirect(node->content->flag))
 		exec_redirect(node, msh_fd, env, exec_pipe);
 	else if (node->content->flag == FT_PIPE_F)
