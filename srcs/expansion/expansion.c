@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 15:20:57 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 16:03:14 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,17 @@ void	exps_check_command(t_token *token, t_env *env)
 		data = data_init();
 		new_data = NULL;
 		while (token->data[data->idx] != '\0')
-		{
 			if (token->data[data->idx] == '\'')
 				new_data = exps_set_squote_data(token->data, new_data, data);
 			else if (token->data[data->idx] == '\"')
 				new_data = exps_set_dquote_data(token, new_data, data, env);
-			else if (token->data[data->idx] == '$')
+			else if (token->data[data->idx] == '$' && token->data[data->idx + 1]
+					&& (ft_isalpha(token->data[data->idx + 1])
+					|| token->data[data->idx + 1] == '_'
+					|| token->data[data->idx + 1] == '?'))
 				new_data = exps_set_envdata(token, new_data, data, env);
 			else
 				data_increment(data);
-		}
 		new_data = save_reading_data(token->data, new_data, data);
 		set_expansion_data(token, new_data);
 		free(data);
