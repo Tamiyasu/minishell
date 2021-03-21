@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
+#    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/21 03:04:29 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/21 12:34:10 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC_FILE	+= expansion/exps_format.c
 SRC_FILE	+= expansion/exps_set_envdata.c
 SRC_FILE	+= expansion/exps_quote.c
 SRC_FILE	+= execute/execute.c
+SRC_FILE	+= execute/execute_pipe.c
 SRC_FILE	+= execute/exec_fd.c
 SRC_FILE	+= execute/exec_redirect.c
 SRC_FILE	+= execute/exec_redirect_save.c

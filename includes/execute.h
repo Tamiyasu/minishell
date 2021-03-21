@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 12:18:05 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 12:38:08 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ char		**export_shape_putenv(char *env);
 int			export_putenv(t_env *env);
 int			execve_search_cmdpath(t_token *token, t_env *env);
 void		exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd);
-
-
+void		exec_command(t_token *token, t_env *env, int child_flag);
+void		set_signals(void (*fc)(int));
+int			get_exit_status(int pid_status);
 #endif
