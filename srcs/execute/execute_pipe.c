@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 12:33:21 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/21 15:39:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 15:43:59 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ void	exec_pipe_p2(int *pipe_fd, t_parser_node *node,
 
 int		wait_and_getstatus(pid_t child_p1, pid_t child_p2)
 {
-	int status;
-	int killed_flag = 0;
+	int	status;
+	int	killed_flag;
 
+	killed_flag = 0;
 	c_pid(child_p1);
 	waitpid(child_p1, &status, 0);
 	if (status == 2)
