@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirect.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 20:40:46 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 15:25:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 20:17:41 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int		check_fdnum(char *data, int redirect_flag)
 	int	fd_num;
 
 	fd_num = ft_atoi(data);
-	if (fd_num == 0 && redirect_flag == FT_REDIRECT_O_F)
+	if (fd_num == 0 && (redirect_flag == FT_REDIRECT_O_F
+		|| redirect_flag == FT_REDIRECT_A_F))
 		fd_num = 1;
 	return (fd_num);
 }
