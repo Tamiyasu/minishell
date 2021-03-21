@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execve_search_cmdpath.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 02:49:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 03:09:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 11:46:49 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-DIR	*open_dir_path(char *dir_path)
+DIR		*open_dir_path(char *dir_path)
 {
 	DIR	*open_dp;
 
@@ -33,7 +33,15 @@ void	format_cmd_path(t_token *token, DIR *dp, char *dir_path)
 	closedir(dp);
 }
 
-int	execve_search_cmdpath(t_token *token, t_env *env)
+int		set_found_commandpath(t_token *token,
+			DIR *dp, char **path_value, int idx)
+{
+	format_cmd_path(token, dp, path_value[idx]);
+	free_args(path_value);
+	return (1);
+}
+
+int		execve_search_cmdpath(t_token *token, t_env *env)
 {
 	struct dirent	*dirp;
 	DIR				*dp;
@@ -53,14 +61,8 @@ int	execve_search_cmdpath(t_token *token, t_env *env)
 		if (dp == NULL)
 			return (0);
 		while ((dirp = readdir(dp)) != NULL)
-		{
 			if (ft_strcmp(token->data, dirp->d_name) == 0)
-			{
-				format_cmd_path(token, dp, path_value[idx]);
-				free_args(path_value);
-				return (1);
-			}
-		}
+				return (set_found_commandpath(token, dp, path_value, idx));
 		closedir(dp);
 		idx++;
 	}

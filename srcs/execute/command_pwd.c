@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 02:33:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 11:15:33 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ void	set_cwd_str(t_env *env, char **cwd_str, char *tmp)
 	}
 }
 
-void	set_cwd_str2(char **cwd_str, char *cd, char *tmp)
+void	set_cwd_str2(char **cwd_str, char *cd)
 {
+	char	*tmp;
+
 	if (ft_strlen(*cwd_str) > 0
-		&& *cwd_str[ft_strlen(*cwd_str) - 1] != '/')
+		&& (*cwd_str)[ft_strlen(*cwd_str) - 1] != '/')
 	{
 		tmp = *cwd_str;
 		*cwd_str = ft_strjoin(tmp, "/");
@@ -55,7 +57,7 @@ char	*cwd_wrapper(t_env *env, char *cd)
 		if (cwd_str == NULL)
 			set_cwd_str(env, &cwd_str, tmp);
 		if (cd)
-			set_cwd_str2(&cwd_str, cd, tmp);
+			set_cwd_str2(&cwd_str, cd);
 	}
 	return (cwd_str);
 }
