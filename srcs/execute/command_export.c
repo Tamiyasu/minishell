@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 01:20:33 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 17:37:53 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	export_check_args(t_token *token, char **split_tokend, int *status)
 				|| (j != 0 && (!ft_isalnum(split_tokend[i][j])
 					&& split_tokend[i][j] != '_')))
 			{
-				printf("in export err=[%s]\n", token->data);
 				unset_error(token, "export", split_tokend[i], status);
 				break ;
 			}

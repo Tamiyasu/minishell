@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 11:31:26 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 19:01:10 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int			check_permission_exec(char *command)
 	struct stat		stat_buf;
 
 	lstat(command, &stat_buf);
-	if ((stat_buf.st_mode & S_IXUSR) == 00100)
+	if ((stat_buf.st_mode & (S_IXUSR | S_IRUSR)) == 00500)
 	{
 		return (1);
 	}
