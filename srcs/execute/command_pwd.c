@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:15:30 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 11:09:44 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 11:15:33 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ void	set_cwd_str(t_env *env, char **cwd_str, char *tmp)
 
 void	set_cwd_str2(char **cwd_str, char *cd)
 {
-	char *tmp;
-	printf("------ %ld\n", ft_strlen(*cwd_str));
-	printf("------ %s\n", *cwd_str);
+	char	*tmp;
 
 	if (ft_strlen(*cwd_str) > 0
 		&& (*cwd_str)[ft_strlen(*cwd_str) - 1] != '/')
