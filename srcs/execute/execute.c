@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 12:19:41 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 12:26:22 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,16 +111,30 @@ void	exec_pipe_p2(int *pipe_fd, t_parser_node *node,
 	exit(g_exit_status);
 }
 
+int		wait_and_getstatus(pid_t child_p1, pid_t child_p2)
+{
+	int status;
+
+	c_pid(child_p1);
+	waitpid(child_p1, &status, 0);
+	c_pid(child_p2);
+	waitpid(child_p2, &status, 0);
+	c_pid(0);
+	if (status == 2)
+		ft_putendl_fd("", STDOUT_FILENO);
+	else if (status == 3)
+		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
+	return (status);
+}
+
 void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 {
 	int		pipe_fd[2];
-	int		status;
 	pid_t	child_p1;
 	pid_t	child_p2;
 
 	if (node == NULL)
 		return ;
-
 	if (node->content->flag  == FT_COMMAND_F)
 	{
 		exec_command(node->content, env, 1);
@@ -128,9 +142,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 		return ;
 	}
 	else if (is_redirect(node->content->flag))
-	{
 		exec_redirect(node, msh_fd, env, exec_pipe);
-	}
 	else if (node->content->flag == FT_PIPE_F)
 	{
 		pipe(pipe_fd);
@@ -143,16 +155,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 			exec_pipe_p2(pipe_fd, node, env, &msh_fd);
 		close(pipe_fd[READ]);
 		close(pipe_fd[WRITE]);
-		c_pid(child_p1);
-		waitpid(child_p1, &status, 0);
-		c_pid(child_p2);
-		waitpid(child_p2, &status, 0);
-		c_pid(0);
-		if (status == 2)
-			ft_putendl_fd("", STDOUT_FILENO);
-		else if (status == 3)
-			ft_putendl_fd("Quit: 3", STDOUT_FILENO);
-		g_exit_status = get_exit_status(status);
+		g_exit_status = get_exit_status(wait_and_getstatus(child_p1, child_p2));
 	}
 }
 
