@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execve_search_cmdpath.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 02:49:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 03:09:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 11:36:33 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-DIR	*open_dir_path(char *dir_path)
+DIR		*open_dir_path(char *dir_path)
 {
 	DIR	*open_dp;
 
@@ -33,17 +33,15 @@ void	format_cmd_path(t_token *token, DIR *dp, char *dir_path)
 	closedir(dp);
 }
 
-int	execve_search_cmdpath(t_token *token, t_env *env)
+int		execve_search_cmdpath(t_token *token, t_env *env)
 {
 	struct dirent	*dirp;
 	DIR				*dp;
 	char			**path_value;
 	int				idx;
 
-	if (ft_strchr(token->data, '/'))
-		return (1);
 	idx = env_search(env->data, "PATH");
-	if (idx == -1)
+	if (ft_strchr(token->data, '/') || idx == -1)
 		return (1);
 	path_value = ft_split(&env->data[idx][5], ':');
 	idx = 0;
