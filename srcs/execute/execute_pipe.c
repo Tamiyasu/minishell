@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 12:33:21 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/21 15:43:59 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 19:54:00 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 	pid_t	child_p1;
 	pid_t	child_p2;
 
-	if (node == NULL)
+	if (node == NULL || node->content == NULL)
 		return ;
 	if (node->content->flag == FT_COMMAND_F)
 		return (exec_pipe_command(node, env, &msh_fd));
