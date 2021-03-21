@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 15:09:31 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 17:36:00 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,8 @@ void	msh_loop(t_env *env)
 		if (get_line(&line) == -1)
 			break ;
 		result = lexer(line, &token_list);
-		if (token_list == NULL)
-		{
-			faile_func(result, &line);
+		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;
-		}
 		result = parser(token_list, &node);
 		if (!faile_func(result, &line))
 			continue ;
