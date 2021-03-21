@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 20:40:46 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 14:56:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 15:25:21 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,19 @@ char	*format_fdnum(char *data)
 	return (format_data);
 }
 
+void	error_open_fd(t_parser_node *node, int fd_num, int open_fd)
+{
+	if (open_fd == -1)
+		output_error(node->r_node->content->data, strerror(errno));
+	else if (fd_num > FD_MAX)
+	{
+		node->content->data = format_fdnum(node->content->data);
+		output_error(node->content->data, "Bad file descriptor");
+	}
+	else
+		output_error("file descriptor out of range", "Bad file descriptor");
+}
+
 void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 					void (*func)(t_parser_node *node,
 					t_env *env, t_info_fd *msh_fd))
@@ -61,29 +74,19 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 	int	fd_num;
 	int open_fd;
 
-	printf("check1[%s]\n",node->content->data);
 	fd_num = check_fdnum(node->content->data, node->content->flag);
 	open_fd = open_file(node->r_node->content->data, node->content->flag);
 	if (open_fd == -1 || fd_num > FD_MAX || fd_num < 0)
 	{
-		if (open_fd == -1)
-			output_error(node->r_node->content->data, strerror(errno));
-		else if (fd_num > FD_MAX)
-		{
-			node->content->data = format_fdnum(node->content->data);
-			output_error(node->content->data, "Bad file descriptor");
-		}
-		else
-			output_error("file descriptor out of range", "Bad file descriptor");
+		error_open_fd(node, fd_num, open_fd);
 		g_exit_status = 1;
 		return ;
 	}
-	printf("check2[%s]\n",node->content->data);
-	if (redirect_check_reserve(msh_fd, fd_num, node->content->flag) && node->l_node && node->l_node->content)
+	if (redirect_check_reserve(msh_fd, fd_num, node->content->flag)
+		&& node->l_node && node->l_node->content)
 	{
 		msh_fd = redirect_save_fd(msh_fd, fd_num, node->content->flag);
 		dup2(open_fd, fd_num);
 	}
-	printf("check3[%s]\n",node->content->data);
 	func(node->l_node, env, msh_fd);
 }
