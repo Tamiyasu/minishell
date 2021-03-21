@@ -3,16 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/21 12:40:38 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/03/21 14:21:05 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= minishell
 SRC_DIR		= ./srcs
 SRC_FILE	= main.c
+SRC_FILE	+= minishell_utils.c
 SRC_FILE	+= get_next_line.c
 SRC_FILE	+= env_set_data.c
 SRC_FILE	+= env_utils.c

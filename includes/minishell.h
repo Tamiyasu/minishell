@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 20:23:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:22:25 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <fcntl.h>
 # include "libft.h"
 
-extern int	g_exit_status;
+extern int		g_exit_status;
 
 typedef struct	s_env
 {
@@ -44,15 +44,15 @@ typedef struct	s_env
 	int			shlvl_flag;
 }				t_env;
 
-void		free_args(char **args);
-char	*error_str(char *str);
+void			free_args(char **args);
+char			*error_str(char *str);
 
 /*
 ** enviroment
 */
-void	env_init(t_env *env);
-void	env_free(t_env *env);
-int		env_search(char **env_data, char *variable_name);
-void	env_update_pwddata(t_env *env, char *cd);
-void	env_set_data(t_env *env, char **envp);
+void			env_init(t_env *env);
+void			env_free(t_env *env);
+int				env_search(char **env_data, char *variable_name);
+void			env_update_pwddata(t_env *env, char *cd);
+void			env_set_data(t_env *env, char **envp);
 #endif
