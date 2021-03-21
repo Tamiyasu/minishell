@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 12:17:44 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 12:19:41 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ void	exec_command(t_token *token, t_env *env, int child_flag)
 		ft_putendl_fd("Quit: 3", STDOUT_FILENO);
 	g_exit_status = get_exit_status(pid_status);
 }
-
-void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd);
 
 void	exec_pipe_p1(int *pipe_fd, t_parser_node *node,
 			t_env *env, t_info_fd **msh_fd)
