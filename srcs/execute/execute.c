@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 11:53:58 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/21 11:58:30 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,17 +107,14 @@ void	exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 		free_fd(&msh_fd);
 		return ;
 	}
-	else if (node->content->flag == FT_REDIRECT_I_F
-			|| node->content->flag == FT_REDIRECT_O_F
-			|| node->content->flag == FT_REDIRECT_A_F)
+	else if (is_redirect(node->content->flag))
 	{
 		exec_redirect(node, msh_fd, env, exec_pipe);
 	}
 	else if (node->content->flag == FT_PIPE_F)
 	{
 		pipe(pipe_fd);
-		signal(SIGINT, sig_handler_c);
-		signal(SIGQUIT, sig_handler_c);
+		set_signals(sig_handler_c);
 		child_p1 = fork();
 		if (child_p1 == 0)
 		{
