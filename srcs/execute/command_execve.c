@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_execve.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 14:44:34 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 03:05:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/21 11:30:26 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	**execve_format_args(t_token *token, char *command)
 	return (args);
 }
 
-int	check_path_directory(char *command)
+int			check_path_directory(char *command)
 {
 	struct stat		stat_buf;
 
@@ -50,7 +50,7 @@ int	check_path_directory(char *command)
 	return (0);
 }
 
-int	check_permission_exec(char *command)
+int			check_permission_exec(char *command)
 {
 	struct stat		stat_buf;
 
@@ -62,36 +62,36 @@ int	check_permission_exec(char *command)
 	return (0);
 }
 
-void			command_execve(t_token *token, t_env *env)
+static int	err_func(char *s1, char *s2, int ext)
+{
+	output_error(s1, s2);
+	return (ext);
+}
+
+void		command_execve(t_token *token, t_env *env)
 {
 	char	**args;
 	int		rc;
 
 	if (!(execve_search_cmdpath(token, env)))
-	{
-		output_error(token->data, "command not found");
-		exit(EXIT_COMMAND_NOT_FOUND);
-	}
+		exit(err_func(token->data, "command not found",
+			EXIT_COMMAND_NOT_FOUND));
 	args = execve_format_args(token, token->data);
 	rc = execve(token->data, args, env->data);
 	free_args(args);
 	if (rc == -1)
 	{
 		if (errno == ENOENT)
-		{
-			output_error(token->data, strerror(errno));
-			exit(EXIT_COMMAND_NOT_FOUND);
-		}
+			exit(err_func(token->data, strerror(errno),
+				EXIT_COMMAND_NOT_FOUND));
 		if (check_path_directory(token->data))
-		{
-			output_error(token->data, "is a directory");
-			exit(EXIT_COMMAND_NOT_EXECUTED);
-		}
+			exit(err_func(token->data, "is a directory",
+				EXIT_COMMAND_NOT_EXECUTED));
 		if (errno == ENOEXEC && !(check_permission_exec(token->data)))
 			errno = EACCES;
 		if (errno == ENOEXEC)
 			exit(EXIT_SUCCESS);
-		output_error(token->data, strerror(errno));
-		exit(EXIT_COMMAND_NOT_EXECUTED);
+		exit(err_func(token->data, strerror(errno),
+			EXIT_COMMAND_NOT_EXECUTED));
 	}
 }
