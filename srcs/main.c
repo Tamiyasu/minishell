@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/24 18:28:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/24 20:54:15 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@
 #include "get_next_line.h"
 #include "parser.h"
 #include "signal_handler.h"
-
-# define ESCAPE '\33'
-# define BACKSPACE '\177'
-# define DELETE '~'
 
 int	g_exit_status;
 
@@ -51,7 +47,6 @@ int		get_line(char **line)
 	tcsetattr(0,TCSANOW, &term);
 	result = get_next_line(line);
 	tcsetattr(0,TCSANOW, &term_save);
-
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	if (result == GNL_ERR)
@@ -89,7 +84,7 @@ void	msh_loop(t_env *env)
 		ft_putstr_fd("minishell>> ", 1);
 		if (get_line(&line) == -1)
 			break ;
-		printf("line=[%s]\n", line);//del
+		printf("\nline=[%s]\n", line);//del
 		result = lexer(line, &token_list);
 		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;

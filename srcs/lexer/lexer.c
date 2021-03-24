@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/24 16:44:04 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/24 20:54:25 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int		lexer(char *input, t_token **token_list_p)
 	data = data_init();
 	while (input[data->idx] != '\0')
 	{
-		printf("input[%d][%c]\n", data->idx, input[data->idx]);
+		printf("lexer[%d][%c]\n", data->idx, input[data->idx]);
 		if (input[data->idx] == '|' || input[data->idx] == ';')
 			token_list = lexer_set_char(token_list, data, input);
 		else if (input[data->idx] == '<' || input[data->idx] == '>')

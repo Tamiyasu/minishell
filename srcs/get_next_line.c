@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/24 19:53:31 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/24 20:53:59 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int			make_line(char *buf_join, char **line)
 	i = 0;
 	while (buf_join[i] != '\n' && buf_join[i] != '\0')
 	{
-		printf("buf_join[%d]=[%c]\n", i, buf_join[i]);
+		//printf("buf_join[%d]=[%c]\n", i, buf_join[i]);
 		i++;
 	}
 	if (buf_join[i] == '\n')
@@ -55,31 +55,24 @@ int					get_next_line(char **line)
 			read(STDIN_FILENO, &buf, 1);
 			if (buf == 'A')
 			{
-				if (buf_join == NULL)
-					buf_join = ft_strdup("up");
-				else
-				{
-					tmp = ft_strjoin(buf_join, "up");
+				if (buf_join)
 					free(buf_join);
-					buf_join = ft_strdup(tmp);
-					free(tmp);
-				}
-				buf_idx += 2;
-				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
+				buf_join = ft_strdup("up");
+				buf_idx = 2;
+				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
+				//ft_putstr_fd("\e[2K", STDOUT_FILENO);
+				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
+				write(STDOUT_FILENO, "up", 2);//履歴を出力&&セット
 			}
 			else if (buf == 'B')
 			{
-				if (buf_join == NULL)
-					buf_join = ft_strdup("down");
-				else
-				{
-					tmp = ft_strjoin(buf_join, "down");
+				if (buf_join)
 					free(buf_join);
-					buf_join = ft_strdup(tmp);
-					free(tmp);
-				}
-				buf_idx += 4;
-				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
+				buf_join = ft_strdup("down");
+				buf_idx = 4;
+				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
+				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
+				write(STDOUT_FILENO, "down", 4);//履歴を出力&&セット
 			}
 			else if (buf == 'C')
 			{
