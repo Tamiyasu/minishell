@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/24 20:53:59 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/24 21:53:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int					get_next_line(char **line)
 	{
 		if (buf == ESCAPE)
 		{
-			read(STDIN_FILENO, &buf, 1);//[Aを読み取るよ
-			read(STDIN_FILENO, &buf, 1);
+			read(STDIN_FILENO, &buf, 1);// [ を読み取るよ
+			read(STDIN_FILENO, &buf, 1);// A を読み取るよ
 			if (buf == 'A')
 			{
 				if (buf_join)
@@ -60,7 +60,6 @@ int					get_next_line(char **line)
 				buf_join = ft_strdup("up");
 				buf_idx = 2;
 				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
-				//ft_putstr_fd("\e[2K", STDOUT_FILENO);
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
 				write(STDOUT_FILENO, "up", 2);//履歴を出力&&セット
 			}
@@ -74,20 +73,20 @@ int					get_next_line(char **line)
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
 				write(STDOUT_FILENO, "down", 4);//履歴を出力&&セット
 			}
-			else if (buf == 'C')
+			else if (buf == 'C')//left
 			{
-				write(STDOUT_FILENO, "\33[C", 3);
+				write(STDOUT_FILENO, "\e[1C", ft_strlen("\e[1C"));
 			}
-			else if (buf == 'D')
+			else if (buf == 'D')//right
 			{
-				write(STDOUT_FILENO, "\10", 2);
+				write(STDOUT_FILENO, "\e[1D", ft_strlen("\e[1D"));
 			}
 		}
 		else if (buf == BACKSPACE)
 		{
 			if (buf_idx == 0)
 				continue ;
-			write(STDOUT_FILENO, "\10\33[1P", 5);
+			write(STDOUT_FILENO, "\10\e[1P", ft_strlen("\10\e[1P"));
 			buf_idx--;
 			tmp = ft_strdup(buf_join);
 			free(buf_join);
