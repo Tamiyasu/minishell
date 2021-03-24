@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 17:36:00 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/24 18:28:02 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@
 #include "get_next_line.h"
 #include "parser.h"
 #include "signal_handler.h"
+
+# define ESCAPE '\33'
+# define BACKSPACE '\177'
+# define DELETE '~'
 
 int	g_exit_status;
 
@@ -36,10 +40,18 @@ int		faile_func(int result, char **line)
 int		get_line(char **line)
 {
 	int result;
-
 	signal(SIGINT, sig_handler_p);
 	signal(SIGQUIT, sig_handler_p);
+
+   	struct termios term;
+    struct termios term_save;
+	tcgetattr(0, &term);
+	term_save = term;
+	term.c_lflag &= ~(ICANON|ECHO);
+	tcsetattr(0,TCSANOW, &term);
 	result = get_next_line(line);
+	tcsetattr(0,TCSANOW, &term_save);
+
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	if (result == GNL_ERR)
@@ -77,6 +89,7 @@ void	msh_loop(t_env *env)
 		ft_putstr_fd("minishell>> ", 1);
 		if (get_line(&line) == -1)
 			break ;
+		printf("line=[%s]\n", line);//del
 		result = lexer(line, &token_list);
 		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;
