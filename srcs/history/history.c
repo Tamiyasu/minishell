@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/25 00:25:13 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/25 00:39:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static void set(char *str, int i, t_list *h_list)
         h_list = h_list->next;
     if (h_list)
     {
-        free(h_list->content);
-        h_list->content = (void *)ft_strdup(str);
+        free(((t_hist *)(h_list->content))->tmp_str);
+        ((t_hist *)(h_list->content))->tmp_str = ft_strdup(str);
     }
 }
 static char *get(int i, t_list *h_list)
@@ -32,7 +32,17 @@ static char *get(int i, t_list *h_list)
     k = 0;
     while (++k < i && h_list->next)
         h_list = h_list->next;
-    return (char *)h_list->content;
+    if (((t_hist *)(h_list->content))->tmp_str)
+        return (((t_hist *)(h_list->content))->tmp_str);
+    else
+        return (((t_hist *)(h_list->content))->hist_str);
+}
+
+void    free_hist(void *hist)
+{
+    free(((t_hist *)hist)->hist_str);
+    free(((t_hist *)hist)->tmp_str);
+    free(hist);
 }
 
 char    *history(char *str, int f)
@@ -45,15 +55,16 @@ char    *history(char *str, int f)
 
     if(str == NULL)
     {
-        ft_lstclear(&h_list, free);
+        ft_lstclear(&h_list, free_hist);
         return (NULL);
     }
     if(s == 0)
     {
         s = 1;
-        tmp_list = malloc(sizeof(t_hist));
-        tmp_list->hist_str = ft_strdup(str);
-        tmp_list->tmp_str = NULL;
+        tmp_list = malloc(sizeof(t_list));
+        tmp_list->content = malloc(sizeof(t_hist));
+        ((t_hist *)(tmp_list->content))->hist_str = ft_strdup(str);
+        ((t_hist *)(tmp_list->content))->tmp_str = NULL;
         ft_lstadd_front(&h_list, tmp_list);
     }
     set(str, i, h_list);
@@ -64,8 +75,10 @@ char    *history(char *str, int f)
         ret_str = NULL;
     }
     else
+    {
         i += f;
         i = i < 0 ? 0 : i;
         ret_str = ft_strdup(get(i, h_list));
+    }
     return (ret_str);
 }
