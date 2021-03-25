@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/24 21:56:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/25 22:15:29 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int					get_next_line(char **line)
 	buf_idx = 0;
 	while((rc = read(STDIN_FILENO, &buf, 1)) >= 0)
 	{
+		printf("--\n");
 		if (buf == ESCAPE)
 		{
 			read(STDIN_FILENO, &buf, 1);// [ を読み取るよ
@@ -94,6 +95,7 @@ int					get_next_line(char **line)
 		}
 		else if (buf == '\n')
 		{
+			printf("buf_join : %s\n", buf_join);
 			if (buf_join == NULL)
 				*line = ft_strdup("\0");
 			else
