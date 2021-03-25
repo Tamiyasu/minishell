@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   command_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 02:22:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/25 23:31:22 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "libft.h"
+#include "history.h"
 
 int			exit_check_integer(char *args)
 {
@@ -96,11 +97,13 @@ void		command_exit(t_token *token)
 	if (token == NULL)
 	{
 		ft_putendl_fd("exit", STDOUT_FILENO);
+		history(NULL, 0);
 		exit(EXIT_SUCCESS);
 	}
 	if (exit_check_integer(token->data) != 1)
 	{
 		output_error_exit_args(token->data);
+		history(NULL, 0);
 		exit(EXIT_OUT_OF_RANGE_STATUS);
 	}
 	if (exit_check_argsnum(token) != 1)

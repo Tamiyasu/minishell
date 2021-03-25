@@ -6,16 +6,18 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/25 00:39:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/25 23:32:16 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
+#include <stdio.h>
 
 static void set(char *str, int i, t_list *h_list)
 {
     int k;
 
+    printf("in history set : i=[%d] : str=[%s]\n", i, str);
     k = 0;
     while (k++ < i && h_list)
         h_list = h_list->next;
@@ -29,6 +31,7 @@ static char *get(int i, t_list *h_list)
 {
     int k;
 
+    printf("in history get : i=[%d]\n", i);
     k = 0;
     while (++k < i && h_list->next)
         h_list = h_list->next;
@@ -40,6 +43,7 @@ static char *get(int i, t_list *h_list)
 
 void    free_hist(void *hist)
 {
+    printf("free hist\n");
     free(((t_hist *)hist)->hist_str);
     free(((t_hist *)hist)->tmp_str);
     free(hist);
@@ -52,6 +56,8 @@ char    *history(char *str, int f)
     static t_list   *h_list;
     t_list          *tmp_list;
     char            *ret_str;
+
+    printf("in history : str = [%s]\n", str);
 
     if(str == NULL)
     {
@@ -80,5 +86,7 @@ char    *history(char *str, int f)
         i = i < 0 ? 0 : i;
         ret_str = ft_strdup(get(i, h_list));
     }
+    //if(!ret_str)
+    //    ret_str = ft_strdup("empty history!");
     return (ret_str);
 }
