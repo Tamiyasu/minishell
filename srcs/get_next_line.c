@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/25 22:34:05 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/25 22:38:53 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ static int			make_line(char *buf_join, char **line)
 
 	i = 0;
 	while (buf_join[i] != '\n' && buf_join[i] != '\0')
-	{
-		//printf("buf_join[%d]=[%c]\n", i, buf_join[i]);
 		i++;
-	}
 	if (buf_join[i] == '\n')
 	{
 		*line = ft_substr(buf_join, 0, i);
@@ -50,7 +47,6 @@ int					get_next_line(char **line)
 	buf_idx = 0;
 	while((rc = read(STDIN_FILENO, buf, 1)) >= 0)
 	{
-		printf("--\n");
 		if (buf[0] == ESCAPE)
 		{
 			read(STDIN_FILENO, buf, 1);// [ を読み取るよ
@@ -90,9 +86,9 @@ int					get_next_line(char **line)
 				continue ;
 			write(STDOUT_FILENO, "\10\e[1P", ft_strlen("\10\e[1P"));
 			buf_idx--;
-			tmp = ft_strdup(buf_join);
-			free(buf_join);
+			tmp = buf_join;
 			buf_join = ft_substr(tmp, 0, buf_idx);
+			free(tmp);
 		}
 		else if (buf[0] == '\n')
 		{
@@ -107,7 +103,6 @@ int					get_next_line(char **line)
 		}
 		else
 		{
-			printf("get_next_line_109\n");
 			buf_idx++;
 			write(STDOUT_FILENO, buf, 1);
 			if (buf_join == NULL)

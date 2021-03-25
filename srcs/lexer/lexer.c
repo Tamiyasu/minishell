@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/25 22:23:13 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/25 22:42:56 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int		lexer(char *input, t_token **token_list_p)
 	t_token	*token_list;
 	t_data	*data;
 
-printf("input : %s, input_length : %ld\n", input, ft_strlen(input));
 	token_list = NULL;
 	data = data_init();
 	while (input[data->idx] != '\0')
@@ -85,10 +84,7 @@ printf("input : %s, input_length : %ld\n", input, ft_strlen(input));
 		else if (input[data->idx] == '\t' || input[data->idx] == ' ')
 			token_list = lexer_skip_space(token_list, data, input);
 		else
-		{
-			printf("data->idx : %d\n", data->idx);
 			data_increment(data);
-		}
 	}
 	token_list = lexer_check_len(token_list, data, input);
 	free(data);
