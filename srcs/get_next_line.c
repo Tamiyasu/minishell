@@ -6,11 +6,12 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/25 22:38:53 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/25 23:27:11 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "history.h"
 #include <stdio.h>
 
 # define ESCAPE '\33'
@@ -43,7 +44,7 @@ int					get_next_line(char **line)
 	int		buf_idx;
 
 	buf[1] = 0;
-	buf_join = NULL;
+	buf_join = ft_strdup("");
 	buf_idx = 0;
 	while((rc = read(STDIN_FILENO, buf, 1)) >= 0)
 	{
@@ -53,23 +54,23 @@ int					get_next_line(char **line)
 			read(STDIN_FILENO, buf, 1);// A を読み取るよ
 			if (buf[0] == 'A')
 			{
-				if (buf_join)
-					free(buf_join);
-				buf_join = ft_strdup("up");
-				buf_idx = 2;
+				tmp = buf_join;
+				buf_join = history(tmp, 1);
+				free(tmp);
+				buf_idx = ft_strlen(buf_join);
 				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
-				write(STDOUT_FILENO, "up", 2);//履歴を出力&&セット
+				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
 			}
 			else if (buf[0] == 'B')
 			{
-				if (buf_join)
-					free(buf_join);
-				buf_join = ft_strdup("down");
-				buf_idx = 4;
+				tmp = buf_join;
+				buf_join = history(tmp, -1);
+				free(tmp);
+				buf_idx = ft_strlen(buf_join);
 				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
-				write(STDOUT_FILENO, "down", 4);//履歴を出力&&セット
+				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
 			}
 			else if (buf[0] == 'C')//left
 			{
@@ -92,13 +93,14 @@ int					get_next_line(char **line)
 		}
 		else if (buf[0] == '\n')
 		{
-			if (buf_join == NULL)
-				*line = ft_strdup("\0");
-			else
-			{
-				*line = ft_strdup(buf_join);
-				free(buf_join);
-			}
+			history(buf_join, 0);
+			//if (buf_join == NULL)
+			//	*line = ft_strdup("\0");
+			//else
+			//{
+			*line = ft_strdup(buf_join);
+			free(buf_join);
+			//}
 			return (GNL_READ);
 		}
 		else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/24 20:54:15 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/25 23:28:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "get_next_line.h"
 #include "parser.h"
 #include "signal_handler.h"
+#include "history.h"
 
 int	g_exit_status;
 
@@ -113,5 +114,7 @@ int		main(int argc, char *argv[], char *envp[])
 	}
 	msh_loop(&env);
 	env_free(&env);
+	printf("-------------------------------\n");
+	history(NULL, 0);
 	return (g_exit_status);
 }
