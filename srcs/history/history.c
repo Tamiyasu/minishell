@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/26 00:54:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/26 20:22:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,20 @@ static void print_hist(t_list *h_hist)
 	}
 }
 
+static void reset(int i, t_list *h_list)
+{
+	int k;
+
+	k = 0;
+	while (k++ < i && h_list)
+		h_list = h_list->next;
+	if (h_list)
+	{
+		free(((t_hist *)(h_list->content))->tmp_str);
+		((t_hist *)(h_list->content))->tmp_str = ft_strdup(((t_hist *)(h_list->content))->hist_str);
+	}
+
+}
 
 static void set(char *str, int i, t_list *h_list)
 {
@@ -92,8 +106,12 @@ char    *history(char *str, int f)
 	set(str, i, h_list);
 	if (f == 0)
 	{
+		if (i != 0 )
+			reset(i, h_list);
+		set(str, 0, h_list);
 		i = 0;
 		s = 0;
+
 		ret_str = NULL;
 	}
 	else
