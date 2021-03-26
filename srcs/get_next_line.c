@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/25 23:27:11 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/26 20:57:09 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,14 @@ int					get_next_line(char **line)
 	char	*buf_join;
 	char	*tmp;
 	int		rc;
-	int		buf_idx;
+	int		buf_len;
+	int		cursor_idx;
 
 	buf[1] = 0;
 	buf_join = ft_strdup("");
-	buf_idx = 0;
-	while((rc = read(STDIN_FILENO, buf, 1)) >= 0)
+	buf_len = 0;
+	cursor_idx = 0;
+	while ((rc = read(STDIN_FILENO, buf, 1)) >= 0)
 	{
 		if (buf[0] == ESCAPE)
 		{
@@ -57,38 +59,46 @@ int					get_next_line(char **line)
 				tmp = buf_join;
 				buf_join = history(tmp, 1);
 				free(tmp);
-				buf_idx = ft_strlen(buf_join);
+				buf_len = ft_strlen(buf_join);
 				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
-				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
+				write(STDOUT_FILENO, buf_join, buf_len);
 			}
 			else if (buf[0] == 'B')
 			{
 				tmp = buf_join;
 				buf_join = history(tmp, -1);
 				free(tmp);
-				buf_idx = ft_strlen(buf_join);
+				buf_len = ft_strlen(buf_join);
 				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
-				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
+				write(STDOUT_FILENO, buf_join, buf_len);
 			}
 			else if (buf[0] == 'C')//left
 			{
-				write(STDOUT_FILENO, "\e[1C", ft_strlen("\e[1C"));
+				if (cursor_idx > 0 && cursor_idx <= buf_len)
+				{
+					cursor_idx--;
+					write(STDOUT_FILENO, "\e[1C", ft_strlen("\e[1C"));
+				}
 			}
 			else if (buf[0] == 'D')//right
 			{
-				write(STDOUT_FILENO, "\e[1D", ft_strlen("\e[1D"));
+				if (cursor_idx >= 0 && cursor_idx < buf_len)
+				{
+					cursor_idx++;
+					write(STDOUT_FILENO, "\e[1D", ft_strlen("\e[1D"));
+				}
 			}
 		}
 		else if (buf[0] == BACKSPACE)
 		{
-			if (buf_idx == 0)
+			if (buf_len == 0 || cursor_idx < 0)
 				continue ;
 			write(STDOUT_FILENO, "\10\e[1P", ft_strlen("\10\e[1P"));
-			buf_idx--;
+			buf_len--;
 			tmp = buf_join;
-			buf_join = ft_substr(tmp, 0, buf_idx);
+			buf_join = ft_substr(tmp, 0, buf_len);
 			free(tmp);
 		}
 		else if (buf[0] == '\n')
@@ -105,7 +115,8 @@ int					get_next_line(char **line)
 		}
 		else
 		{
-			buf_idx++;
+			buf_len++;
+			//cursor_idx++;
 			write(STDOUT_FILENO, buf, 1);
 			if (buf_join == NULL)
 				buf_join = ft_strdup(buf);

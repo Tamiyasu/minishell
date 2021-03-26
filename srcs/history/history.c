@@ -3,32 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/26 00:54:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/26 20:14:09 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
 #include <stdio.h>
 
-static void print_hist(t_list *h_hist)
-{
-	printf("here - %p\n", h_hist);
-	while(h_hist)
-	{
-		printf("h_hist[%p] : h_hist->content[%p], h_hist->content->hist_str=[%s], h_hist->content->tmp_str=[%s]\n", h_hist, h_hist->content, ((t_hist *)(h_hist->content))->hist_str, ((t_hist *)(h_hist->content))->tmp_str);
-		h_hist = h_hist->next;
-	}
-}
+// static void print_hist(t_list *h_hist)
+// {
+// 	printf("here - %p\n", h_hist);
+// 	while(h_hist)
+// 	{
+// 		printf("h_hist[%p] : h_hist->content[%p], h_hist->content->hist_str=[%s], h_hist->content->tmp_str=[%s]\n", h_hist, h_hist->content, ((t_hist *)(h_hist->content))->hist_str, ((t_hist *)(h_hist->content))->tmp_str);
+// 		h_hist = h_hist->next;
+// 	}
+// }
 
 
 static void set(char *str, int i, t_list *h_list)
 {
 	int k;
 
-	printf("in history set : i=[%d] : str=[%s]\n", i, str);
+	//printf("in history set : i=[%d] : str=[%s]\n", i, str);
 	k = 0;
 	while (k++ < i && h_list)
 		h_list = h_list->next;
@@ -48,7 +48,7 @@ static char *get(int i, t_list *h_list)
 {
 	int k;
 
-	printf("in history get : i=[%d]\n", i);
+	//printf("in history get : i=[%d]\n", i);
 	k = 0;
 	while (k++ < i && h_list->next)
 		h_list = h_list->next;
@@ -73,7 +73,7 @@ char    *history(char *str, int f)
 	t_list          *tmp_list;
 	char            *ret_str;
 
-	printf("\nin history : str = [%s], f=[%d]\n", str, f);
+	//printf("\nin history : str = [%s], f=[%d]\n", str, f);
 
 	if(str == NULL)
 	{
@@ -104,6 +104,6 @@ char    *history(char *str, int f)
 	}
 	//if(!ret_str)
 	//    ret_str = ft_strdup("empty history!");
-	print_hist(h_list);
+	//print_hist(h_list);
 	return (ret_str);
 }
