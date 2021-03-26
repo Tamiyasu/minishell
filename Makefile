@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
+#    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/21 14:21:05 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/24 00:01:59 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRC_FILE	+= execute/export_putenv.c
 SRC_FILE	+= execute/execve_search_cmdpath.c
 SRC_FILE	+= execute/exec_split_env.c
 SRC_FILE	+= execute/error.c
+SRC_FILE	+= history/history.c
 
 
 INC_DIR	= ./includes

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 17:36:00 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/25 23:28:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "get_next_line.h"
 #include "parser.h"
 #include "signal_handler.h"
+#include "history.h"
 
 int	g_exit_status;
 
@@ -36,10 +37,17 @@ int		faile_func(int result, char **line)
 int		get_line(char **line)
 {
 	int result;
-
 	signal(SIGINT, sig_handler_p);
 	signal(SIGQUIT, sig_handler_p);
+
+   	struct termios term;
+    struct termios term_save;
+	tcgetattr(0, &term);
+	term_save = term;
+	term.c_lflag &= ~(ICANON|ECHO);
+	tcsetattr(0,TCSANOW, &term);
 	result = get_next_line(line);
+	tcsetattr(0,TCSANOW, &term_save);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	if (result == GNL_ERR)
@@ -77,6 +85,7 @@ void	msh_loop(t_env *env)
 		ft_putstr_fd("minishell>> ", 1);
 		if (get_line(&line) == -1)
 			break ;
+		printf("\nline=[%s]\n", line);//del
 		result = lexer(line, &token_list);
 		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;
@@ -105,5 +114,7 @@ int		main(int argc, char *argv[], char *envp[])
 	}
 	msh_loop(&env);
 	env_free(&env);
+	printf("-------------------------------\n");
+	history(NULL, 0);
 	return (g_exit_status);
 }

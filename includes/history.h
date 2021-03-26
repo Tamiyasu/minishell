@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   history.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/13 20:44:50 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/24 18:27:05 by ysaito           ###   ########.fr       */
+/*   Created: 2021/03/23 23:59:30 by tmurakam          #+#    #+#             */
+/*   Updated: 2021/03/25 00:25:30 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_strcmp(const char *s1, const char *s2)
+#ifndef HISTORY_H
+# define HISTORY_H
+# include "libft.h"
+
+typedef struct	s_hist
 {
-	while (*s1 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+	char			*hist_str;
+	char			*tmp_str;
+}				t_hist;
+
+char    *history(char *str, int f);
+
+#endif

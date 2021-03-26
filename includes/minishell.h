@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 14:30:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/23 16:07:34 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <sys/stat.h>
 # include <dirent.h>
 # include <fcntl.h>
+# include <termios.h>
 # include "libft.h"
 
 extern int		g_exit_status;

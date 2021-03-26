@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve_search_cmdpath.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 02:49:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 11:46:49 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/24 19:42:57 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

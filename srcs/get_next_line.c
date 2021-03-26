@@ -6,54 +6,27 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:40:08 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/25 23:27:11 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "history.h"
+#include <stdio.h>
 
-static char			*ft_strjoin_and_free(char *s1, char *s2)
-{
-	char		*newstr;
-	int			strlen;
-	int			i;
-	int			j;
+# define ESCAPE '\33'
+# define BACKSPACE '\177'
 
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
-	strlen = ft_strlen(s1) + ft_strlen(s2);
-	newstr = (char *)malloc(sizeof(char) * (strlen + 1));
-	if (newstr == NULL)
-		ft_enomem();
-	i = 0;
-	j = 0;
-	while (s1[i] != '\0')
-	{
-		newstr[i] = s1[i];
-		i++;
-	}
-	while (s2[j] != '\0')
-		newstr[i++] = s2[j++];
-	newstr[i] = '\0';
-	free(s1);
-	return (newstr);
-}
-
-static int			make_line(char *buf_join, char **save, char **line)
+static int			make_line(char *buf_join, char **line)
 {
 	int			i;
 
 	i = 0;
-	if (buf_join == NULL || save == NULL || line == NULL)
-		return (GNL_ERR);
 	while (buf_join[i] != '\n' && buf_join[i] != '\0')
-	{
 		i++;
-	}
 	if (buf_join[i] == '\n')
 	{
 		*line = ft_substr(buf_join, 0, i);
-		*save = ft_strdup(&buf_join[i + 1]);
 		free(buf_join);
 		return (GNL_READ);
 	}
@@ -62,59 +35,88 @@ static int			make_line(char *buf_join, char **save, char **line)
 	return (GNL_EOF);
 }
 
-static char			*ft_read_or_save(char **save, int *rc)
-{
-	char		*buf;
-
-	if (save == NULL)
-		return (NULL);
-	if (*save != NULL)
-	{
-		buf = *save;
-		*save = NULL;
-		*rc = GNL_READ;
-	}
-	else
-	{
-		buf = (char *)malloc(sizeof(char) * (1024 + 1));
-		if (buf == NULL)
-			return (NULL);
-		*rc = read(0, buf, 1024);
-		if (*rc < 0)
-		{
-			free(buf);
-			return (NULL);
-		}
-		buf[*rc] = '\0';
-	}
-	return (buf);
-}
-
 int					get_next_line(char **line)
 {
-	static char	*save;
-	char		*buf;
-	char		*buf_join;
-	int			rc;
+	char	buf[2];
+	char	*buf_join;
+	char	*tmp;
+	int		rc;
+	int		buf_idx;
 
-	if (line == NULL)
-		return (GNL_ERR);
-	buf_join = NULL;
-	while (1)
+	buf[1] = 0;
+	buf_join = ft_strdup("");
+	buf_idx = 0;
+	while((rc = read(STDIN_FILENO, buf, 1)) >= 0)
 	{
-		buf = ft_read_or_save(&save, &rc);
-		if (buf == NULL)
-			return (GNL_ERR);
-		if (buf_join == NULL)
-			buf_join = ft_strdup(buf);
-		else
-			buf_join = ft_strjoin_and_free(buf_join, buf);
-		if (ft_strchr(buf, '\n') || (ft_strlen(buf) == 0 && rc == GNL_EOF))
+		if (buf[0] == ESCAPE)
 		{
-			free(buf);
-			break ;
+			read(STDIN_FILENO, buf, 1);// [ を読み取るよ
+			read(STDIN_FILENO, buf, 1);// A を読み取るよ
+			if (buf[0] == 'A')
+			{
+				tmp = buf_join;
+				buf_join = history(tmp, 1);
+				free(tmp);
+				buf_idx = ft_strlen(buf_join);
+				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
+				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
+				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
+			}
+			else if (buf[0] == 'B')
+			{
+				tmp = buf_join;
+				buf_join = history(tmp, -1);
+				free(tmp);
+				buf_idx = ft_strlen(buf_join);
+				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
+				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
+				write(STDOUT_FILENO, buf_join, buf_idx);//履歴を出力&&セット
+			}
+			else if (buf[0] == 'C')//left
+			{
+				write(STDOUT_FILENO, "\e[1C", ft_strlen("\e[1C"));
+			}
+			else if (buf[0] == 'D')//right
+			{
+				write(STDOUT_FILENO, "\e[1D", ft_strlen("\e[1D"));
+			}
 		}
-		free(buf);
+		else if (buf[0] == BACKSPACE)
+		{
+			if (buf_idx == 0)
+				continue ;
+			write(STDOUT_FILENO, "\10\e[1P", ft_strlen("\10\e[1P"));
+			buf_idx--;
+			tmp = buf_join;
+			buf_join = ft_substr(tmp, 0, buf_idx);
+			free(tmp);
+		}
+		else if (buf[0] == '\n')
+		{
+			history(buf_join, 0);
+			//if (buf_join == NULL)
+			//	*line = ft_strdup("\0");
+			//else
+			//{
+			*line = ft_strdup(buf_join);
+			free(buf_join);
+			//}
+			return (GNL_READ);
+		}
+		else
+		{
+			buf_idx++;
+			write(STDOUT_FILENO, buf, 1);
+			if (buf_join == NULL)
+				buf_join = ft_strdup(buf);
+			else
+			{
+				tmp = ft_strjoin(buf_join, buf);
+				free(buf_join);
+				buf_join = ft_strdup(tmp);
+				free(tmp);
+			}
+		}
 	}
-	return (make_line(buf_join, &save, line));
+	return (make_line(buf_join, line));
 }
