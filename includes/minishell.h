@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 17:06:34 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 18:07:09 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,15 @@ typedef struct	s_env
 	int			shlvl_flag;
 }				t_env;
 
+typedef struct	s_data
+{
+	int			length;
+	int			start;
+	int			idx;
+}				t_data;
+
+void			data_increment(t_data *data);
+t_data			*data_init(void);
 int				faile_func(int result, char **line);
 void			free_args(char **args);
 char			*error_str(char *str);

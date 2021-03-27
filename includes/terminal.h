@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:36 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 16:19:20 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 20:55:55 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include "libft.h"
 
 int		terminal(char **line);
-char	*term_arrow(char *buf_join, int *buf_len, int *cursor_len);
-
+char	*term_history(char *buf_join, int *buf_len, int *cursor_len);
+char	*term_backspace(char *buf_join, int *buf_len, int *cursor_len);
+int		term_newline(char **line, char *buf_join);
+char	*term_join(char *buf_join, char *buf, int *buf_len, int *cursor_len);
 #endif

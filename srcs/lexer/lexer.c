@@ -3,35 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 16:53:54 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 21:27:00 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-void	data_increment(t_data *data)
+int		error_token(t_token *token, char *err_str, t_data *data)
 {
-	data->idx++;
-	data->length++;
+	error_str("'");
+	error_str(err_str);
+	error_str("syntax error near unexpected token `");
+	free(data);
+	free_lst(&token);
+	return (0);
 }
 
-t_data	*data_init(void)
+int		lexer_increment(t_token *token, char *input, t_data *data)
 {
-	t_data *data;
-
-	data = malloc(sizeof(t_data));
-	if (data)
+	if (input[data->idx] == '\'' || input[data->idx] == '\"')
 	{
-		data->length = 0;
-		data->start = 0;
-		data->idx = 0;
+		if (!lexer_count_quote(data, input, input[data->idx]))
+			return (error_token(token, &input[data->idx], data));
+		return (1);
 	}
-	else
-		ft_enomem();
-	return (data);
+	if (input[data->idx] == '\\')
+	{
+		data_increment(data);
+		if (input[data->idx] == '\0')
+			return (error_token(token, "\\", data));
+	}
+	data_increment(data);
+	return (1);
 }
 
 t_token	*lexer_set_token(t_token *token, t_data *data, char *content)
@@ -69,21 +75,22 @@ int		lexer(char *input, t_token **token_list_p)
 
 	token_list = NULL;
 	data = data_init();
+//	printf("input : [%s]\n", input);
 	while (input[data->idx] != '\0')
 	{
+		printf("data->idx [%d]: input[data->idx] [%c]\n", data->idx, input[data->idx]);
 		if (input[data->idx] == '|' || input[data->idx] == ';')
 			token_list = lexer_set_char(token_list, data, input);
 		else if (input[data->idx] == '<' || input[data->idx] == '>')
 			token_list = lexer_set_redirect(token_list, data, input);
-		else if (input[data->idx] == '\'' || input[data->idx] == '\"')
-		{
-			if (!lexer_count_quote(data, input, input[data->idx]))
-				return (error_quote(token_list, input, data));
-		}
 		else if (input[data->idx] == '\t' || input[data->idx] == ' ')
 			token_list = lexer_skip_space(token_list, data, input);
 		else
-			data_increment(data);
+		{
+			if (!lexer_increment(token_list, input, data))
+				return (0);
+		}
+		printf("data->idx [%d]\n", data->idx);
 	}
 	token_list = lexer_check_len(token_list, data, input);
 	free(data);
