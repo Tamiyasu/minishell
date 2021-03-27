@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 09:31:10 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 09:45:51 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,22 @@ void	add_new_hist(t_list **h_list)
 	ft_lstadd_front(h_list, tmp_list);
 }
 
+char	*history_arrange(int *i, int f, t_list *h_list)
+{
+	int lstsize;
+
+	lstsize = ft_lstsize(h_list);
+	*i += f;
+	*i = *i < 0 ? 0 : *i;
+	*i = *i < (lstsize - 1) ? *i : (lstsize - 1);
+	return (get(*i, h_list));
+}
+
 char    *history(char *str, int f)
 {
 	static int		i;
 	static t_list	*h_list;
-	//t_list			*tmp_list;
 	char			*ret_str;
-
-	//printf("\nin history : str = [%s], f=[%d]\n", str, f);
 
 	if(str == NULL)
 	{
@@ -106,13 +114,6 @@ char    *history(char *str, int f)
 	}
 	if(h_list == NULL)
 		add_new_hist(&h_list);
-/*	{
-		tmp_list = malloc(sizeof(t_list));
-		tmp_list->content = malloc(sizeof(t_hist));
-		((t_hist *)(tmp_list->content))->hist_str = ft_strdup(str);
-		((t_hist *)(tmp_list->content))->tmp_str = NULL;
-		ft_lstadd_front(&h_list, tmp_list);
-	}*/
 	set(str, i, h_list);
 	if (f == 0)
 	{
@@ -122,22 +123,10 @@ char    *history(char *str, int f)
 		i = 0;
 		if (ft_strlen(str) != 0)
 			add_new_hist(&h_list);
-/*		{
-			tmp_list = malloc(sizeof(t_list));
-			tmp_list->content = malloc(sizeof(t_hist));
-			((t_hist *)(tmp_list->content))->hist_str = ft_strdup(str);
-			((t_hist *)(tmp_list->content))->tmp_str = NULL;
-			ft_lstadd_front(&h_list, tmp_list);
-		}*/
 		ret_str = NULL;
 	}
 	else
-	{
-		i += f;
-		i = i < 0 ? 0 : i;
-		i = i < ft_lstsize(h_list) ? i : ft_lstsize(h_list);
-		ret_str = ft_strdup(get(i, h_list));
-	}
+		ret_str = ft_strdup(history_arrange(&i, f, h_list));
 	print_hist(h_list);
 	return (ret_str);
 }
