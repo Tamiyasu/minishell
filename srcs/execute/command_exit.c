@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/25 23:31:22 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/26 21:06:40 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void		exit_check_status(t_token *token)
 	if (token->flag == -1)
 	{
 		output_error_exit_args(token->data);
+		history(NULL, 0);
 		exit(EXIT_OUT_OF_RANGE_STATUS);
 	}
 	g_exit_status = status % 256;
@@ -114,5 +115,6 @@ void		command_exit(t_token *token)
 	}
 	exit_check_status(token);
 	ft_putendl_fd("exit", STDOUT_FILENO);
+	history(NULL, 0);
 	exit(g_exit_status);
 }
