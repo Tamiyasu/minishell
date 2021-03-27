@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   terminal.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:36 by ysaito            #+#    #+#             */
-/*   Updated: 2021/02/24 00:34:25 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 16:19:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef TERMINAL_H
+# define TERMINAL_H
 
-# define GNL_READ 1
-# define GNL_EOF 0
-# define GNL_ERR -1
+# define TERM_READ 1
+# define TERM_EOF 0
+# define TERM_ERR -1
+# define ESCAPE '\33'
+# define BACKSPACE '\177'
+# define TERM_CLEAR "\e[2K\e[G"
+# define TERM_LEFT "\e[1D"
+# define TERM_RIGHT "\e[1C"
+# define TERM_BACKSPACE "\b\e[K"
 
-# include <stdlib.h>
-# include <unistd.h>
+# include "minishell.h"
 # include "libft.h"
 
-int		get_next_line(char **line);
+int		terminal(char **line);
+char	*term_arrow(char *buf_join, int *buf_len, int *cursor_len);
 
 #endif

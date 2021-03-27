@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:06:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 23:07:14 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 17:06:30 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,22 @@
 #include "lexer.h"
 #include "expansion.h"
 #include "execute.h"
-#include "get_next_line.h"
+#include "terminal.h"
 #include "parser.h"
 #include "signal_handler.h"
+
+int		faile_func(int result, char **line)
+{
+	free(*line);
+	*line = NULL;
+	if (!result)
+	{
+		g_exit_status = EXIT_SYNTAX_ERROR;
+		ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
+		error_str(NULL);
+	}
+	return (result);
+}
 
 void	free_args(char **args)
 {
