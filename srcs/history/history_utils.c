@@ -6,13 +6,13 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 10:44:47 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 10:56:22 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 10:56:59 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
 
-void    free_hist(void *hist)
+void	free_hist(void *hist)
 {
 	free(((t_hist *)hist)->hist_str);
 	free(((t_hist *)hist)->tmp_str);
