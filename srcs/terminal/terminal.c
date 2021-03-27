@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 16:51:47 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 17:06:10 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int		make_line(char *buf_join, char **line)
 {
-	int			i;
+	int	i;
 
 	i = 0;
 	while (buf_join[i] != '\n' && buf_join[i] != '\0')
@@ -54,6 +54,7 @@ int		term_newline(char **line, char *buf_join)
 	history(buf_join, 0);
 	*line = ft_strdup(buf_join);
 	free(buf_join);
+	ft_putstr_fd("\n", STDOUT_FILENO);
 	return (TERM_READ);
 }
 
@@ -76,7 +77,7 @@ char	*term_join(char *buf_join, char *buf, int *buf_len, int *cursor_len)
 	return (buf_join);
 }
 
-int			terminal(char **line)
+int		terminal(char **line)
 {
 	char	buf[2];
 	char	*buf_join;
