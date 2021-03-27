@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/27 19:48:59 by ysaito           ###   ########.fr        #
+#    Updated: 2021/03/27 20:49:21 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRC_FILE	+= env_set_data.c
 SRC_FILE	+= env_utils.c
 SRC_FILE	+= signal_handler.c
 SRC_FILE	+= terminal/terminal.c
-SRC_FILE	+= terminal/term_arrow.c
+SRC_FILE	+= terminal/terminal_utils.c
 SRC_FILE	+= lexer/lexer.c
 SRC_FILE	+= lexer/lexer_lst.c
 SRC_FILE	+= lexer/lexer_count_quote.c
