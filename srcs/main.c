@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/26 21:49:40 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 16:56:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ int		get_line(char **line)
    	struct termios term;
     struct termios term_save;
 	tcgetattr(0, &term);
-	term_save = term;
+	//term_save = term;
+	tcgetattr(0, &term_save);
 	term.c_lflag &= ~(ICANON|ECHO);
 	tcsetattr(0,TCSANOW, &term);
 	result = get_next_line(line);
@@ -85,7 +86,7 @@ void	msh_loop(t_env *env)
 		ft_putstr_fd("minishell>> ", 1);
 		if (get_line(&line) == -1)
 			break ;
-		printf("\nline=[%s]\n", line);//del
+		//printf("\nline=[%s]\n", line);//del
 		result = lexer(line, &token_list);
 		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;
