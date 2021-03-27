@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_handler.h                                   :+:      :+:    :+:   */
+/*   term_bufutils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/13 14:45:39 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 19:44:29 by tmurakam         ###   ########.fr       */
+/*   Created: 2021/03/27 20:03:16 by tmurakam          #+#    #+#             */
+/*   Updated: 2021/03/27 20:04:15 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SIGNAL_HANDLER_H
-# define SIGNAL_HANDLER_H
-# include <unistd.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <signal.h>
-# include "minishell.h"
+#include "terminal.h"
 
-pid_t	c_pid(pid_t t);
-void	sig_handler_c(int signo);
-void	sig_handler_p(int signo);
-int		last_signal(int i);
-#endif
+void	init_buf(char **buf_join, int *buf_len, int *cursor_len)
+{
+	free(*buf_join);
+	*buf_join = ft_strdup("");
+	*buf_len = 0;
+	*cursor_len = 0;
+}
