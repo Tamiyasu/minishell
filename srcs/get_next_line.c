@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 11:05:10 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 11:29:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int					get_next_line(char **line)
 				buf_join = history(tmp, 1);
 				free(tmp);
 				buf_len = ft_strlen(buf_join);
+				cursor_idx = buf_len;
 				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
 				write(STDOUT_FILENO, buf_join, buf_len);
@@ -70,30 +71,32 @@ int					get_next_line(char **line)
 				buf_join = history(tmp, -1);
 				free(tmp);
 				buf_len = ft_strlen(buf_join);
+				cursor_idx = buf_len;
 				ft_putstr_fd("\e[2K\e[G", STDOUT_FILENO);
 				ft_putstr_fd("minishell>> ", STDOUT_FILENO);
 				write(STDOUT_FILENO, buf_join, buf_len);
 			}
-			else if (buf[0] == 'C')//left
-			{
-				if (cursor_idx > 0 && cursor_idx <= buf_len)
-				{
-					cursor_idx--;
-					write(STDOUT_FILENO, "\e[1C", ft_strlen("\e[1C"));
-				}
-			}
-			else if (buf[0] == 'D')//right
+			else if (buf[0] == 'C')//right
 			{
 				if (cursor_idx >= 0 && cursor_idx < buf_len)
 				{
 					cursor_idx++;
+					write(STDOUT_FILENO, "\e[1C", ft_strlen("\e[1C"));
+				}
+			}
+			else if (buf[0] == 'D')//left
+			{
+				if (cursor_idx > 0 && cursor_idx <= buf_len)
+				{
+					cursor_idx--;
 					write(STDOUT_FILENO, "\e[1D", ft_strlen("\e[1D"));
 				}
 			}
 		}
 		else if (buf[0] == BACKSPACE)
 		{
-			if (buf_len == 0/* || cursor_idx <= 0*/)
+			//printf("push backspace=[%d]\n", cursor_idx);
+			if (buf_len == 0 || cursor_idx <= 0)
 				continue ;
 			// write(STDOUT_FILENO, "\10\e[1P", ft_strlen("\10\e[1P"));
 			write(STDOUT_FILENO, "\b\e[K", ft_strlen("\b\e[K"));
@@ -122,7 +125,7 @@ int					get_next_line(char **line)
 		else
 		{
 			buf_len++;
-			//cursor_idx++;
+			cursor_idx++;
 			write(STDOUT_FILENO, buf, 1);
 			if (buf_join == NULL)
 				buf_join = ft_strdup(buf);
