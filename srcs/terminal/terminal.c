@@ -6,12 +6,11 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 19:44:25 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 19:59:47 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "terminal.h"
-#include "history.h"
 
 int		make_line(char *buf_join, char **line)
 {
@@ -77,6 +76,14 @@ char	*term_join(char *buf_join, char *buf, int *buf_len, int *cursor_len)
 	return (buf_join);
 }
 
+void	init_buf(char **buf_join, int *buf_len, int *cursor_len)
+{
+	free(*buf_join);
+	*buf_join = ft_strdup("");
+	*buf_len = 0;
+	*cursor_len = 0;
+}
+
 int		terminal(char **line)
 {
 	char	buf[2];
@@ -86,18 +93,12 @@ int		terminal(char **line)
 	int		cursor_len;
 
 	buf[1] = 0;
-	buf_join = ft_strdup("");
-	buf_len = 0;
-	cursor_len = 0;
+	buf_join = NULL;
+	init_buf(&buf_join, &buf_len, &cursor_len);
 	while ((rc = read(STDIN_FILENO, buf, 1)) >= 0)
 	{
 		if(last_signal(0))
-		{
-			free(buf_join);
-			buf_join = ft_strdup("");
-			buf_len = 0;
-			cursor_len = 0;
-		}
+			init_buf(&buf_join, &buf_len, &cursor_len);
 		if (buf[0] == ESCAPE)
 			buf_join = term_arrow(buf_join, &buf_len, &cursor_len);
 		else if (buf[0] == BACKSPACE)
