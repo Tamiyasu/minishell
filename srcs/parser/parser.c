@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 00:56:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/21 17:18:03 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 20:23:22 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,20 @@ int				check_token_type(t_token *token, int last_type)
 	int	token_length;
 
 	token_length = ft_strlen(token->data);
-	if (token->data[token_length - 1] == '>')
+	if (token->data[token_length - 1] == '>' &&
+		(token_length == 1 || token->data[token_length - 2] != '\\'))
 	{
 		if (token_length == 1 || token->data[token_length - 2] != '>')
 			type_i = FT_REDIRECT_O_F;
 		else
 			type_i = FT_REDIRECT_A_F;
 	}
-	else if (token->data[token_length - 1] == '|')
+	else if (token->data[0] == '|' && token_length == 1)
 		type_i = FT_PIPE_F;
-	else if (token->data[token_length - 1] == ';')
+	else if (token->data[0] == ';' && token_length == 1)
 		type_i = FT_SEMICOLON_F;
-	else if (token->data[token_length - 1] == '<')
+	else if (token->data[token_length - 1] == '<' && 
+		(token_length == 1 || ft_isdigit(token->data[token_length - 2])))
 		type_i = FT_REDIRECT_I_F;
 	else if (is_redirect(last_type))
 		type_i = FT_FILENAME_F;
