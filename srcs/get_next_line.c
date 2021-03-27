@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/26 20:57:09 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 11:05:10 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,15 @@ int					get_next_line(char **line)
 		}
 		else if (buf[0] == BACKSPACE)
 		{
-			if (buf_len == 0 || cursor_idx < 0)
+			if (buf_len == 0/* || cursor_idx <= 0*/)
 				continue ;
-			write(STDOUT_FILENO, "\10\e[1P", ft_strlen("\10\e[1P"));
+			// write(STDOUT_FILENO, "\10\e[1P", ft_strlen("\10\e[1P"));
+			write(STDOUT_FILENO, "\b\e[K", ft_strlen("\b\e[K"));
+			// write(2, "\b", ft_strlen("\b"));// "printf(hello worl\bd\n");->hello worl->hello word
+			// write(2, "\e[K", ft_strlen("\e[K"));
+			//write(STDOUT_FILENO, buf_join, buf_len);
+
+
 			buf_len--;
 			tmp = buf_join;
 			buf_join = ft_substr(tmp, 0, buf_len);

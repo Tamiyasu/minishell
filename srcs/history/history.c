@@ -6,22 +6,22 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 10:06:36 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 10:07:43 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
 #include <stdio.h>
 
-static void print_hist(t_list *h_list)
-{
-	printf("here - %p\n", h_list);
-	while(h_list)
-	{
-		printf("h_list[%p] : h_list->content[%p], h_list->content->hist_str=[%s], h_list->content->tmp_str=[%s]\n", h_list, h_list->content, ((t_hist *)(h_list->content))->hist_str, ((t_hist *)(h_list->content))->tmp_str);
-		h_list = h_list->next;
-	}
-}
+// static void print_hist(t_list *h_list)
+// {
+// 	printf("here - %p\n", h_list);
+// 	while(h_list)
+// 	{
+// 		printf("h_list[%p] : h_list->content[%p], h_list->content->hist_str=[%s], h_list->content->tmp_str=[%s]\n", h_list, h_list->content, ((t_hist *)(h_list->content))->hist_str, ((t_hist *)(h_list->content))->tmp_str);
+// 		h_list = h_list->next;
+// 	}
+// }
 
 static void reset(int i, t_list *h_list)
 {
@@ -127,6 +127,6 @@ char    *history(char *str, int f)
 	}
 	else
 		ret_str = ft_strdup(history_arrange(&i, f, h_list));
-	print_hist(h_list);
+	//print_hist(h_list);
 	return (ret_str);
 }
