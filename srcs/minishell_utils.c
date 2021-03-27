@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:06:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/20 23:07:14 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 16:53:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "lexer.h"
 #include "expansion.h"
 #include "execute.h"
-#include "get_next_line.h"
+#include "terminal.h"
 #include "parser.h"
 #include "signal_handler.h"
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/25 22:42:56 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 16:53:54 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int		lexer(char *input, t_token **token_list_p)
 	data = data_init();
 	while (input[data->idx] != '\0')
 	{
-		printf("lexer[%d][%c]\n", data->idx, input[data->idx]);
 		if (input[data->idx] == '|' || input[data->idx] == ';')
 			token_list = lexer_set_char(token_list, data, input);
 		else if (input[data->idx] == '<' || input[data->idx] == '>')
