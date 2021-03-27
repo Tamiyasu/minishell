@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/19 17:17:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 21:22:14 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 21:41:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int	lexer_count_quote(t_data *data, char *input, char quote)
 		else if (input[data->idx] == quote)
 		{
 			data_increment(data);
-			printf("data-idx:[%d]\n", data->idx);
-			printf("data-idx:[%d]/input[data-idx][%c]\n", data->idx, input[data->idx]);
 			return (1);
 		}
 		else
