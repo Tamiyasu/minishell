@@ -6,22 +6,12 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 10:38:28 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 10:41:04 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
 #include <stdio.h>
-
-static void print_hist(t_list *h_list)
-{
-	printf("here - %p\n", h_list);
-	while(h_list)
-	{
-		printf("h_list[%p] : h_list->content[%p], h_list->content->hist_str=[%s], h_list->content->tmp_str=[%s]\n", h_list, h_list->content, ((t_hist *)(h_list->content))->hist_str, ((t_hist *)(h_list->content))->tmp_str);
-		h_list = h_list->next;
-	}
-}
 
 static void reset(int i, t_list *h_list)
 {
@@ -42,7 +32,6 @@ static void set(char *str, int i, t_list *h_list)
 {
 	int k;
 
-	printf("in history set : i=[%d] : str=[%s]\n", i, str);
 	k = 0;
 	while (k++ < i && h_list)
 		h_list = h_list->next;
@@ -62,7 +51,6 @@ static char *get(int i, t_list *h_list)
 {
 	int k;
 
-	printf("in history get : i=[%d]\n", i);
 	k = 0;
 	while (k++ < i && h_list->next)
 		h_list = h_list->next;
@@ -121,8 +109,6 @@ char    *history(char *str, int f)
 	static t_list	*h_list;
 	char			*ret_str;
 
-	printf("\nin history : str = [%s], f=[%d]\n", str, f);
-
 	if(str == NULL)
 		return history_destroy(&h_list);
 	if(h_list == NULL)
@@ -132,6 +118,5 @@ char    *history(char *str, int f)
 		ret_str = history_make(&i, str, &h_list);
 	else
 		ret_str = history_arrange(&i, f, h_list);
-	print_hist(h_list);
 	return (ret_str);
 }
