@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 16:38:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 19:46:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 20:35:43 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		error_token(t_token *token, char *err_str, t_data *data)
 {
 	error_str("'");
 	error_str(err_str);
-	error_str("error near token `");
+	error_str("syntax error near unexpected token `");
 	free(data);
 	free_lst(&token);
 	return (0);
