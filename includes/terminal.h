@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:36 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 19:45:29 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 20:04:24 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include "signal_handler.h"
 # include "libft.h"
 
+void	init_buf(char **buf_join, int *buf_len, int *cursor_len);
 int		terminal(char **line);
 char	*term_arrow(char *buf_join, int *buf_len, int *cursor_len);
 
