@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   terminal.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 21:36:39 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 21:54:09 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int		terminal(char **line)
 			return (term_newline(line, buf_join));
 		else if (buf[0] == EOT && buf_len == 0)
 			break ;
-		else if (buf[0] != EOT)
+		else if (buf[0] != EOT && buf[0] != '\t')
 			buf_join = term_join(buf_join, buf, &buf_len, &cursor_len);
 	}
 	return (make_line(buf_join, line));
