@@ -6,21 +6,11 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/19 17:17:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/26 19:59:33 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 18:32:48 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-
-int	error_quote(t_token *token, char *input, t_data *data)
-{
-	error_str("'");
-	error_str(&input[data->idx]);
-	error_str("quotation marks error near token `");
-	free(data);
-	free_lst(&token);
-	return (0);
-}
 
 int	lexer_count_quote(t_data *data, char *input, char quote)
 {

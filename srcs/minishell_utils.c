@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:06:58 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 17:06:30 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 18:07:01 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,28 @@
 #include "terminal.h"
 #include "parser.h"
 #include "signal_handler.h"
+
+void	data_increment(t_data *data)
+{
+	data->idx++;
+	data->length++;
+}
+
+t_data	*data_init(void)
+{
+	t_data *data;
+
+	data = malloc(sizeof(t_data));
+	if (data)
+	{
+		data->length = 0;
+		data->start = 0;
+		data->idx = 0;
+	}
+	else
+		ft_enomem();
+	return (data);
+}
 
 int		faile_func(int result, char **line)
 {

@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/26 17:27:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/27 18:16:17 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,19 @@ void	set_expansion_data(t_token *token, char *new_data)
 	}
 }
 
+char	*exps_increment(t_token *token, char *new_data, t_data *data)
+{
+	if (token->data[data->idx] == '\\')
+	{
+		new_data = save_reading_data(token->data, new_data, data);
+		printf("exps token->data[%d]=[%c]\n", data->idx, token->data[data->idx]);
+		//data_increment(data);
+	}
+//	else
+	data_increment(data);
+	return (new_data);
+}
+
 void	exps_check_command(t_token *token, t_env *env)
 {
 	t_data	*data;
@@ -72,7 +85,7 @@ void	exps_check_command(t_token *token, t_env *env)
 					|| token->data[data->idx + 1] == '?'))
 				new_data = exps_set_envdata(token, new_data, data, env);
 			else
-				data_increment(data);
+				new_data = exps_increment(token, new_data, data);
 		new_data = save_reading_data(token->data, new_data, data);
 		set_expansion_data(token, new_data);
 		free(data);
