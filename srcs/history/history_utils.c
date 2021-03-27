@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 10:44:47 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 10:49:13 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 10:56:22 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ void    free_hist(void *hist)
 	free(hist);
 }
 
-
 void	history_reset(int i, t_list *h_list)
 {
-	int k;
+	int	k;
 
 	k = 0;
 	while (k++ < i && h_list)
@@ -30,14 +29,14 @@ void	history_reset(int i, t_list *h_list)
 	if (h_list)
 	{
 		free(((t_hist *)(h_list->content))->tmp_str);
-		((t_hist *)(h_list->content))->tmp_str = ft_strdup(((t_hist *)(h_list->content))->hist_str);
+		((t_hist *)(h_list->content))->tmp_str =
+			ft_strdup(((t_hist *)(h_list->content))->hist_str);
 	}
-
 }
 
-void history_set(char *str, int i, t_list *h_list)
+void	history_set(char *str, int i, t_list *h_list)
 {
-	int k;
+	int	k;
 
 	k = 0;
 	while (k++ < i && h_list)
@@ -54,9 +53,9 @@ void history_set(char *str, int i, t_list *h_list)
 	}
 }
 
-char *history_get(int i, t_list *h_list)
+char	*history_get(int i, t_list *h_list)
 {
-	int k;
+	int	k;
 
 	k = 0;
 	while (k++ < i && h_list->next)

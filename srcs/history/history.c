@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 10:50:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/27 10:54:28 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ char	*history_make(int *i, char *str, t_list **h_list)
 	return (NULL);
 }
 
-char    *history(char *str, int f)
+char	*history(char *str, int f)
 {
 	static int		i;
 	static t_list	*h_list;
 	char			*ret_str;
 
 	if (str == NULL)
-		return history_destroy(&h_list);
+		return (history_destroy(&h_list));
 	if (h_list == NULL)
 		add_new_hist(&h_list);
 	history_set(str, i, h_list);
