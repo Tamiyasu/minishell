@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 20:06:37 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/28 17:09:43 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/28 20:39:27 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,6 @@ char
 	new_data = save_reading_data(token->data, new_data, data);
 	while (token->data[data->idx] != '\"')
 	{
-		printf("in dquote token[%d]=[%c]\n", data->idx, token->data[data->idx]);//del
-		// if (token->data[data->idx] == '\\'
-		// 	&& (token->data[data->idx + 1] == '\\'
-		// 	|| token->data[data->idx + 1] == '\"'
-		// 	|| token->data[data->idx + 1] == '$'))
-		// {
-		// 	{
-		// 		data_increment(data);
-		// 		data->start = data->idx;
-		// 		new_data = save_reading_data(token->data, new_data, data);
-		// 	}
-		// }
 		if (token->data[data->idx] == '\\' &&
 			(token->data[data->idx + 1] == '\\'
 			|| token->data[data->idx + 1] == '\"'
@@ -63,6 +51,5 @@ char
 			data_increment(data);
 	}
 	new_data = save_reading_data(token->data, new_data, data);
-	printf("out dquote new_data=[%s]\n", new_data);
 	return (new_data);
 }
