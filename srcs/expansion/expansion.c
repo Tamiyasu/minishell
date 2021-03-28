@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 19:57:49 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/28 17:09:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	exps_check_command(t_token *token, t_env *env)
 				new_data = exps_increment(token, new_data, data);
 		new_data = save_reading_data(token->data, new_data, data);
 		set_expansion_data(token, new_data);
+		printf("final new_data=[%s]\n", new_data);//del
 		free(data);
 		token = token->next;
 	}
