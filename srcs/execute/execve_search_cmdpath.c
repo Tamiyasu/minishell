@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execve_search_cmdpath.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 02:49:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/24 19:42:57 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/28 20:13:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
+/*
 DIR		*open_dir_path(char *dir_path)
 {
 	DIR	*open_dp;
@@ -20,7 +21,7 @@ DIR		*open_dir_path(char *dir_path)
 	if (open_dp == NULL)
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 	return (open_dp);
-}
+}*/
 
 void	format_cmd_path(t_token *token, DIR *dp, char *dir_path)
 {
@@ -57,13 +58,14 @@ int		execve_search_cmdpath(t_token *token, t_env *env)
 	idx = 0;
 	while (path_value[idx] != NULL)
 	{
-		dp = open_dir_path(path_value[idx]);
-		if (dp == NULL)
-			return (0);
-		while ((dirp = readdir(dp)) != NULL)
-			if (ft_strcmp(token->data, dirp->d_name) == 0)
-				return (set_found_commandpath(token, dp, path_value, idx));
-		closedir(dp);
+		dp = opendir(path_value[idx]);
+		if (dp != NULL)
+		{
+			while ((dirp = readdir(dp)) != NULL)
+				if (ft_strcmp(token->data, dirp->d_name) == 0)
+					return (set_found_commandpath(token, dp, path_value, idx));
+			closedir(dp);
+		}
 		idx++;
 	}
 	free_args(path_value);
