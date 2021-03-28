@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:36 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 21:36:50 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/03/28 21:22:43 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include "libft.h"
 
 void	init_buf(char **buf_join, int *buf_len, int *cursor_len);
+void	buf_signal(char **buf_join, int *buf_len, int *cursor_len);
 int		terminal(char **line);
 char	*term_history(char *buf_join, int *buf_len, int *cursor_len);
 char	*term_backspace(char *buf_join, int *buf_len, int *cursor_len);
