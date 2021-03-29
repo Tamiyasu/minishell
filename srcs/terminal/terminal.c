@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   terminal.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/27 21:54:09 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/28 20:58:12 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ int		terminal(char **line)
 	while ((rc = read(STDIN_FILENO, buf, 1)) >= 0)
 	{
 		if (last_signal(0))
+		{
+			history(buf_join, HISTORY_POS_RESET);
 			init_buf(&buf_join, &buf_len, &cursor_len);
+		}
 		if (buf[0] == ESCAPE)
 			buf_join = term_history(buf_join, &buf_len, &cursor_len);
 		else if (buf[0] == BACKSPACE)
