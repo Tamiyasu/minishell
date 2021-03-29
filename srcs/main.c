@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/28 17:08:34 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/29 22:47:26 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	print_token(t_token *token)
 {
 	while (token)
 	{
-		printf("toke->data[%s]\n", token->data);
+		printf("toke->data[%s][%d]\n", token->data, token->flag);
 		token = token->next;
 	}
 }
@@ -91,10 +91,12 @@ void	minishell_loop(t_env *env)
 		result = lexer(line, &token_list);
 		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;
+		printf("\n--------lexer------------------------\n\n");//del
 		print_token(token_list);//del
 		result = parser(token_list, &node);
 		if (!faile_func(result, &line))
 			continue ;
+		//printf("\n--------expansion--------------------\n\n");//del
 		expansion(node, env);
 		printf("--------after expansion--------------\n");//del
 		print_token(node->content);//del
