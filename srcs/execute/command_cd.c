@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 22:08:46 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/30 22:07:16 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,20 @@ int		cd_home(t_env *env)
 int		command_cd(t_token *token, t_env *env)
 {
 	char		*err_str;
-	struct stat	stat_buf;
-	int			err_cord;
+	//struct stat	stat_buf;
+	//int			err_cord;
 
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
 	else if (chdir(token->data) == -1)
 	{
-		err_cord = ENOENT;
-		if (!stat(token->data, &stat_buf)
-			&& (stat_buf.st_mode & S_IFMT) != S_IFDIR)
-			err_cord = ENOTDIR;
+		//err_cord = ENOENT;
+		// if (!stat(token->data, &stat_buf)
+		// 	&& (stat_buf.st_mode & S_IFMT) != S_IFDIR)
+		// 	err_cord = ENOTDIR;
 		err_str = ft_strjoin("cd: ", token->data);
-		output_error(err_str, strerror(err_cord));
+		output_error(err_str, strerror(/*err_cord*/errno));
 		free(err_str);
 		return (EXIT_FAILURE);
 	}
