@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 20:40:46 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/30 10:40:22 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/30 10:45:53 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 	int open_fd;
 
 	fd_num = check_fdnum(node->content->data, node->content->flag);
-	fprintf(stderr, "data=[%s], fd_num=[%d]\n", node->content->data ,fd_num);//del;
 	open_fd = open_file(node->r_node->content->data, node->content->flag);
 	if (open_fd == -1 || fd_num > FD_MAX || fd_num < 0)
 	{
@@ -90,7 +89,5 @@ void	exec_redirect(t_parser_node *node, t_info_fd *msh_fd, t_env *env,
 		msh_fd = redirect_save_fd(msh_fd, fd_num, node->content->flag);
 		dup2(open_fd, fd_num);
 	}
-	fprintf(stderr, "--------after redirect_save--------------\n");//del;
-	fprintf(stderr, "data=[%s], fd_num=[%d], fd_save=[%d]\n", node->content->data , msh_fd->fd_num, msh_fd->fd_save);//del;
 	func(node->l_node, env, msh_fd);
 }

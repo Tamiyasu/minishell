@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 20:50:41 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/30 10:26:45 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/30 10:45:29 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int			redirect_check_reserve(t_info_fd *msh_fd, int fd_num, int flag)
 {
 	while (msh_fd)
 	{
-		// if (flag == msh_fd->flag && fd_num == msh_fd->fd_num)
-		// 	return (0);
 		if (flag == FT_REDIRECT_I_F)
 		{
 			if (msh_fd->flag == FT_REDIRECT_I_F && fd_num == msh_fd->fd_num)
