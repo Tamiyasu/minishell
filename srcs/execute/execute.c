@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 14:50:13 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/30 10:30:59 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	exec_command(t_token *token, t_env *env, int child_flag)
 {
 	pid_t	child_p;
 	int		pid_status;
-
 	pid_status = 0;
 	if (ft_strcmp(token->data, "") == 0)
 		return ;
