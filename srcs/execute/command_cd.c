@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/30 22:07:16 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/03/31 14:06:37 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ int		cd_home(t_env *env)
 		return (EXIT_FAILURE);
 	}
 	env_home = ft_strdup(&env->data[idx][5]);
+	if (ft_strcmp(env_home, "") == 0)
+	{
+		free(env_home);
+		return (EXIT_SUCCESS);
+	}
 	if (chdir(env_home) == -1)
 	{
 		output_error("cd", strerror(ENOENT));
