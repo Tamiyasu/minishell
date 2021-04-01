@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:09:52 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 14:32:51 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,14 @@ void	env_update_pwddata(t_env *env, char *cd)
 
 void	error_shlvl(int shlvl_num)
 {
+	char	*shlvl_str;
+
+	shlvl_str = ft_itoa(shlvl_num + 1);
 	error_str(") too high, resetting to 1");
-	error_str(ft_itoa(shlvl_num + 1));
+	error_str(shlvl_str);
 	error_str("warning: shell level (");
 	ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
 	error_str(NULL);
+	free(shlvl_str);
+	shlvl_str = NULL;
 }

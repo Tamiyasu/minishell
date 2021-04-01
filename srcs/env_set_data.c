@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:21:18 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 14:37:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	env_set_data(t_env *env, char **envp)
 	}
 	idx = env_set_pwd(env, idx);
 	if (0 < ft_strlen(error_str("")))
-		ft_putendl_fd(error_str("shell-init: "), 2);
+		ft_putendl_fd(error_str("shell-init: "), STDERR_FILENO);
 	error_str(NULL);
 	env_set_shlvl(env, &idx);
 	env->oldpwd_flag = 1;

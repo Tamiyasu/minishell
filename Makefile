@@ -70,8 +70,8 @@ RM		= rm -f
 LIBS_NAME	=	libft.a
 LIBS_DIR	=	./libft
 
-#CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
-CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(LIBS_DIR)
+CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
+
 $(NAME):	$(OBJS)
 			$(MAKE) -C $(LIBS_DIR)
 			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBS_DIR) -lft
