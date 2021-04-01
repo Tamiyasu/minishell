@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 10:43:02 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 13:56:53 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,20 @@ int		env_set_shlvl(t_env *env, int idx)
 	else
 	{
 		shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
-		if (shlvl_num == SHLVL_MAX)//999
+		if (shlvl_num == SHLVL_MAX)
 		{
 			free(env->data[env->shlvl_flag]);
 			env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", "");
 			return (idx);
 		}
-		if (shlvl_num < 0)//-
+		if (shlvl_num < 0)
 			shlvl_num = 0;
 		else if (shlvl_num == INT_MAX)
 			shlvl_num = 0;
-		else if (shlvl_num > SHLVL_MAX)//1000~
+		else if (shlvl_num > SHLVL_MAX)
 		{
 			error_str(") too high, resetting to 1");
-			error_str(ft_itoa(shlvl_num));
+			error_str(ft_itoa(shlvl_num + 1));
 			error_str("warning: shell level (");
 			ft_putendl_fd(error_str("minishell: "), STDERR_FILENO);
 			error_str(NULL);
