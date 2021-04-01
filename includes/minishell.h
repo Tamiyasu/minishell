@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/29 16:21:25 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 14:10:08 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # define FD_MAX 255
+# define SHLVL_MAX 999
 # define EXIT_COMMAND_NOT_EXECUTED 126
 # define EXIT_COMMAND_NOT_FOUND 127
 # define EXIT_OUT_OF_RANGE_STATUS 255
@@ -62,4 +63,5 @@ void			env_free(t_env *env);
 int				env_search(char **env_data, char *variable_name);
 void			env_update_pwddata(t_env *env, char *cd);
 void			env_set_data(t_env *env, char **envp);
+void			error_shlvl(int shlvl_num);
 #endif

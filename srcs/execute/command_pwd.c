@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 14:31:58 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 14:35:40 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		command_pwd(t_env *env)
 	if (cwdir == NULL)
 	{
 		error_str("error retrieving current directory: ");
-		ft_putendl_fd(error_str("pwd: "), 2);
+		ft_putendl_fd(error_str("pwd: "), STDERR_FILENO);
 		error_str(NULL);
 		return (EXIT_FAILURE);
 	}

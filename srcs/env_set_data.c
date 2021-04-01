@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_set_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:10:39 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/01 14:37:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,31 +31,42 @@ int		env_check_data(t_env *env, char **envp)
 	return (env_num);
 }
 
-int		env_set_shlvl(t_env *env, int idx)
+int		set_shlvl_num(int shlvl_num)
+{
+	if (shlvl_num < 0 || shlvl_num == INT_MAX)
+		shlvl_num = 0;
+	else if (shlvl_num > SHLVL_MAX)
+	{
+		error_shlvl(shlvl_num);
+		shlvl_num = 1;
+	}
+	else
+		shlvl_num += 1;
+	return (shlvl_num);
+}
+
+void	env_set_shlvl(t_env *env, int *idx)
 {
 	int		shlvl_num;
 	char	*shlvl_str;
 
 	if (env->shlvl_flag == -1)
-		env->data[idx++] = ft_strdup("SHLVL=1");
-	else
 	{
-		shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
-		if (shlvl_num < 0)
-			shlvl_num = 0;
-		else
-		{
-			if (shlvl_num == INT_MAX)
-				shlvl_num = 0;
-			else
-				shlvl_num += 1;
-		}
-		free(env->data[env->shlvl_flag]);
-		shlvl_str = ft_itoa(shlvl_num);
-		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", shlvl_str);
-		free(shlvl_str);
+		env->data[*idx] = ft_strdup("SHLVL=1");
+		*idx = *idx + 1;
+		return ;
 	}
-	return (idx);
+	shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
+	free(env->data[env->shlvl_flag]);
+	if (shlvl_num == SHLVL_MAX)
+	{
+		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", "");
+		return ;
+	}
+	shlvl_num = set_shlvl_num(shlvl_num);
+	shlvl_str = ft_itoa(shlvl_num);
+	env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", shlvl_str);
+	free(shlvl_str);
 }
 
 int		env_set_pwd(t_env *env, int idx)
@@ -95,9 +106,9 @@ void	env_set_data(t_env *env, char **envp)
 	}
 	idx = env_set_pwd(env, idx);
 	if (0 < ft_strlen(error_str("")))
-		ft_putendl_fd(error_str("shell-init: "), 2);
+		ft_putendl_fd(error_str("shell-init: "), STDERR_FILENO);
 	error_str(NULL);
-	idx = env_set_shlvl(env, idx);
+	env_set_shlvl(env, &idx);
 	env->oldpwd_flag = 1;
 	env->pwd_flag = 1;
 	env->data[idx] = NULL;
