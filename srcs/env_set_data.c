@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_set_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:10:39 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/01 10:28:01 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,26 @@ int		env_set_shlvl(t_env *env, int idx)
 	else
 	{
 		shlvl_num = ft_atoi(&env->data[env->shlvl_flag][6]);
-		if (shlvl_num < 0)
-			shlvl_num = 0;
-		else
+		if (shlvl_num == SHLVL_MAX)//999
 		{
-			if (shlvl_num == INT_MAX)
-				shlvl_num = 0;
-			else
-				shlvl_num += 1;
+			free(env->data[env->shlvl_flag]);
+			env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", "");
+			return (idx);
 		}
+		if (shlvl_num < 0)//-
+			shlvl_num = 0;
+		else if (shlvl_num == INT_MAX)
+			shlvl_num = 0;
+		else if (shlvl_num > SHLVL_MAX)//1000~
+		{
+			error_str(") too high, resetting to 1");
+			error_str(ft_itoa(shlvl_num));
+			error_str("warning: shell level (");
+			error_str("minishell: ");
+			shlvl_num = 1;
+		}
+		else
+			shlvl_num += 1;
 		free(env->data[env->shlvl_flag]);
 		shlvl_str = ft_itoa(shlvl_num);
 		env->data[env->shlvl_flag] = ft_strjoin("SHLVL=", shlvl_str);
