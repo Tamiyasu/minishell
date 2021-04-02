@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/31 14:13:33 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 21:15:01 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,6 @@ void	loop_end_func(char **line, t_parser_node **node)
 	*line = NULL;
 }
 
-//del
-void	print_token(t_token *token)
-{
-	while (token)
-	{
-		printf("toke->data[%s][%d]\n", token->data, token->flag);
-		token = token->next;
-	}
-}
-//del
-
 void	minishell_loop(t_env *env)
 {
 	char			*line;
@@ -91,15 +80,10 @@ void	minishell_loop(t_env *env)
 		result = lexer(line, &token_list);
 		if (!faile_func(result, &line) || token_list == NULL)
 			continue ;
-		// printf("\n--------lexer------------------------\n\n");//del
-		// print_token(token_list);//del
 		result = parser(token_list, &node);
 		if (!faile_func(result, &line))
 			continue ;
 		expansion(node, env);
-		// printf("--------after expansion--------------\n");//del
-		// print_token(node->content);//del
-		// printf("--------check print end--------------\n");//del
 		msh_fd = NULL;
 		execute(node, env, msh_fd);
 		loop_end_func(&line, &node);

@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/03/29 19:12:37 by ysaito           ###   ########.fr        #
+#    Updated: 2021/04/01 21:00:00 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC_FILE    += parser/parser_find_node.c
 SRC_FILE    += parser/node.c
 SRC_FILE	+= expansion/expansion.c
 SRC_FILE	+= expansion/exps_format.c
+SRC_FILE	+= expansion/exps_format_utils.c
 SRC_FILE	+= expansion/exps_set_envdata.c
 SRC_FILE	+= expansion/exps_quote.c
 SRC_FILE	+= execute/execute.c
