@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 14:20:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 14:33:56 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,10 @@ int		env_set_pwd(t_env *env, int idx)
 	env_update_pwddata(env, NULL);
 	if (env->pwd_flag == -1 && env->pwd_data)
 	{
-		printf("in\n");//del
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
 	}
 	else
 	{
-		printf("env->pwd_flag2[%d]\n", env->pwd_flag);//del
 		tmp_cwd = env->data[env->pwd_flag];
 		if (env->pwd_data)
 		{
@@ -125,7 +123,6 @@ void	env_set_data(t_env *env, char **envp)
 		if (idx != env->oldpwd_flag)
 		{
 			env->data[data_idx] = ft_strdup(envp[idx]);
-			printf("check env->data=[%d][%s]\n", data_idx, env->data[data_idx]);//del
 			data_idx++;
 		}
 		idx++;
@@ -141,7 +138,7 @@ void	env_set_data(t_env *env, char **envp)
 		ft_putendl_fd(error_str("shell-init: "), STDERR_FILENO);
 	error_str(NULL);
 	env_set_shlvl(env, &data_idx);
-	//env->oldpwd_flag = 1;本当にいらない？
+	env->oldpwd_flag = 1;//本当にいらない？
 	env->pwd_flag = 1;
 	env->data[data_idx] = NULL;
 }
