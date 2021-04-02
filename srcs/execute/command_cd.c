@@ -32,7 +32,8 @@ void	cd_update_envpwd(t_env *env, char *arg_str)
 			old_idx = env->num++;
 			env->data[env->num] = NULL;
 		}
-		free(env->data[old_idx]);
+        else
+		    free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", &env->data[idx][4]);
 		else
