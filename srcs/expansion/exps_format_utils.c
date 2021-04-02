@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   term_bufutils.c                                    :+:      :+:    :+:   */
+/*   exps_format_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/27 20:03:16 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/04/01 20:55:41 by ysaito           ###   ########.fr       */
+/*   Created: 2021/04/01 21:00:28 by ysaito            #+#    #+#             */
+/*   Updated: 2021/04/01 21:02:24 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "terminal.h"
+#include "expansion.h"
 
-void	init_buf(char **buf_join, int *buf_len, int *cursor_len)
+int		is_space(char c)
 {
-	free(*buf_join);
-	*buf_join = ft_strdup("");
-	*buf_len = 0;
-	*cursor_len = 0;
+	if (c == ' ' || c == '\t')
+		return (1);
+	return (0);
 }
 
-void	buf_signal(char **buf_join, int *buf_len, int *cursor_len)
+void	exps_free(t_data *data, char *tmp_token_data)
 {
-	history(*buf_join, HISTORY_POS_RESET);
-	init_buf(buf_join, buf_len, cursor_len);
+	free(tmp_token_data);
+	tmp_token_data = NULL;
+	free(data);
+	data = NULL;
+}
+
+void	set_token(t_token *token)
+{
+	free(token->data);
+	token->data = NULL;
+	token->flag = FT_COMMAND_F;
 }

@@ -6,33 +6,11 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 19:27:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/29 22:45:10 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 21:05:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-
-int		is_space(char c)
-{
-	if (c == ' ' || c == '\t')
-		return (1);
-	return (0);
-}
-
-void	exps_free(t_data *data, char *tmp_token_data)
-{
-	free(tmp_token_data);
-	tmp_token_data = NULL;
-	free(data);
-	data = NULL;
-}
-
-void	set_token(t_token *token)
-{
-	free(token->data);
-	token->data = NULL;
-	token->flag = FT_COMMAND_F;
-}
 
 t_token	*set_format_data(t_token *token, char *tmp_token_data, t_data *data)
 {
@@ -53,26 +31,6 @@ t_token	*set_format_data(t_token *token, char *tmp_token_data, t_data *data)
 		}
 		data->length = 0;
 	}
-	data->start = ++data->idx;
-	return (token);
-}
-
-t_token	*set_format_quotedata(t_token *token, char *quote_data, t_data *data)
-{
-	t_token	*add_token;
-	char	*format_data;
-
-	if (token->data == NULL)
-			token->data = ft_strdup(quote_data);
-	else
-	{
-		format_data = ft_strdup(quote_data);
-		add_token = token_list_new(format_data);
-		add_token->flag = FT_COMMAND_F;
-		add_token->next = token->next;
-		token->next = add_token;
-	}
-	data->length = 0;
 	data->start = ++data->idx;
 	return (token);
 }

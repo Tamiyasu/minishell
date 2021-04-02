@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 20:58:35 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/02 21:40:17 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,13 @@ void	cd_update_envpwd(t_env *env, char *aim_dir)
 	if (env->oldpwd_flag != -1)
 	{
 		old_idx = env_search(env->data, "OLDPWD");
-		free(env->data[old_idx]);
+		if (old_idx == -1)
+		{
+			old_idx = env->num++;
+			env->data[env->num] = NULL;
+		}
+        else
+		    free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", &env->data[idx][4]);
 		else
@@ -102,7 +108,7 @@ char	*strs_join(char **strs, char *enc)
 	return (str);
 }
 
-char	*get_aim_dir(t_env *env, char *cd_str)
+char	*get_aim_dir(char *cd_str)
 {
 	char *tmp;
 	char *str;
@@ -111,8 +117,9 @@ char	*get_aim_dir(t_env *env, char *cd_str)
 		return (ft_strdup(cd_str));
 	else
 	{
-		tmp = cwd_wrapper(env, NULL);
-		str = ft_strjoin(tmp, "/");
+		tmp = cwd_wrapper(NULL);
+		if (ft_strlen(tmp) > 0 && *(tmp + ft_strlen(tmp) - 1) != '/')
+			str = ft_strjoin(tmp, "/");
 		free(tmp);
 		tmp = str;
 		str = ft_strjoin(tmp, cd_str);
@@ -240,7 +247,7 @@ int		command_cd(t_token *token, t_env *env)
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
-	aim_dir = get_aim_dir(env, token->data);
+	aim_dir = get_aim_dir(token->data);
 	if (chdir(aim_dir) == -1)
 	{
 		if (check_cd(token->data))

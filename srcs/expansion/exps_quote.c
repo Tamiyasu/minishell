@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 20:06:37 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/29 22:23:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/01 20:56:31 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ char
 	*exps_set_squote_data_1(char *token_data, char *new_data, t_data *data)
 {
 	new_data = save_reading_data(token_data, new_data, data);
-	data->start--;//add
-	data->length++;//add
+	data->start--;
+	data->length++;
 	while (token_data[data->idx] != '\'')
 	{
 		data_increment(data);
 	}
-	data->length++;//add
+	data->length++;
 	new_data = save_reading_data(token_data, new_data, data);
 	return (new_data);
 }
@@ -32,14 +32,14 @@ char
 						t_data *data, t_env *env)
 {
 	new_data = save_reading_data(token->data, new_data, data);
-	data->start--;//add
-	data->length++;//add
+	data->start--;
+	data->length++;
 	while (token->data[data->idx] != '\"')
 	{
 		if (token->data[data->idx] == '\\')
 		{
 			data_increment(data);
-			data_increment(data);//add;
+			data_increment(data);
 		}
 		else if (token->data[data->idx] == '$' && token->data[data->idx + 1]
 			&& (ft_isalpha(token->data[data->idx + 1])
@@ -52,7 +52,7 @@ char
 		else
 			data_increment(data);
 	}
-	data->length++;//add
+	data->length++;
 	new_data = save_reading_data(token->data, new_data, data);
 	return (new_data);
 }

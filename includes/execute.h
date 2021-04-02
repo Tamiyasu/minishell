@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 14:30:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 21:38:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void			output_no_filename(void);
 void			output_error_exit_args(char	*exit_args);
 void			unset_error(t_token *token, char *command,
 						char *err, int *status);
-char			*cwd_wrapper(t_env *env, char *cd);
+char			*cwd_wrapper(char *cd);
 t_info_fd		*fd_list_new(int fd_num, int fd_save, int flag);
 t_info_fd		*fd_list_last(t_info_fd *msh_fd);
 void			fd_list_addback(t_info_fd **msh_fd, t_info_fd *new);
