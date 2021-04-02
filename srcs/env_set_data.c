@@ -99,7 +99,6 @@ void	env_set_data(t_env *env, char **envp)
 	int	idx;
 
 	env->num = env_check_data(env, envp);
-	printf("1.env->num=[%d]\n", env->num);
 	env->data = malloc(sizeof(char *) * (env->num + 2));
 	if (env->data == NULL)
 		ft_enomem();

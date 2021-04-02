@@ -29,11 +29,8 @@ void	cd_update_envpwd(t_env *env, char *arg_str)
 		old_idx = env_search(env->data, "OLDPWD");
 		if (old_idx == -1)
 		{
-			printf("2.env->num=[%d]\n", env->num);
-			old_idx = env->num++;//must fix
-			printf("3.env->num=[%d]\n", env->num);
-			env->data[env->num] = NULL;//must fix
-			printf("4.env->num=[%d]\n", env->num);
+			old_idx = env->num++;
+			env->data[env->num] = NULL;
 		}
         else
 		    free(env->data[old_idx]);
