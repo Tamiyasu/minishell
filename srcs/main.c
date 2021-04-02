@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 14:27:07 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 15:06:40 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,6 @@ void	minishell_loop(t_env *env)
 int		main(int argc, char *argv[], char *envp[])
 {
 	t_env	env;
-
-    for (int i = 0; envp[i] != NULL; i++)
-        printf("envp[%d]=[%s]\n", i, envp[i]);
 
 	argc -= argc;
 	argv -= (long)argv;
