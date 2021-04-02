@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:32:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 20:33:48 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,16 @@ int		env_search(char **env_data, char *variable_name)
 	return (-1);
 }
 
-void	env_update_pwddata(t_env *env, char *cd)
+void	env_update_pwddata(t_env *env, char *aim_dir)
 {
-	char *cwdir;
-
-	cwdir = cwd_wrapper(env, cd);
-	if (cwdir == NULL)
+	if (aim_dir == NULL)
 	{
 		error_str("error retrieving current directory: ");
 	}
 	else
 	{
 		free(env->pwd_data);
-		env->pwd_data = ft_strdup(cwdir);
+		env->pwd_data = ft_strdup(aim_dir);
 	}
 }
 

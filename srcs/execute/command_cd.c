@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 17:47:33 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/02 20:58:35 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-void	cd_update_envpwd(t_env *env, char *arg_str)
+void	cd_update_envpwd(t_env *env, char *aim_dir)
 {
 	int	old_idx;
 	int	idx;
@@ -33,7 +33,7 @@ void	cd_update_envpwd(t_env *env, char *arg_str)
 		else
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
 	}
-	env_update_pwddata(env, arg_str);
+	env_update_pwddata(env, aim_dir);
 	if (ft_strlen(error_str("")) > 0)
 		ft_putendl_fd(error_str("cd: "), 2);
 	error_str(NULL);
@@ -104,6 +104,23 @@ char	*strs_join(char **strs, char *enc)
 
 char	*get_aim_dir(t_env *env, char *cd_str)
 {
+	char *tmp;
+	char *str;
+
+	if (*cd_str == '/')
+		return (ft_strdup(cd_str));
+	else
+	{
+		tmp = cwd_wrapper(env, NULL);
+		str = ft_strjoin(tmp, "/");
+		free(tmp);
+		tmp = str;
+		str = ft_strjoin(tmp, cd_str);
+		free(tmp);
+	}
+	return (str);
+}
+/*		
 	char	**cds;
 	char	**a_cds;
 	char	*str;
@@ -112,7 +129,6 @@ char	*get_aim_dir(t_env *env, char *cd_str)
 	int		j;
 	char	**e_cds;
 
-	str = cwd_wrapper(env, NULL);
 	cds = ft_split(str, '/');
 	a_cds = ft_split(cd_str, '/');
 	size = arr_size(cds) + arr_size(a_cds);
@@ -152,6 +168,7 @@ char	*get_aim_dir(t_env *env, char *cd_str)
 	free_args(e_cds);
 	return (str);
 }
+*/
 
 int		check_cd(char *cd_str)
 {
@@ -163,7 +180,7 @@ int		check_cd(char *cd_str)
 	splited = ft_split(cd_str, '/');
 	while (*(cd_str + i))
 	{
-		if (2 < ft_strlen(*(splited + i))) ||
+		if (2 < ft_strlen(*(splited + i)) ||
 			ft_strcmp("", *(splited + i)) != 0 ||
 			ft_strcmp(".", *(splited + i)) != 0 ||
 			ft_strcmp("..", *(splited + i)) != 0)
@@ -175,6 +192,43 @@ int		check_cd(char *cd_str)
 	}
 	free_args(splited);
 	return (ret);
+}
+
+void	normalize(char **aim_dir)
+{	
+	char **cds;
+	char **cds_normalized;
+	int i;
+	int j;
+
+	cds = ft_split(*aim_dir, '/');
+	free(*aim_dir);
+	cds_normalized = ft_calloc(sizeof(char *), arr_size(cds) + 1);
+	i = 0;
+	j = 0;
+	while (*(cds + j))
+	{
+		if (!ft_strcmp(*(cds + j), "..") && i > 0 && ft_strcmp(*(cds_normalized + i - 1), ".."))
+		{
+			i--;
+			free(*(cds_normalized + i));
+			*(cds_normalized + i) = NULL;
+			j++;
+		}
+		else if (!ft_strcmp(*(cds + j), "."))
+		{
+			j++;
+		}
+		else
+		{
+			*(cds_normalized + i) = ft_strdup(*(cds + j));
+			i++;
+			j++;
+		}
+	}
+	*aim_dir = strs_join(cds_normalized, "/");
+	free_args(cds);
+	free_args(cds_normalized);
 }
 
 int		command_cd(t_token *token, t_env *env)
@@ -199,12 +253,15 @@ int		command_cd(t_token *token, t_env *env)
 		{
 			error_str("cannot access parent directories: No such file or directory");
 			error_str("error retrieving current directory: getcwd: ");
+			normalize(&aim_dir);
+			cd_update_envpwd(env, aim_dir);
 		}
 		output_error(error_str("cd: "), "");
 		error_str(NULL);
 		return (EXIT_FAILURE);
 	}
+	normalize(&aim_dir);
+	cd_update_envpwd(env, aim_dir);
 	free(aim_dir);
-	cd_update_envpwd(env, token->data);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 17:47:37 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/02 21:00:57 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	set_cwd_str2(char **cwd_str, char *cd)
 char	*cwd_wrapper(t_env *env, char *cd)
 {
 	static char	*cwd_str;
-	char		*tmp;
 
 	if (cwd_str == NULL)
 		cwd_str = getcwd(NULL, 0);
