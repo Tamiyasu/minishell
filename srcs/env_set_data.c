@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:37:22 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 09:15:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int		env_check_data(t_env *env, char **envp)
 	env_num = 0;
 	while (envp[env_num] != NULL)
 		env_num++;
-	env->oldpwd_flag = env_search(envp, "OLDPWD");
-	if (env->oldpwd_flag == -1)
-		env_num++;
+	//env->oldpwd_flag = env_search(envp, "OLDPWD");//存在するかどうか
+	// if (env->oldpwd_flag == -1)
+	// 	env_num++;
 	env->pwd_flag = env_search(envp, "PWD");
 	if (env->pwd_flag == -1)
 		env_num++;
@@ -73,8 +73,8 @@ int		env_set_pwd(t_env *env, int idx)
 {
 	char *tmp_cwd;
 
-	if (env->oldpwd_flag == -1)
-		env->data[idx++] = ft_strdup("OLDPWD");
+	// if (env->oldpwd_flag == -1)
+	// 	env->data[idx++] = ft_strdup("OLDPWD");
 	env_update_pwddata(env, NULL);
 	if (env->pwd_flag == -1 && env->pwd_data)
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
