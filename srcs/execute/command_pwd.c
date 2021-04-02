@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:35:40 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 17:47:37 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,22 @@ void	set_cwd_str2(char **cwd_str, char *cd)
 	free(tmp);
 }
 
+//shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+
 char	*cwd_wrapper(t_env *env, char *cd)
 {
 	static char	*cwd_str;
 	char		*tmp;
 
-	tmp = getcwd(NULL, 0);
-	if (tmp)
+	if (cwd_str == NULL)
+		cwd_str = getcwd(NULL, 0);
+	if (cwd_str == NULL)
 	{
-		free(cwd_str);
-		cwd_str = tmp;
+		error_str("shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory");
+		cwd_str = ft_strdup("");
 	}
-	else
-	{
-		if (cwd_str == NULL)
-			set_cwd_str(env, &cwd_str, tmp);
-		if (cd)
-			set_cwd_str2(&cwd_str, cd);
-	}
+	if (cd)
+		set_cwd_str2(&cwd_str, cd);
 	return (cwd_str);
 }
 

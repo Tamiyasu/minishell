@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 01:05:15 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/02 17:47:33 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,10 +153,32 @@ char	*get_aim_dir(t_env *env, char *cd_str)
 	return (str);
 }
 
+int		check_cd(char *cd_str)
+{
+	char **splited;
+	int i;
+	int ret;
+
+	ret = 0;
+	splited = ft_split(cd_str, '/');
+	while (*(cd_str + i))
+	{
+		if (2 < ft_strlen(*(splited + i))) ||
+			ft_strcmp("", *(splited + i)) != 0 ||
+			ft_strcmp(".", *(splited + i)) != 0 ||
+			ft_strcmp("..", *(splited + i)) != 0)
+		{
+			ret = 1;
+			break;
+		}
+		i++;
+	}
+	free_args(splited);
+	return (ret);
+}
 
 int		command_cd(t_token *token, t_env *env)
 {
-	char		*err_str;
 	char		*aim_dir;
 	//struct stat	stat_buf;
 	//int			err_cord;
@@ -167,13 +189,19 @@ int		command_cd(t_token *token, t_env *env)
 	aim_dir = get_aim_dir(env, token->data);
 	if (chdir(aim_dir) == -1)
 	{
-		//err_cord = ENOENT;
-		// if (!stat(token->data, &stat_buf)
-		// 	&& (stat_buf.st_mode & S_IFMT) != S_IFDIR)
-		// 	err_cord = ENOTDIR;
-		err_str = ft_strjoin("cd: ", token->data);
-		output_error(err_str, strerror(/*err_cord*/errno));
-		free(err_str);
+		if (check_cd(token->data))
+		{
+			error_str(strerror(errno));
+			error_str(": ");
+			error_str(token->data);
+		}
+		else
+		{
+			error_str("cannot access parent directories: No such file or directory");
+			error_str("error retrieving current directory: getcwd: ");
+		}
+		output_error(error_str("cd: "), "");
+		error_str(NULL);
 		return (EXIT_FAILURE);
 	}
 	free(aim_dir);
