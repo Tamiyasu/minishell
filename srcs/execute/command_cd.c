@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 09:30:52 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 14:41:46 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,11 @@ void	cd_update_envpwd(t_env *env, char *arg_str)
 	if (env->oldpwd_flag != -1)
 	{
 		old_idx = env_search(env->data, "OLDPWD");
-		printf("OLDPWD=[%d], env->num=[%d]\n", old_idx, env->num);//del;
 		if (old_idx == -1)
 		{
 			old_idx = env->num++;
 			env->data[env->num] = NULL;
 		}
-		//else
 		free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", &env->data[idx][4]);
@@ -85,20 +83,14 @@ int		cd_home(t_env *env)
 int		command_cd(t_token *token, t_env *env)
 {
 	char		*err_str;
-	//struct stat	stat_buf;
-	//int			err_cord;
 
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
 	else if (chdir(token->data) == -1)
 	{
-		//err_cord = ENOENT;
-		// if (!stat(token->data, &stat_buf)
-		// 	&& (stat_buf.st_mode & S_IFMT) != S_IFDIR)
-		// 	err_cord = ENOTDIR;
 		err_str = ft_strjoin("cd: ", token->data);
-		output_error(err_str, strerror(/*err_cord*/errno));
+		output_error(err_str, strerror(errno));
 		free(err_str);
 		return (EXIT_FAILURE);
 	}

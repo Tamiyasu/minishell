@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 14:33:56 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 14:41:16 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@ int		env_check_data(t_env *env, char **envp)
 	env_num = 0;
 	while (envp[env_num] != NULL)
 		env_num++;
-	// env->oldpwd_flag = env_search(envp, "OLDPWD");//存在するかどうか
-	// if (env->oldpwd_flag == -1)
-	// 	env_num++;
-	// if (env_search(envp, "OLDPWD") != -1)
-	// 	env_num--;
 	env->oldpwd_flag = env_search(envp, "OLDPWD");//存在するかどうか
 	if (env->oldpwd_flag != -1)
 		env_num--;
@@ -83,13 +78,9 @@ int		env_set_pwd(t_env *env, int idx)
 {
 	char *tmp_cwd;
 
-	// if (env->oldpwd_flag == -1)
-	// 	env->data[idx++] = ft_strdup("OLDPWD");
 	env_update_pwddata(env, NULL);
 	if (env->pwd_flag == -1 && env->pwd_data)
-	{
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
-	}
 	else
 	{
 		tmp_cwd = env->data[env->pwd_flag];
@@ -115,11 +106,6 @@ void	env_set_data(t_env *env, char **envp)
 	idx = 0;
 	while (envp[idx] != NULL)
 	{
-		// if (!((ft_strncmp(envp[idx], "OLDPWD", 6) == 0) && envp[idx][6] == '='))
-		// {
-		// 	printf("check OLDPWD=[%s]\n", envp[idx]);
-		// 	idx++;
-		// 	continue ;
 		if (idx != env->oldpwd_flag)
 		{
 			env->data[data_idx] = ft_strdup(envp[idx]);
@@ -128,17 +114,11 @@ void	env_set_data(t_env *env, char **envp)
 		idx++;
 	}
 	data_idx = env_set_pwd(env, data_idx);
-	//
-	for (int x = 0; x < env->num; x++)
-	{
-		printf("check env->data=[%d][%s]\n", x, env->data[x]);//del
-	}
-	//
 	if (0 < ft_strlen(error_str("")))
 		ft_putendl_fd(error_str("shell-init: "), STDERR_FILENO);
 	error_str(NULL);
 	env_set_shlvl(env, &data_idx);
-	env->oldpwd_flag = 1;//本当にいらない？
+	env->oldpwd_flag = 1;
 	env->pwd_flag = 1;
 	env->data[data_idx] = NULL;
 }
