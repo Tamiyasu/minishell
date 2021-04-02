@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 14:47:36 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 15:47:26 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ void	env_set_data(t_env *env, char **envp)
 	int	idx;
 
 	env->num = env_check_data(env, envp);
-	env->data = malloc(sizeof(char *) * (env->num + 1));
+	printf("1.env->num=[%d]\n", env->num);
+	env->data = malloc(sizeof(char *) * (env->num + 2));
 	if (env->data == NULL)
 		ft_enomem();
 	data_idx = 0;
