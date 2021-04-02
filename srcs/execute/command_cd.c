@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 14:41:46 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 15:45:54 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,14 @@ void	cd_update_envpwd(t_env *env, char *arg_str)
 		old_idx = env_search(env->data, "OLDPWD");
 		if (old_idx == -1)
 		{
-			old_idx = env->num++;
-			env->data[env->num] = NULL;
+			printf("2.env->num=[%d]\n", env->num);
+			old_idx = env->num++;//must fix
+			printf("3.env->num=[%d]\n", env->num);
+			env->data[env->num] = NULL;//must fix
+			printf("4.env->num=[%d]\n", env->num);
 		}
-		free(env->data[old_idx]);
+		else
+			free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
 			env->data[old_idx] = ft_strjoin("OLDPWD=", &env->data[idx][4]);
 		else
