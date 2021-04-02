@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 14:41:16 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/02 14:47:03 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		env_check_data(t_env *env, char **envp)
 	env_num = 0;
 	while (envp[env_num] != NULL)
 		env_num++;
-	env->oldpwd_flag = env_search(envp, "OLDPWD");//存在するかどうか
+	env->oldpwd_flag = env_search(envp, "OLDPWD");
 	if (env->oldpwd_flag != -1)
 		env_num--;
 	env->pwd_flag = env_search(envp, "PWD");
@@ -107,10 +107,7 @@ void	env_set_data(t_env *env, char **envp)
 	while (envp[idx] != NULL)
 	{
 		if (idx != env->oldpwd_flag)
-		{
-			env->data[data_idx] = ft_strdup(envp[idx]);
-			data_idx++;
-		}
+			env->data[data_idx++] = ft_strdup(envp[idx]);
 		idx++;
 	}
 	data_idx = env_set_pwd(env, data_idx);
