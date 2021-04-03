@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 19:46:00 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 20:15:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,20 +61,22 @@ int		cd_home(t_env *env)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-	env_home = ft_strdup(&env->data[idx][5]);
-	if (ft_strcmp(env_home, "") == 0)
+//	env_home = ft_strdup(&env->data[idx][5]);
+	env_home = 	get_aim_dir(env, &env->data[idx][5]);
+	normalize(&env_home);
+/*	if (ft_strcmp(env_home, "") == 0)
 	{
 		free(env_home);
 		return (EXIT_SUCCESS);
-	}
+	}*/
 	if (chdir(env_home) == -1)
 	{
 		output_error("cd", strerror(ENOENT));
 		free(env_home);
 		return (EXIT_FAILURE);
 	}
+	cd_update_envpwd(env, env_home);
 	free(env_home);
-	cd_update_envpwd(env, NULL);
 	return (EXIT_SUCCESS);
 }
 
@@ -171,6 +173,11 @@ void	normalize(char **aim_dir)
 	char *f;
 
 	cds = ft_split(*aim_dir, '/');
+	if (!*cds)
+	{
+		free_args(cds);
+		return ;
+	}
 	f = (**aim_dir == '/' ? "/" : "");
 	free(*aim_dir);
 	cds_normalized = ft_calloc(sizeof(char *), arr_size(cds) + 1);

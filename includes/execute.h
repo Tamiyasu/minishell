@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 11:46:17 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 20:15:11 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void			output_error_exit_args(char	*exit_args);
 void			unset_error(t_token *token, char *command,
 						char *err, int *status);
 char			*cwd_wrapper(t_env *env, char *cd);
+char			*get_aim_dir(t_env *env, char *cd_str);
+void			normalize(char **aim_dir);
 t_info_fd		*fd_list_new(int fd_num, int fd_save, int flag);
 t_info_fd		*fd_list_last(t_info_fd *msh_fd);
 void			fd_list_addback(t_info_fd **msh_fd, t_info_fd *new);
