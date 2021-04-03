@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 14:52:17 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 19:39:26 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,16 @@ int		arr_size(char **null_ended_strs)
 	return (ret);
 }
 
-char	*strs_join(char **strs, char *enc)
+char	*strs_join(char **strs, char *enc, char *f)
 {
 	char *str;
 	char *tmp;
 
-	str = ft_strjoin("", "");
+	str = ft_strdup(f);
+	printf("--- strs[%s]\n", *strs);
+	tmp = str;
+	str = ft_strjoin(tmp, *(strs++));
+	free(tmp);
 	while (*strs)
 	{
 		tmp = str;
@@ -116,14 +120,15 @@ void	join_free(char **s1, char *s2)
 
 char	*get_aim_dir(t_env *env, char *cd_str)
 {
-	//char *tmp;
 	char *str;
+	char *tmp;
 
-	if (*cd_str == '/')
+	tmp = cwd_wrapper(env, NULL);
+	if (*cd_str == '/' || !tmp || *tmp != '/')
 		str = ft_strdup(cd_str);
 	else
 	{
-		str = ft_strdup(cwd_wrapper(env, NULL));
+		str = ft_strdup(tmp);
 		if (str == NULL)
 			str = ft_strdup("");
 		if (ft_strlen(str) > 0 && *(str + ft_strlen(str) - 1) != '/')
@@ -164,8 +169,10 @@ void	normalize(char **aim_dir)
 	char **cds_normalized;
 	int i;
 	int j;
+	char *f;
 
 	cds = ft_split(*aim_dir, '/');
+	f = (**aim_dir == '/' ? "/" : "");
 	free(*aim_dir);
 	cds_normalized = ft_calloc(sizeof(char *), arr_size(cds) + 1);
 	i = 0;
@@ -175,22 +182,37 @@ void	normalize(char **aim_dir)
 		if (!ft_strcmp(*(cds + j), "..") && i > 0 && ft_strcmp(*(cds_normalized + i - 1), ".."))
 		{
 			i--;
-			free(*(cds_normalized + i));
-			*(cds_normalized + i) = NULL;
+			if (!ft_strcmp(*(cds_normalized + i), "."))
+			{
+				free(*(cds_normalized + i));
+				*(cds_normalized + i) = ft_strdup(*(cds + j));
+			}
+			else
+			{
+				free(*(cds_normalized + i));
+				*(cds_normalized + i) = NULL;
+			}
 			j++;
 		}
 		else if (!ft_strcmp(*(cds + j), "."))
 		{
+			if (i == 0)
+			{
+				*(cds_normalized + i) = ft_strdup(*(cds + j));
+				i++;
+			}
 			j++;
 		}
 		else
 		{
+			printf("here?\n");
 			*(cds_normalized + i) = ft_strdup(*(cds + j));
 			i++;
 			j++;
 		}
 	}
-	*aim_dir = strs_join(cds_normalized, "/");
+	printf("----aa\n");
+	*aim_dir = strs_join(cds_normalized, "/", f);
 	free_args(cds);
 	free_args(cds_normalized);
 }
@@ -216,18 +238,28 @@ int		command_cd(t_token *token, t_env *env)
 		}
 		else
 		{
+			printf("kokonihairanaiC?\n");
 			error_str("cannot access parent directories: No such file or directory");
 			error_str("error retrieving current directory: getcwd: ");
-			if (*aim_dir != '/')
-				cd_update_envpwd(env, nom_path);
-			else
-				cd_update_envpwd(env, aim_dir);
+			cd_update_envpwd(env, aim_dir);
 		}
 		output_error("cd", error_str(""));
 		error_str(NULL);
 		free(aim_dir);
 		free(nom_path);
 		return (EXIT_FAILURE);
+	}
+	if(*aim_dir != '/')
+	{
+		free(nom_path);
+		if (env->pwd_data)
+			nom_path = ft_strjoin(env->pwd_data, "/");
+		else
+			nom_path = ft_strdup("");
+		join_free(&nom_path, token->data);
+		printf("nom_path [%s]", nom_path);
+		normalize(&nom_path);
+		cd_update_envpwd(env, nom_path);
 	}
 	cd_update_envpwd(env, nom_path);
 	free(aim_dir);
