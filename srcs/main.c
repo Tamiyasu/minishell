@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 15:49:46 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 20:00:37 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		return_result(int result, char **line)
 	{
 		free(*line);
 		g_exit_status = 0;
-		write(1, "exit\n", 5);
+		write(STDERR_FILENO, "exit\n", 5);
 		return (-1);
 	}
 	return (0);
@@ -74,7 +74,7 @@ void	minishell_loop(t_env *env)
 
 	while (1)
 	{
-		ft_putstr_fd("minishell>> ", 1);
+		ft_putstr_fd("minishell>> ", STDERR_FILENO);
 		if (get_line(&line) == -1)
 			break ;
 		result = lexer(line, &token_list);

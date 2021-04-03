@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 15:17:00 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/20 23:56:22 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 16:06:11 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,34 +40,6 @@ void	unset_check_args(t_token *token, int *status)
 	}
 }
 
-void	unset_check_pwd(char *token_data, t_env *env)
-{
-	char *cwdir;
-
-	if (ft_strcmp(token_data, "PWD") == 0)
-	{
-		env->pwd_flag = -1;
-		if (env->pwd_data != NULL)
-			free(env->pwd_data);
-		env->pwd_data = ft_strdup("");
-		if (env->unset_pwd != NULL)
-		{
-			free(env->unset_pwd);
-			env->unset_pwd = NULL;
-		}
-		cwdir = getcwd(NULL, 0);
-		if (cwdir == NULL)
-		{
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			return ;
-		}
-		env->unset_pwd = ft_strdup(cwdir);
-		free(cwdir);
-	}
-	else if (ft_strcmp(token_data, "OLDPWD") == 0)
-		env->oldpwd_flag = -1;
-}
-
 void	unset_cmp_token_env(t_token *token, t_env *env, char **split_env)
 {
 	int		idx;
@@ -76,7 +48,7 @@ void	unset_cmp_token_env(t_token *token, t_env *env, char **split_env)
 	{
 		if (token->flag != -1)
 		{
-			unset_check_pwd(token->data, env);
+			unset_save_pwd(token->data, env);
 			idx = 0;
 			while (split_env[idx] != NULL)
 			{

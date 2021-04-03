@@ -6,7 +6,7 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/04/03 11:43:20 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/04/03 21:48:02 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRC_FILE	+= expansion/exps_format.c
 SRC_FILE	+= expansion/exps_format_utils.c
 SRC_FILE	+= expansion/exps_set_envdata.c
 SRC_FILE	+= expansion/exps_quote.c
+SRC_FILE	+= expansion/exps_increment.c
 SRC_FILE	+= execute/execute.c
 SRC_FILE	+= execute/execute_pipe.c
 SRC_FILE	+= execute/execute_utils.c
@@ -55,6 +56,7 @@ SRC_FILE	+= execute/export_cmp_args.c
 SRC_FILE	+= execute/export_sort.c
 SRC_FILE	+= execute/export_shape_putenv.c
 SRC_FILE	+= execute/export_putenv.c
+SRC_FILE	+= execute/unset_save_pwd.c
 SRC_FILE	+= execute/execve_search_cmdpath.c
 SRC_FILE	+= execute/exec_split_env.c
 SRC_FILE	+= execute/error.c
@@ -73,6 +75,7 @@ LIBS_DIR	=	./libft
 
 CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
 CFLAGS	=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(LIBS_DIR)
+
 
 $(NAME):	$(OBJS)
 			$(MAKE) -C $(LIBS_DIR)

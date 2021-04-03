@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 19:46:19 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 21:45:09 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,6 @@ void	set_expansion_data(t_token *token, char *new_data)
 		free(token->data);
 		token->data = ft_strdup("");
 	}
-}
-
-void	exps_increment_1(t_token *token, t_data *data)
-{
-	if (token->data[data->idx] == '\\')
-		data_increment(data);
-	data_increment(data);
-}
-
-char	*exps_increment_2(t_token *token, char *new_data, t_data *data)
-{
-	if (token->data[data->idx] == '\\')
-		new_data = save_reading_data(token->data, new_data, data);
-	data_increment(data);
-	return (new_data);
 }
 
 void	exps_check_command_1(t_token *token, t_env *env)

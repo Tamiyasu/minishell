@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 20:15:11 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 21:44:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void			export_cmp_args(t_token *token, char **split_tokend,
 void			export_sort(char **envp, int *idx, int num);
 char			**export_shape_putenv(char *env);
 int				export_putenv(t_env *env);
+void			unset_save_pwd(char *token_data, t_env *env);
 int				execve_search_cmdpath(t_token *token, t_env *env);
 void			exec_pipe(t_parser_node *node, t_env *env, t_info_fd *msh_fd);
 void			exec_command(t_token *token, t_env *env, int child_flag);

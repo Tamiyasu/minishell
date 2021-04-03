@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execve_search_cmdpath.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 02:49:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/28 20:13:20 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 16:21:32 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-
-/*
-DIR		*open_dir_path(char *dir_path)
-{
-	DIR	*open_dp;
-
-	open_dp = opendir(dir_path);
-	if (open_dp == NULL)
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-	return (open_dp);
-}*/
 
 void	format_cmd_path(t_token *token, DIR *dp, char *dir_path)
 {
@@ -51,8 +40,7 @@ int		execve_search_cmdpath(t_token *token, t_env *env)
 
 	if (ft_strchr(token->data, '/'))
 		return (1);
-	idx = env_search(env->data, "PATH");
-	if (idx == -1)
+	if ((idx = env_search(env->data, "PATH")) == -1)
 		return (1);
 	path_value = ft_split(&env->data[idx][5], ':');
 	idx = 0;

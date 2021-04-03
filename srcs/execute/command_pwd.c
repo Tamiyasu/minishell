@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 14:49:06 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 21:58:42 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ char	*cwd_wrapper(t_env *env, char *fullpath_str)
 {
 	if (fullpath_str)
 	{
+		if (env->oldpwd_data)
+			free(env->oldpwd_data);
+		if (env->pwd_data)
+			env->oldpwd_data = ft_strdup(env->pwd_data);
 		free(env->pwd_data);
 		env->pwd_data = ft_strdup(fullpath_str);
 	}

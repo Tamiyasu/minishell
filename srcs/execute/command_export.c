@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 16:10:16 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/21 17:37:53 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 16:02:22 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,14 @@ void	set_pwd(t_token *token, t_env *env)
 		{
 			free(token->data);
 			token->data = ft_strjoin("PWD=", env->pwd_data);
+		}
+	}
+	else if (ft_strcmp(token->data, "OLDPWD") == 0 && token->flag == 1)
+	{
+		if (env->oldpwd_data)
+		{
+			free(token->data);
+			token->data = ft_strjoin("OLDPWD=", env->oldpwd_data);
 		}
 	}
 }
