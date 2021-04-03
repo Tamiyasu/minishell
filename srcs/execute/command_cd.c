@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 22:03:18 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 22:31:37 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,8 @@ int		cd_home(t_env *env)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-//	env_home = ft_strdup(&env->data[idx][5]);
 	env_home = 	get_aim_dir(env, &env->data[idx][5]);
 	normalize(&env_home);
-/*	if (ft_strcmp(env_home, "") == 0)
-	{
-		free(env_home);
-		return (EXIT_SUCCESS);
-	}*/
 	if (chdir(env_home) == -1)
 	{
 		output_error("cd", strerror(ENOENT));
@@ -162,6 +156,15 @@ int		check_cd(char *cd_str)
 	return (ret);
 }
 
+void 	free_set(char **s1, char *s2)
+{
+	free(*s1);
+	if (s2)
+		*s1 = ft_strdup(s2);
+	else
+		*s1 = NULL;
+}
+
 void	normalize(char **aim_dir)
 {	
 	char **cds;
@@ -187,32 +190,13 @@ void	normalize(char **aim_dir)
 		{
 			i--;
 			if (!ft_strcmp(*(cds_normalized + i), "."))
-			{
-				free(*(cds_normalized + i));
-				*(cds_normalized + i) = ft_strdup(*(cds + j));
-			}
+				free_set(cds_normalized + i, *(cds + j));
 			else
-			{
-				free(*(cds_normalized + i));
-				*(cds_normalized + i) = NULL;
-			}
-			j++;
+				free_set(cds_normalized + i, NULL);
 		}
-		else if (!ft_strcmp(*(cds + j), "."))
-		{
-			if (i == 0)
-			{
-				*(cds_normalized + i) = ft_strdup(*(cds + j));
-				i++;
-			}
-			j++;
-		}
-		else
-		{
-			*(cds_normalized + i) = ft_strdup(*(cds + j));
-			i++;
-			j++;
-		}
+		else if (i == 0 || ft_strcmp(*(cds + j), "."))
+			*(cds_normalized + i++) = ft_strdup(*(cds + j));
+		j++;
 	}
 	*aim_dir = strs_join(cds_normalized, "/", f);
 	free_args(cds);
