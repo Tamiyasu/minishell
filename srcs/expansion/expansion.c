@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 17:30:48 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 18:09:20 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,6 @@ void	set_expansion_data(t_token *token, char *new_data)
 		free(token->data);
 		token->data = ft_strdup("");
 	}
-}
-
-void	exps_increment_1(t_token *token, t_data *data)
-{
-	if (token->data[data->idx] == '\\')
-		data_increment(data);
-	data_increment(data);
-}
-
-char	*exps_increment_2(t_token *token, char *new_data, t_data *data)
-{
-	if (token->data[data->idx] == '\\')
-		new_data = save_reading_data(token->data, new_data, data);
-	data_increment(data);
-	return (new_data);
 }
 
 void	exps_check_command_1(t_token *token, t_env *env)
@@ -125,9 +110,7 @@ void	expansion(t_parser_node *node, t_env *env)
 	if (node->content->flag == FT_COMMAND_F)
 	{
 		exps_check_command_1(node->content, env);
-		print_token("exps_check_command_1()", node->content);//del
 		node->content = exps_format(node->content);
-		print_token("exps_format()", node->content);//del
 		exps_check_command_2(node->content);
 	}
 	expansion(node->l_node, env);

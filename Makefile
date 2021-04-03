@@ -6,7 +6,7 @@
 #    By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/04/03 17:31:26 by ysaito           ###   ########.fr        #
+#    Updated: 2021/04/03 18:11:38 by ysaito           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRC_FILE	+= expansion/exps_format.c
 SRC_FILE	+= expansion/exps_format_utils.c
 SRC_FILE	+= expansion/exps_set_envdata.c
 SRC_FILE	+= expansion/exps_quote.c
+SRC_FILE	+= expansion/exps_increment.c
 SRC_FILE	+= execute/execute.c
 SRC_FILE	+= execute/execute_pipe.c
 SRC_FILE	+= execute/execute_utils.c
@@ -72,7 +73,7 @@ RM		= rm -f
 LIBS_NAME	=	libft.a
 LIBS_DIR	=	./libft
 
-CFLAGS	=	-Wall -Wextra -Werror -fsanitize=address -I$(INC_DIR) -I$(LIBS_DIR)
+CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
 
 
 $(NAME):	$(OBJS)

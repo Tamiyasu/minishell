@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:35:44 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 17:36:28 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 18:06:35 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,6 @@ int		command_echo(t_token *token)
 			token = token->next;
 			continue ;
 		}
-		// ft_putstr_fd(token->data, STDOUT_FILENO);
-		// token = token->next;
-		// if (token == NULL)
-		// 	break ;
-		// ft_putchar_fd(' ', STDOUT_FILENO);
 		token = echo_put_data(token);
 	}
 	ft_putchar_fd('\n', STDOUT_FILENO);
