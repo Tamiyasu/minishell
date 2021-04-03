@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/26 21:06:40 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 19:57:47 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void		command_exit(t_token *token)
 	token = token->next;
 	if (token == NULL)
 	{
-		ft_putendl_fd("exit", STDOUT_FILENO);
+		ft_putendl_fd("exit", STDERR_FILENO);
 		history(NULL, 0);
 		exit(EXIT_SUCCESS);
 	}
@@ -114,7 +114,7 @@ void		command_exit(t_token *token)
 		return ;
 	}
 	exit_check_status(token);
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	ft_putendl_fd("exit", STDERR_FILENO);
 	history(NULL, 0);
 	exit(g_exit_status);
 }

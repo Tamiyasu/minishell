@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 14:48:02 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/27 19:42:45 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 19:58:56 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	sig_handler_p(int signo)
 		{
 			last_signal(1);
 			g_exit_status = 1;
-			write(1, "\nminishell>> ", 13);
+			write(STDERR_FILENO, "\nminishell>> ", 13);
 		}
 	}
 }
