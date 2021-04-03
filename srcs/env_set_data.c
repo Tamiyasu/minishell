@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 16:23:13 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 16:00:05 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ int		env_check_data(t_env *env, char **envp)
 	env->pwd_flag = env_search(envp, "PWD");
 	if (env->pwd_flag == -1)
 		env_num++;
-	// else
-	// {
-	// 	if (env->oldpwd_flag != -1 && (env->pwd_flag > env->oldpwd_flag))
-	// 		env->pwd_flag--;
-	// }
 	env->shlvl_flag = env_search(envp, "SHLVL");
 	if (env->shlvl_flag == -1)
 		env_num++;
@@ -102,19 +97,15 @@ int		env_set_pwd(t_env *env, int idx)
 
 void	env_set_data(t_env *env, char **envp)
 {
-	//int	data_idx;
 	int	idx;
 
 	env->num = env_check_data(env, envp);
 	env->data = malloc(sizeof(char *) * (env->num + 1));
 	if (env->data == NULL)
 		ft_enomem();
-	//data_idx = 0;
 	idx = 0;
 	while (envp[idx] != NULL)
 	{
-		//if (idx != env->oldpwd_flag)
-		//	env->data[data_idx++] = ft_strdup(envp[idx]);
 		env->data[idx] = ft_strdup(envp[idx]);
 		idx++;
 	}

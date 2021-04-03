@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:10:08 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 15:24:23 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_env
 {
 	char		**data;
 	int			num;
+	char		*oldpwd_data;
 	char		*pwd_data;
 	char		*unset_pwd;
 	int			oldpwd_flag;

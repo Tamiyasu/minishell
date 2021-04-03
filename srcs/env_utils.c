@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:32:51 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 15:38:02 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	env_free(t_env *env)
 		free(env->pwd_data);
 	if (env->unset_pwd != NULL)
 		free(env->unset_pwd);
+	if (env->oldpwd_data != NULL)
+		free(env->oldpwd_data);
 }
 
 void	env_init(t_env *env)
@@ -30,6 +32,7 @@ void	env_init(t_env *env)
 	env->shlvl_flag = 0;
 	env->pwd_data = NULL;
 	env->unset_pwd = NULL;
+	env->oldpwd_data = NULL;
 }
 
 int		env_search(char **env_data, char *variable_name)
@@ -62,7 +65,13 @@ void	env_update_pwddata(t_env *env, char *cd)
 	}
 	else
 	{
-		free(env->pwd_data);
+		if (env->oldpwd_data)
+			free(env->oldpwd_data);
+		if (env->pwd_data)
+		{
+			env->oldpwd_data = ft_strdup(env->pwd_data);
+			free(env->pwd_data);
+		}
 		env->pwd_data = ft_strdup(cwdir);
 	}
 }
