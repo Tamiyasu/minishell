@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 10:12:39 by ysaito            #+#    #+#             */
-/*   Updated: 2021/03/29 22:47:06 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 19:46:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,11 +125,7 @@ void	expansion(t_parser_node *node, t_env *env)
 	if (node->content->flag == FT_COMMAND_F)
 	{
 		exps_check_command_1(node->content, env);
-		//printf("--------after exps_check_command_1()---------------\n");//del
-		//print_token(node->content);//del
 		node->content = exps_format(node->content);
-		//printf("--------after exps_format()----------------------\n");//del
-		//print_token(node->content);//del
 		exps_check_command_2(node->content);
 	}
 	expansion(node->l_node, env);

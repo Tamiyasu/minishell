@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 19:39:26 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 19:46:00 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ char	*strs_join(char **strs, char *enc, char *f)
 	char *tmp;
 
 	str = ft_strdup(f);
-	printf("--- strs[%s]\n", *strs);
 	tmp = str;
 	str = ft_strjoin(tmp, *(strs++));
 	free(tmp);
@@ -205,13 +204,11 @@ void	normalize(char **aim_dir)
 		}
 		else
 		{
-			printf("here?\n");
 			*(cds_normalized + i) = ft_strdup(*(cds + j));
 			i++;
 			j++;
 		}
 	}
-	printf("----aa\n");
 	*aim_dir = strs_join(cds_normalized, "/", f);
 	free_args(cds);
 	free_args(cds_normalized);
@@ -238,7 +235,6 @@ int		command_cd(t_token *token, t_env *env)
 		}
 		else
 		{
-			printf("kokonihairanaiC?\n");
 			error_str("cannot access parent directories: No such file or directory");
 			error_str("error retrieving current directory: getcwd: ");
 			cd_update_envpwd(env, aim_dir);
@@ -257,7 +253,6 @@ int		command_cd(t_token *token, t_env *env)
 		else
 			nom_path = ft_strdup("");
 		join_free(&nom_path, token->data);
-		printf("nom_path [%s]", nom_path);
 		normalize(&nom_path);
 		cd_update_envpwd(env, nom_path);
 	}
