@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 11:42:06 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 14:49:06 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,6 @@ void	set_cwd_str(t_env *env, char **cwd_str, char *tmp)
 		*cwd_str = ft_strdup("");
 	}
 }
-/*
-void	set_cwd_str2(char **cwd_str, char *cd)
-{
-	char	*tmp;
-
-	if (ft_strlen(*cwd_str) > 0
-		&& (*cwd_str)[ft_strlen(*cwd_str) - 1] != '/')
-	{
-		tmp = *cwd_str;
-		*cwd_str = ft_strjoin(tmp, "/");
-		free(tmp);
-	}
-	tmp = *cwd_str;
-	*cwd_str = ft_strjoin(tmp, cd);
-	free(tmp);
-}
-*/
 //shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
 
 char	*cwd_wrapper(t_env *env, char *fullpath_str)
@@ -53,12 +36,10 @@ char	*cwd_wrapper(t_env *env, char *fullpath_str)
 	if (env->pwd_data == NULL)
 	{
 		env->pwd_data = getcwd(NULL, 0);
-		printf("works!\n");
 	}
 	if (env->pwd_data == NULL)
 	{
-		printf("works2!\n");
-		error_str("shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory");
+		error_str("getcwd: cannot access parent directories: No such file or directory");
 	}
 	return (env->pwd_data);
 }

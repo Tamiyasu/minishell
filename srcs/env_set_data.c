@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 11:46:41 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 14:33:01 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ int		env_set_pwd(t_env *env, int idx)
 		free(env->data[env->oldpwd_flag]);
 		env->data[env->oldpwd_flag] = ft_strdup("OLDPWD");
 	}
-	env_update_pwddata(env, NULL);
+	cwd_wrapper(env, NULL);
+	//env_update_pwddata(env, NULL);
 	if (env->pwd_flag == -1 && env->pwd_data)
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
 	else
@@ -121,7 +122,7 @@ void	env_set_data(t_env *env, char **envp)
 	}
 	idx = env_set_pwd(env, idx);
 	if (0 < ft_strlen(error_str("")))
-		ft_putendl_fd(error_str("shell-init: "), STDERR_FILENO);
+		ft_putendl_fd(error_str("shell--------------init: "), STDERR_FILENO);
 	error_str(NULL);
 	env_set_shlvl(env, &idx);
 	env->oldpwd_flag = 1;

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 13:28:40 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 14:36:51 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int		env_search(char **env_data, char *variable_name)
 	return (-1);
 }
 
+/*
 void	env_update_pwddata(t_env *env, char *aim_dir)
 {
 	if (aim_dir == NULL)
@@ -63,7 +64,7 @@ void	env_update_pwddata(t_env *env, char *aim_dir)
 		free(env->pwd_data);
 		env->pwd_data = ft_strdup(aim_dir);
 	}
-}
+}*/
 
 void	error_shlvl(int shlvl_num)
 {

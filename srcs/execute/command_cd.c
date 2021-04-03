@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 14:19:27 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 14:52:17 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,7 @@ void	cd_update_envpwd(t_env *env, char *aim_dir)
 		else
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
 	}
-	env_update_pwddata(env, aim_dir);
-	if (ft_strlen(error_str("")) > 0)
-		ft_putendl_fd(error_str("cd: "), 2);
-	error_str(NULL);
+	cwd_wrapper(env, aim_dir);
 	if (env->pwd_flag != -1)
 	{
 		if (env->pwd_data && idx >= 0)
@@ -135,55 +132,6 @@ char	*get_aim_dir(t_env *env, char *cd_str)
 	}
 	return (str);
 }
-/*		
-	char	**cds;
-	char	**a_cds;
-	char	*str;
-	int		size;
-	int		i;
-	int		j;
-	char	**e_cds;
-
-	cds = ft_split(str, '/');
-	a_cds = ft_split(cd_str, '/');
-	size = arr_size(cds) + arr_size(a_cds);
-	e_cds = ft_calloc(sizeof(char *), size + 1);
-	i = 0;
-	while(*(cds + i))
-	{
-		*(e_cds + i) = ft_strdup(*(cds + i));
-		i++;
-	}
-	j = 0;
-	while(*(a_cds + j))
-	{
-		if	(!ft_strcmp(*(a_cds + j), ".."))
-		{
-			printf("----------\n");
-			i--;
-			free(*(e_cds + i));
-			*(e_cds + i) = NULL;
-			j++;
-		}
-		else if (!ft_strcmp(*(a_cds + j), "."))
-		{
-			j++;
-		}
-		else
-		{
-			*(e_cds + i) = ft_strdup(*(a_cds + j));
-			i++;
-			j++;
-		}
-	}
-	str = strs_join(e_cds, "/");
-	printf("%s\n", str);
-	free_args(cds);
-	free_args(a_cds);
-	free_args(e_cds);
-	return (str);
-}
-*/
 
 int		check_cd(char *cd_str)
 {
@@ -201,7 +149,6 @@ int		check_cd(char *cd_str)
 			ft_strcmp(".", *(splited + i)) != 0 &&
 			ft_strcmp("", *(splited + i)) != 0 ))
 		{
-			printf("found : [%s]\n", *(splited + i));
 			ret = 1;
 			break;
 		}
@@ -256,11 +203,9 @@ int		command_cd(t_token *token, t_env *env)
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
-	printf("env->pwd_data p[%p] s[%s]\n", env->pwd_data, env->pwd_data);
 	aim_dir = get_aim_dir(env, token->data);
 	nom_path = ft_strdup(aim_dir);
 	normalize(&nom_path);
-	printf("env->pwd_data p[%p] s[%s]\n", env->pwd_data, env->pwd_data);
 	if (chdir(nom_path) == -1)
 	{
 		if (check_cd(token->data))
@@ -273,13 +218,12 @@ int		command_cd(t_token *token, t_env *env)
 		{
 			error_str("cannot access parent directories: No such file or directory");
 			error_str("error retrieving current directory: getcwd: ");
-			printf("aim_dir [%s]\n", aim_dir);
 			if (*aim_dir != '/')
-				normalize(&aim_dir);
-			printf("aim_dir [%s]\n", aim_dir);
-			cd_update_envpwd(env, aim_dir);
+				cd_update_envpwd(env, nom_path);
+			else
+				cd_update_envpwd(env, aim_dir);
 		}
-		output_error(error_str("cd: "), "");
+		output_error("cd", error_str(""));
 		error_str(NULL);
 		free(aim_dir);
 		free(nom_path);
