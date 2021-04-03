@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 21:40:17 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 14:19:27 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,22 +108,30 @@ char	*strs_join(char **strs, char *enc)
 	return (str);
 }
 
-char	*get_aim_dir(char *cd_str)
+void	join_free(char **s1, char *s2)
 {
 	char *tmp;
+
+	tmp = *s1;
+	*s1 = ft_strjoin(*s1, s2);
+	free(tmp);
+}
+
+char	*get_aim_dir(t_env *env, char *cd_str)
+{
+	//char *tmp;
 	char *str;
 
 	if (*cd_str == '/')
-		return (ft_strdup(cd_str));
+		str = ft_strdup(cd_str);
 	else
 	{
-		tmp = cwd_wrapper(NULL);
-		if (ft_strlen(tmp) > 0 && *(tmp + ft_strlen(tmp) - 1) != '/')
-			str = ft_strjoin(tmp, "/");
-		free(tmp);
-		tmp = str;
-		str = ft_strjoin(tmp, cd_str);
-		free(tmp);
+		str = ft_strdup(cwd_wrapper(env, NULL));
+		if (str == NULL)
+			str = ft_strdup("");
+		if (ft_strlen(str) > 0 && *(str + ft_strlen(str) - 1) != '/')
+			join_free(&str, "/");
+		join_free(&str, cd_str);
 	}
 	return (str);
 }
@@ -184,14 +192,16 @@ int		check_cd(char *cd_str)
 	int ret;
 
 	ret = 0;
+	i = 0;
 	splited = ft_split(cd_str, '/');
-	while (*(cd_str + i))
+	while (*(splited + i))
 	{
 		if (2 < ft_strlen(*(splited + i)) ||
-			ft_strcmp("", *(splited + i)) != 0 ||
-			ft_strcmp(".", *(splited + i)) != 0 ||
-			ft_strcmp("..", *(splited + i)) != 0)
+			(ft_strcmp("..", *(splited + i)) != 0 &&
+			ft_strcmp(".", *(splited + i)) != 0 &&
+			ft_strcmp("", *(splited + i)) != 0 ))
 		{
+			printf("found : [%s]\n", *(splited + i));
 			ret = 1;
 			break;
 		}
@@ -241,14 +251,17 @@ void	normalize(char **aim_dir)
 int		command_cd(t_token *token, t_env *env)
 {
 	char		*aim_dir;
-	//struct stat	stat_buf;
-	//int			err_cord;
+	char		*nom_path;
 
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
-	aim_dir = get_aim_dir(token->data);
-	if (chdir(aim_dir) == -1)
+	printf("env->pwd_data p[%p] s[%s]\n", env->pwd_data, env->pwd_data);
+	aim_dir = get_aim_dir(env, token->data);
+	nom_path = ft_strdup(aim_dir);
+	normalize(&nom_path);
+	printf("env->pwd_data p[%p] s[%s]\n", env->pwd_data, env->pwd_data);
+	if (chdir(nom_path) == -1)
 	{
 		if (check_cd(token->data))
 		{
@@ -260,15 +273,20 @@ int		command_cd(t_token *token, t_env *env)
 		{
 			error_str("cannot access parent directories: No such file or directory");
 			error_str("error retrieving current directory: getcwd: ");
-			normalize(&aim_dir);
+			printf("aim_dir [%s]\n", aim_dir);
+			if (*aim_dir != '/')
+				normalize(&aim_dir);
+			printf("aim_dir [%s]\n", aim_dir);
 			cd_update_envpwd(env, aim_dir);
 		}
 		output_error(error_str("cd: "), "");
 		error_str(NULL);
+		free(aim_dir);
+		free(nom_path);
 		return (EXIT_FAILURE);
 	}
-	normalize(&aim_dir);
-	cd_update_envpwd(env, aim_dir);
+	cd_update_envpwd(env, nom_path);
 	free(aim_dir);
+	free(nom_path);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 20:33:48 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 13:28:40 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	env_update_pwddata(t_env *env, char *aim_dir)
 	}
 	else
 	{
+		printf("env->pwd_data p[%p]\n", env->pwd_data);
 		free(env->pwd_data);
 		env->pwd_data = ft_strdup(aim_dir);
 	}

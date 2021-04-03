@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_set_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/02 16:23:13 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/03 11:46:41 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 
 int		env_check_data(t_env *env, char **envp)
 {

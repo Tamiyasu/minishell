@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 00:20:21 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 11:42:06 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,34 +43,31 @@ void	set_cwd_str2(char **cwd_str, char *cd)
 */
 //shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
 
-char	*cwd_wrapper(char *cd)
+char	*cwd_wrapper(t_env *env, char *fullpath_str)
 {
-	static char	*cwd_str;
-	printf("cwd_str:[%s]\n", cwd_str);
-	if (cd)
+	if (fullpath_str)
 	{
-		free(cwd_str);
-		cwd_str = ft_strdup(cd);
+		free(env->pwd_data);
+		env->pwd_data = ft_strdup(fullpath_str);
 	}
-	if (cwd_str == NULL)
+	if (env->pwd_data == NULL)
 	{
-		cwd_str = getcwd(NULL, 0);
+		env->pwd_data = getcwd(NULL, 0);
 		printf("works!\n");
 	}
-	if (cwd_str == NULL)
+	if (env->pwd_data == NULL)
 	{
 		printf("works2!\n");
 		error_str("shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory");
 	}
-	printf("cwd_str:[%s]\n", cwd_str);
-	return (cwd_str);
+	return (env->pwd_data);
 }
 
-int		command_pwd(void)
+int		command_pwd(t_env *env)
 {
 	char	*cwdir;
 
-	cwdir = cwd_wrapper(NULL);
+	cwdir = cwd_wrapper(env, NULL);
 	if (cwdir == NULL)
 	{
 		error_str("error retrieving current directory: ");
