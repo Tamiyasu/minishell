@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 13:53:18 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 21:49:12 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 22:02:16 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,32 +53,6 @@ int		env_search(char **env_data, char *variable_name)
 	}
 	return (-1);
 }
-
-/*
-void	env_update_pwddata(t_env *env, char *aim_dir)
-{
-	if (aim_dir == NULL)
-	{
-		error_str("error retrieving current directory: ");
-	}
-	else
-	{
-<<<<<<< HEAD
-		printf("env->pwd_data p[%p]\n", env->pwd_data);
-		free(env->pwd_data);
-		env->pwd_data = ft_strdup(aim_dir);
-=======
-		if (env->oldpwd_data)
-			free(env->oldpwd_data);
-		if (env->pwd_data)
-		{
-			env->oldpwd_data = ft_strdup(env->pwd_data);
-			free(env->pwd_data);
-		}
-		env->pwd_data = ft_strdup(cwdir);
->>>>>>> master
-	}
-}*/
 
 void	error_shlvl(int shlvl_num)
 {

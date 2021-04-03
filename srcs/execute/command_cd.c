@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 21:44:44 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/03 22:03:18 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,11 @@ void	cd_update_envpwd(t_env *env, char *aim_dir)
 	}
 	cwd_wrapper(env, aim_dir);
 	if (env->pwd_flag != -1)
-	{
 		if (env->pwd_data && idx >= 0)
 		{
 			free(env->data[idx]);
 			env->data[idx] = ft_strjoin("PWD=", env->pwd_data);
 		}
-	}
 }
 
 int		cd_home(t_env *env)
