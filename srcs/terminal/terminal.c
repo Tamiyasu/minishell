@@ -6,11 +6,17 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 11:51:10 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 19:48:12 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 08:01:06 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "terminal.h"
+
+void	term_init(char **buf_join, int *buf_len, int *cursor_len)
+{
+	history(*buf_join, HISTORY_POS_RESET);
+	init_buf(buf_join, buf_len, cursor_len);
+}
 
 int		make_line(char *buf_join, char **line)
 {
@@ -44,10 +50,7 @@ int		terminal(char **line)
 	while ((rc = read(STDIN_FILENO, buf, 1)) >= 0)
 	{
 		if (last_signal(0))
-		{
-			history(buf_join, HISTORY_POS_RESET);
-			init_buf(&buf_join, &buf_len, &cursor_len);
-		}
+			term_init(&buf_join, &buf_len, &cursor_len);
 		if (buf[0] == ESCAPE)
 			buf_join = term_history(buf_join, &buf_len, &cursor_len);
 		else if (buf[0] == BACKSPACE)

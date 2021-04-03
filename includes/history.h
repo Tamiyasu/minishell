@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:59:30 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/04/01 20:55:07 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 07:56:46 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct	s_hist
 	char			*tmp_str;
 }				t_hist;
 
+void			add_new_hist(t_list **h_list);
 void			free_hist(void *hist);
 void			history_reset(int i, t_list *h_list);
 void			history_set(char *str, int i, t_list *h_list);
