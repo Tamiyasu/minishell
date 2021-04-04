@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 11:00:07 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 20:51:14 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int		command_cd(t_token *token, t_env *env)
 		return (cd_home(env));
 	nom_path = get_aim_dir(env, token->data);
 	normalize(&nom_path);
+	printf("nom_path:[%s]\n", nom_path);
 	if (chdir(nom_path) == -1)
 	{
 		error_str(strerror(errno));
