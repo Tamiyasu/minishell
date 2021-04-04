@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:24:58 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:27:56 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ void	cd_update_envpwd(t_env *env, char *aim_dir)
 	{
 		old_idx = env_search(env->data, "OLDPWD");
 		if (old_idx == -1)
-		{
+			env->data[env->num + 1] = NULL;
+		if (old_idx == -1)
 			old_idx = env->num++;
-			env->data[env->num] = NULL;
-		}
 		else
 			free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
