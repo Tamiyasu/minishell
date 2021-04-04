@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:19:24 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:21:47 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ int		check_cd(char *cd_str)
 		if (2 < ft_strlen(*(splited + i)) ||
 			(ft_strcmp("..", *(splited + i)) != 0 &&
 			ft_strcmp(".", *(splited + i)) != 0 &&
-			ft_strcmp("", *(splited + i)) != 0 ))
+			ft_strcmp("", *(splited + i)) != 0))
 			return (1);
 		i++;
 	}
@@ -155,7 +155,7 @@ int		check_cd(char *cd_str)
 	return (0);
 }
 
-void 	free_set(char **s1, char *s2)
+void	free_set(char **s1, char *s2)
 {
 	free(*s1);
 	if (s2)
@@ -166,11 +166,11 @@ void 	free_set(char **s1, char *s2)
 
 void	normalize(char **aim_dir)
 {	
-	char **cds;
-	char **cds_normalized;
-	int i;
-	int j;
-	char *f;
+	char	**cds;
+	char	**cds_normalized;
+	int		i;
+	int		j;
+	char	*f;
 
 	cds = ft_split(*aim_dir, '/');
 	if (!*cds)
