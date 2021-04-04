@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 23:58:07 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/04/04 07:56:21 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 19:15:15 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,13 @@ char	*history_make(int *i, char *str, t_list **h_list)
 char	*history_pos_reset(int *i, t_list *h_list)
 {
 	*i = 0;
-	free(((t_hist *)(h_list->content))->hist_str);
-	free(((t_hist *)(h_list->content))->tmp_str);
-	((t_hist *)(h_list->content))->hist_str = NULL;
-	((t_hist *)(h_list->content))->tmp_str = NULL;
+	if (h_list)
+	{
+		free(((t_hist *)(h_list->content))->hist_str);
+		free(((t_hist *)(h_list->content))->tmp_str);
+		((t_hist *)(h_list->content))->hist_str = NULL;
+		((t_hist *)(h_list->content))->tmp_str = NULL;
+	}	
 	return (NULL);
 }
 
