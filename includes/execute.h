@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 21:44:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:57:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,14 @@ void			output_no_filename(void);
 void			output_error_exit_args(char	*exit_args);
 void			unset_error(t_token *token, char *command,
 						char *err, int *status);
+void			cd_update_envpwd(t_env *env, char *aim_dir);
 char			*cwd_wrapper(t_env *env, char *cd);
 char			*get_aim_dir(t_env *env, char *cd_str);
 void			normalize(char **aim_dir);
+int				check_cd(char *cd_str);
+void			path_recon(char **cds, char *f, char **cds_normed);
+void			setup_relativepath(char **path, t_env *env, char *cd_str);
+void			fail_with_relativepath(t_env *env, char *cd_str);
 t_info_fd		*fd_list_new(int fd_num, int fd_save, int flag);
 t_info_fd		*fd_list_last(t_info_fd *msh_fd);
 void			fd_list_addback(t_info_fd **msh_fd, t_info_fd *new);
