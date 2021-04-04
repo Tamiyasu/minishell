@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:21:47 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:24:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,9 +165,9 @@ void	free_set(char **s1, char *s2)
 }
 
 void	normalize(char **aim_dir)
-{	
+{
 	char	**cds;
-	char	**cds_normalized;
+	char	**cds_normed;
 	int		i;
 	int		j;
 	char	*f;
@@ -180,28 +180,30 @@ void	normalize(char **aim_dir)
 	}
 	f = (**aim_dir == '/' ? "/" : "");
 	free(*aim_dir);
-	cds_normalized = ft_calloc(sizeof(char *), arr_size(cds) + 1);
+	cds_normed = ft_calloc(sizeof(char *), arr_size(cds) + 1);
 	i = 0;
 	j = 0;
 	while (*(cds + j))
 	{
-		if (!ft_strcmp(*(cds + j), "..") && i > 0 && ft_strcmp(*(cds_normalized + i - 1), ".."))
+		if (!ft_strcmp(*(cds + j), "..") && i > 0
+			&& ft_strcmp(*(cds_normed + i - 1), ".."))
 		{
 			i--;
-			if (!ft_strcmp(*(cds_normalized + i), "."))
-				free_set(cds_normalized + i, *(cds + j));
+			if (!ft_strcmp(*(cds_normed + i), "."))
+				free_set(cds_normed + i, *(cds + j));
 			else
-				free_set(cds_normalized + i, NULL);
+				free_set(cds_normed + i, NULL);
 		}
-		else if ((!ft_strcmp(*(cds + j), "..") || !ft_strcmp(*(cds + j), ".")) && *f == '/' && i == 0)
+		else if ((!ft_strcmp(*(cds + j), "..")
+			|| !ft_strcmp(*(cds + j), ".")) && *f == '/' && i == 0)
 			;
 		else if (i == 0 || ft_strcmp(*(cds + j), "."))
-			*(cds_normalized + i++) = ft_strdup(*(cds + j));
+			*(cds_normed + i++) = ft_strdup(*(cds + j));
 		j++;
 	}
-	*aim_dir = strs_join(cds_normalized, "/", f);
+	*aim_dir = strs_join(cds_normed, "/", f);
 	free_args(cds);
-	free_args(cds_normalized);
+	free_args(cds_normed);
 }
 
 void	setup_relativepath(char **path, t_env *env, char *cd_str)
