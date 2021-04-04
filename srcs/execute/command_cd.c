@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:15:57 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:19:24 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*strs_join(char **strs, char *enc, char *f)
 	char *tmp;
 
 	str = ft_strdup(f);
-	if(*strs)
+	if (*strs)
 	{
 		tmp = str;
 		str = ft_strjoin(tmp, *(strs++));
@@ -137,11 +137,9 @@ char	*get_aim_dir(t_env *env, char *cd_str)
 
 int		check_cd(char *cd_str)
 {
-	char **splited;
-	int i;
-	int ret;
+	char	**splited;
+	int		i;
 
-	ret = 0;
 	i = 0;
 	splited = ft_split(cd_str, '/');
 	while (*(splited + i))
@@ -150,14 +148,11 @@ int		check_cd(char *cd_str)
 			(ft_strcmp("..", *(splited + i)) != 0 &&
 			ft_strcmp(".", *(splited + i)) != 0 &&
 			ft_strcmp("", *(splited + i)) != 0 ))
-		{
-			ret = 1;
-			break;
-		}
+			return (1);
 		i++;
 	}
 	free_args(splited);
-	return (ret);
+	return (0);
 }
 
 void 	free_set(char **s1, char *s2)
