@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:06:58 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:15:57 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int		cd_home(t_env *env)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-	env_home = 	get_aim_dir(env, &env->data[idx][5]);
+	env_home = get_aim_dir(env, &env->data[idx][5]);
 	normalize(&env_home);
 	if (chdir(env_home) == -1)
 	{
@@ -75,6 +75,7 @@ int		cd_home(t_env *env)
 int		arr_size(char **null_ended_strs)
 {
 	int ret;
+
 	ret = 0;
 	while (*null_ended_strs++)
 		ret++;
@@ -222,7 +223,7 @@ void	setup_relativepath(char **path, t_env *env, char *cd_str)
 void	fail_with_relativepath(t_env *env, char *cd_str)
 {
 	char *aim_dir;
-	
+
 	aim_dir = get_aim_dir(env, cd_str);
 	error_str("cannot access parent directories");
 	error_str("error retrieving current directory: getcwd: ");
