@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:27:56 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:44:19 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,23 +163,11 @@ void	free_set(char **s1, char *s2)
 		*s1 = NULL;
 }
 
-void	normalize(char **aim_dir)
+void	path_recon(char **cds, char *f, char **cds_normed)
 {
-	char	**cds;
-	char	**cds_normed;
-	int		i;
-	int		j;
-	char	*f;
+	int i;
+	int j;
 
-	cds = ft_split(*aim_dir, '/');
-	if (!*cds)
-	{
-		free_args(cds);
-		return ;
-	}
-	f = (**aim_dir == '/' ? "/" : "");
-	free(*aim_dir);
-	cds_normed = ft_calloc(sizeof(char *), arr_size(cds) + 1);
 	i = 0;
 	j = 0;
 	while (*(cds + j))
@@ -200,6 +188,46 @@ void	normalize(char **aim_dir)
 			*(cds_normed + i++) = ft_strdup(*(cds + j));
 		j++;
 	}
+}
+
+void	normalize(char **aim_dir)
+{
+	char	**cds;
+	char	**cds_normed;
+	char	*f;
+
+	cds = ft_split(*aim_dir, '/');
+	if (!*cds)
+	{
+		free_args(cds);
+		return ;
+	}
+	f = (**aim_dir == '/' ? "/" : "");
+	cds_normed = ft_calloc(sizeof(char *), arr_size(cds) + 1);
+	free(*aim_dir);
+	path_recon(cds, f, cds_normed);
+	/*
+	i = 0;
+	j = 0;
+	while (*(cds + j))
+	{
+		if (!ft_strcmp(*(cds + j), "..") && i > 0
+			&& ft_strcmp(*(cds_normed + i - 1), ".."))
+		{
+			i--;
+			if (!ft_strcmp(*(cds_normed + i), "."))
+				free_set(cds_normed + i, *(cds + j));
+			else
+				free_set(cds_normed + i, NULL);
+		}
+		else if ((!ft_strcmp(*(cds + j), "..")
+			|| !ft_strcmp(*(cds + j), ".")) && *f == '/' && i == 0)
+			;
+		else if (i == 0 || ft_strcmp(*(cds + j), "."))
+			*(cds_normed + i++) = ft_strdup(*(cds + j));
+		j++;
+	}
+	*/
 	*aim_dir = strs_join(cds_normed, "/", f);
 	free_args(cds);
 	free_args(cds_normed);
