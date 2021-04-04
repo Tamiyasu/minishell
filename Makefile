@@ -6,7 +6,7 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/04/04 10:56:23 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/04/04 11:31:05 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,8 +76,6 @@ LIBS_NAME	=	libft.a
 LIBS_DIR	=	./libft
 
 CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
-CFLAGS	=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(LIBS_DIR)
-
 
 $(NAME):	$(OBJS)
 			$(MAKE) -C $(LIBS_DIR)
