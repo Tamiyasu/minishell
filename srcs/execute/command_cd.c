@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:58:05 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 11:00:07 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int		cd_home(t_env *env)
 	free(env_home);
 	return (EXIT_SUCCESS);
 }
-
 
 char	*get_aim_dir(t_env *env, char *cd_str)
 {
