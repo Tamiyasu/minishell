@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 16:46:48 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 17:42:27 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 18:05:37 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,6 @@ void		exit_check_status(t_token *token)
 
 void		command_exit(t_token *token)
 {
-	t_token *token_save_p;
-
-	token_save_p = token;
 	token = token->next;
 	if (token == NULL)
 	{

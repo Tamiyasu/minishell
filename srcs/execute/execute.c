@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 23:15:11 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 17:46:39 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 18:04:00 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,11 @@ void	execute(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 {
 	if (!node || !(node->content) || g_exit_status == -1)
 	{
-		if (g_exit_status == -1)
-			g_exit_status = 1;
 		return ;
 	}
 	else if (node->content->flag == FT_SEMICOLON_F)
 	{
 		execute(node->l_node, env, msh_fd);
-		// reset_fd(msh_fd);
-		// free_fd(&msh_fd);
 		fd_reset_and_free(msh_fd);
 		expansion(node->r_node, env);
 		execute(node->r_node, env, msh_fd);
@@ -71,8 +67,6 @@ void	execute(t_parser_node *node, t_env *env, t_info_fd *msh_fd)
 	else if (node->content->flag == FT_COMMAND_F)
 	{
 		exec_command(node->content, env, 0);
-		// reset_fd(msh_fd);
-		// free_fd(&msh_fd);
 		fd_reset_and_free(msh_fd);
 	}
 }
