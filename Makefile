@@ -6,7 +6,7 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/04/03 21:48:02 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/04/04 11:31:05 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME		= minishell
 SRC_DIR		= ./srcs
 SRC_FILE	= main.c
 SRC_FILE	+= minishell_utils.c
+SRC_FILE	+= minishell_utils_a.c
 SRC_FILE	+= env_set_data.c
 SRC_FILE	+= env_utils.c
 SRC_FILE	+= signal_handler.c
@@ -43,6 +44,7 @@ SRC_FILE	+= execute/exec_fd.c
 SRC_FILE	+= execute/exec_redirect.c
 SRC_FILE	+= execute/exec_redirect_save.c
 SRC_FILE	+= execute/command_cd.c
+SRC_FILE	+= execute/command_cd_utils.c
 SRC_FILE	+= execute/command_echo.c
 SRC_FILE	+= execute/command_env.c
 SRC_FILE	+= execute/command_execve.c
@@ -74,8 +76,6 @@ LIBS_NAME	=	libft.a
 LIBS_DIR	=	./libft
 
 CFLAGS	=	-Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBS_DIR)
-CFLAGS	=	-Wall -Wextra -Werror -g -fsanitize=address -I$(INC_DIR) -I$(LIBS_DIR)
-
 
 $(NAME):	$(OBJS)
 			$(MAKE) -C $(LIBS_DIR)

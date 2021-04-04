@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 21:58:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 11:02:06 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	set_cwd_str(t_env *env, char **cwd_str, char *tmp)
 		*cwd_str = ft_strdup("");
 	}
 }
-//shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
 
 char	*cwd_wrapper(t_env *env, char *fullpath_str)
 {
@@ -43,7 +42,8 @@ char	*cwd_wrapper(t_env *env, char *fullpath_str)
 	}
 	if (env->pwd_data == NULL)
 	{
-		error_str("getcwd: cannot access parent directories: No such file or directory");
+		error_str("No such file or directory");
+		error_str("getcwd: cannot access parent directories: ");
 	}
 	return (env->pwd_data);
 }

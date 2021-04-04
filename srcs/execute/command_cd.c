@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 22:44:21 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 11:00:07 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ void	cd_update_envpwd(t_env *env, char *aim_dir)
 	{
 		old_idx = env_search(env->data, "OLDPWD");
 		if (old_idx == -1)
-		{
+			env->data[env->num + 1] = NULL;
+		if (old_idx == -1)
 			old_idx = env->num++;
-			env->data[env->num] = NULL;
-		}
 		else
 			free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
@@ -59,7 +58,7 @@ int		cd_home(t_env *env)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-	env_home = 	get_aim_dir(env, &env->data[idx][5]);
+	env_home = get_aim_dir(env, &env->data[idx][5]);
 	normalize(&env_home);
 	if (chdir(env_home) == -1)
 	{
@@ -70,45 +69,6 @@ int		cd_home(t_env *env)
 	cd_update_envpwd(env, env_home);
 	free(env_home);
 	return (EXIT_SUCCESS);
-}
-
-int		arr_size(char **null_ended_strs)
-{
-	int ret;
-	ret = 0;
-	while (*null_ended_strs++)
-		ret++;
-	return (ret);
-}
-
-char	*strs_join(char **strs, char *enc, char *f)
-{
-	char *str;
-	char *tmp;
-
-	str = ft_strdup(f);
-	tmp = str;
-	str = ft_strjoin(tmp, *(strs++));
-	free(tmp);
-	while (*strs)
-	{
-		tmp = str;
-		str = ft_strjoin(tmp, enc);
-		free(tmp);
-		tmp = str;
-		str = ft_strjoin(tmp, *(strs++));
-		free(tmp);
-	}
-	return (str);
-}
-
-void	join_free(char **s1, char *s2)
-{
-	char *tmp;
-
-	tmp = *s1;
-	*s1 = ft_strjoin(*s1, s2);
-	free(tmp);
 }
 
 char	*get_aim_dir(t_env *env, char *cd_str)
@@ -131,99 +91,14 @@ char	*get_aim_dir(t_env *env, char *cd_str)
 	return (str);
 }
 
-int		check_cd(char *cd_str)
-{
-	char **splited;
-	int i;
-	int ret;
-
-	ret = 0;
-	i = 0;
-	splited = ft_split(cd_str, '/');
-	while (*(splited + i))
-	{
-		if (2 < ft_strlen(*(splited + i)) ||
-			(ft_strcmp("..", *(splited + i)) != 0 &&
-			ft_strcmp(".", *(splited + i)) != 0 &&
-			ft_strcmp("", *(splited + i)) != 0 ))
-		{
-			ret = 1;
-			break;
-		}
-		i++;
-	}
-	free_args(splited);
-	return (ret);
-}
-
-void 	free_set(char **s1, char *s2)
-{
-	free(*s1);
-	if (s2)
-		*s1 = ft_strdup(s2);
-	else
-		*s1 = NULL;
-}
-
-void	normalize(char **aim_dir)
-{	
-	char **cds;
-	char **cds_normalized;
-	int i;
-	int j;
-	char *f;
-
-	cds = ft_split(*aim_dir, '/');
-	if (!*cds)
-	{
-		free_args(cds);
-		return ;
-	}
-	f = (**aim_dir == '/' ? "/" : "");
-	free(*aim_dir);
-	cds_normalized = ft_calloc(sizeof(char *), arr_size(cds) + 1);
-	i = 0;
-	j = 0;
-	while (*(cds + j))
-	{
-		if (!ft_strcmp(*(cds + j), "..") && i > 0 && ft_strcmp(*(cds_normalized + i - 1), ".."))
-		{
-			i--;
-			if (!ft_strcmp(*(cds_normalized + i), "."))
-				free_set(cds_normalized + i, *(cds + j));
-			else
-				free_set(cds_normalized + i, NULL);
-		}
-		else if (i == 0 || ft_strcmp(*(cds + j), "."))
-			*(cds_normalized + i++) = ft_strdup(*(cds + j));
-		j++;
-	}
-	*aim_dir = strs_join(cds_normalized, "/", f);
-	free_args(cds);
-	free_args(cds_normalized);
-}
-
-void	setup_relativepath(char **path, t_env *env, char *cd_str)
-{
-	free(*path);
-	if (env->pwd_data)
-		*path = ft_strjoin(env->pwd_data, "/");
-	else
-		*path = ft_strdup("");
-	join_free(path, cd_str);
-	normalize(path);
-}
-
 int		command_cd(t_token *token, t_env *env)
 {
-	char		*aim_dir;
 	char		*nom_path;
 
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
-	aim_dir = get_aim_dir(env, token->data);
-	nom_path = ft_strdup(aim_dir);
+	nom_path = get_aim_dir(env, token->data);
 	normalize(&nom_path);
 	if (chdir(nom_path) == -1)
 	{
@@ -232,21 +107,15 @@ int		command_cd(t_token *token, t_env *env)
 		if (check_cd(token->data))
 			error_str(token->data);
 		else
-		{
-			error_str("cannot access parent directories");
-			error_str("error retrieving current directory: getcwd: ");
-			cd_update_envpwd(env, aim_dir);
-		}
+			fail_with_relativepath(env, token->data);
 		output_error("cd", error_str(""));
 		error_str(NULL);
-		free(aim_dir);
 		free(nom_path);
 		return (EXIT_FAILURE);
 	}
-	if (*aim_dir != '/')
+	if (*nom_path != '/')
 		setup_relativepath(&nom_path, env, token->data);
 	cd_update_envpwd(env, nom_path);
-	free(aim_dir);
 	free(nom_path);
 	return (EXIT_SUCCESS);
 }
