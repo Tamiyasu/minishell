@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 12:41:41 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/03/21 12:41:51 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 17:43:28 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,10 @@ void	set_signals(void (*fc)(int))
 {
 	signal(SIGINT, fc);
 	signal(SIGQUIT, fc);
+}
+
+void	fd_reset_and_free(t_info_fd *msh_fd)
+{
+	reset_fd(msh_fd);
+	free_fd(&msh_fd);
 }

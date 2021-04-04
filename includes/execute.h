@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:40:12 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 21:44:42 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 17:45:51 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,5 @@ void			set_signals(void (*fc)(int));
 int				get_exit_status(int pid_status);
 void			command_builtin(t_token *token, t_env *env);
 int				exec_is_builtin(char *token_data);
+void			fd_reset_and_free(t_info_fd *msh_fd);
 #endif
