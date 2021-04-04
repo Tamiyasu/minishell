@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/04 10:54:16 by tmurakam          #+#    #+#             */
-/*   Updated: 2021/04/04 10:55:49 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 13:26:23 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ int		check_cd(char *cd_str)
 			(ft_strcmp("..", *(splited + i)) != 0 &&
 			ft_strcmp(".", *(splited + i)) != 0 &&
 			ft_strcmp("", *(splited + i)) != 0))
+		{
+			free_args(splited);
 			return (1);
+		}
 		i++;
 	}
 	free_args(splited);
