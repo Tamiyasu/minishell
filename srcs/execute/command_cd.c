@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/04 10:47:05 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:52:01 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,48 +71,6 @@ int		cd_home(t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-int		arr_size(char **null_ended_strs)
-{
-	int ret;
-
-	ret = 0;
-	while (*null_ended_strs++)
-		ret++;
-	return (ret);
-}
-
-char	*strs_join(char **strs, char *enc, char *f)
-{
-	char *str;
-	char *tmp;
-
-	str = ft_strdup(f);
-	if (*strs)
-	{
-		tmp = str;
-		str = ft_strjoin(tmp, *(strs++));
-		free(tmp);
-	}
-	while (*strs)
-	{
-		tmp = str;
-		str = ft_strjoin(tmp, enc);
-		free(tmp);
-		tmp = str;
-		str = ft_strjoin(tmp, *(strs++));
-		free(tmp);
-	}
-	return (str);
-}
-
-void	join_free(char **s1, char *s2)
-{
-	char *tmp;
-
-	tmp = *s1;
-	*s1 = ft_strjoin(*s1, s2);
-	free(tmp);
-}
 
 char	*get_aim_dir(t_env *env, char *cd_str)
 {
@@ -152,15 +110,6 @@ int		check_cd(char *cd_str)
 	}
 	free_args(splited);
 	return (0);
-}
-
-void	free_set(char **s1, char *s2)
-{
-	free(*s1);
-	if (s2)
-		*s1 = ft_strdup(s2);
-	else
-		*s1 = NULL;
 }
 
 void	path_recon(char **cds, char *f, char **cds_normed)
