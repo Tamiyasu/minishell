@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:01:07 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 16:46:11 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 10:51:53 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,8 @@ int				env_search(char **env_data, char *variable_name);
 void			env_update_pwddata(t_env *env, char *cd);
 void			env_set_data(t_env *env, char **envp);
 void			error_shlvl(int shlvl_num);
+void			free_set(char **s1, char *s2);
+int				arr_size(char **null_ended_strs);
+char			*strs_join(char **strs, char *enc, char *f);
+void			join_free(char **s1, char *s2);
 #endif

@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_set_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 13:22:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 16:00:05 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 11:14:20 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 
 int		env_check_data(t_env *env, char **envp)
 {
@@ -80,7 +81,7 @@ int		env_set_pwd(t_env *env, int idx)
 		free(env->data[env->oldpwd_flag]);
 		env->data[env->oldpwd_flag] = ft_strdup("OLDPWD");
 	}
-	env_update_pwddata(env, NULL);
+	cwd_wrapper(env, NULL);
 	if (env->pwd_flag == -1 && env->pwd_data)
 		env->data[idx++] = ft_strjoin("PWD=", env->pwd_data);
 	else

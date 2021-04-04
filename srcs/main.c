@@ -6,7 +6,7 @@
 /*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 12:02:26 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 20:00:37 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 18:04:26 by ysaito           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	minishell_loop(t_env *env)
 		expansion(node, env);
 		msh_fd = NULL;
 		execute(node, env, msh_fd);
+		if (g_exit_status == -1)
+			g_exit_status = 1;
 		loop_end_func(&line, &node);
 	}
 }

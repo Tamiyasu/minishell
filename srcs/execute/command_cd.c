@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 16:20:32 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 11:00:07 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-void	cd_update_envpwd(t_env *env, char *arg_str)
+void	cd_update_envpwd(t_env *env, char *aim_dir)
 {
 	int	old_idx;
 	int	idx;
@@ -28,10 +28,9 @@ void	cd_update_envpwd(t_env *env, char *arg_str)
 	{
 		old_idx = env_search(env->data, "OLDPWD");
 		if (old_idx == -1)
-		{
+			env->data[env->num + 1] = NULL;
+		if (old_idx == -1)
 			old_idx = env->num++;
-			env->data[env->num] = NULL;
-		}
 		else
 			free(env->data[old_idx]);
 		if (env->pwd_flag != -1)
@@ -39,18 +38,13 @@ void	cd_update_envpwd(t_env *env, char *arg_str)
 		else
 			env->data[old_idx] = ft_strjoin("OLDPWD=", env->pwd_data);
 	}
-	env_update_pwddata(env, arg_str);
-	if (ft_strlen(error_str("")) > 0)
-		ft_putendl_fd(error_str("cd: "), 2);
-	error_str(NULL);
+	cwd_wrapper(env, aim_dir);
 	if (env->pwd_flag != -1)
-	{
 		if (env->pwd_data && idx >= 0)
 		{
 			free(env->data[idx]);
 			env->data[idx] = ft_strjoin("PWD=", env->pwd_data);
 		}
-	}
 }
 
 int		cd_home(t_env *env)
@@ -64,37 +58,64 @@ int		cd_home(t_env *env)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
-	env_home = ft_strdup(&env->data[idx][5]);
-	if (ft_strcmp(env_home, "") == 0)
-	{
-		free(env_home);
-		return (EXIT_SUCCESS);
-	}
+	env_home = get_aim_dir(env, &env->data[idx][5]);
+	normalize(&env_home);
 	if (chdir(env_home) == -1)
 	{
 		output_error("cd", strerror(ENOENT));
 		free(env_home);
 		return (EXIT_FAILURE);
 	}
+	cd_update_envpwd(env, env_home);
 	free(env_home);
-	cd_update_envpwd(env, NULL);
 	return (EXIT_SUCCESS);
+}
+
+char	*get_aim_dir(t_env *env, char *cd_str)
+{
+	char *str;
+	char *tmp;
+
+	tmp = cwd_wrapper(env, NULL);
+	if (*cd_str == '/' || !tmp || *tmp != '/')
+		str = ft_strdup(cd_str);
+	else
+	{
+		str = ft_strdup(tmp);
+		if (str == NULL)
+			str = ft_strdup("");
+		if (ft_strlen(str) > 0 && *(str + ft_strlen(str) - 1) != '/')
+			join_free(&str, "/");
+		join_free(&str, cd_str);
+	}
+	return (str);
 }
 
 int		command_cd(t_token *token, t_env *env)
 {
-	char		*err_str;
+	char		*nom_path;
 
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
-	else if (chdir(token->data) == -1)
+	nom_path = get_aim_dir(env, token->data);
+	normalize(&nom_path);
+	if (chdir(nom_path) == -1)
 	{
-		err_str = ft_strjoin("cd: ", token->data);
-		output_error(err_str, strerror(errno));
-		free(err_str);
+		error_str(strerror(errno));
+		error_str(": ");
+		if (check_cd(token->data))
+			error_str(token->data);
+		else
+			fail_with_relativepath(env, token->data);
+		output_error("cd", error_str(""));
+		error_str(NULL);
+		free(nom_path);
 		return (EXIT_FAILURE);
 	}
-	cd_update_envpwd(env, token->data);
+	if (*nom_path != '/')
+		setup_relativepath(&nom_path, env, token->data);
+	cd_update_envpwd(env, nom_path);
+	free(nom_path);
 	return (EXIT_SUCCESS);
 }

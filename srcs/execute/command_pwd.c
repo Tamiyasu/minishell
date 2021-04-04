@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysaito <ysaito@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:31:55 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/01 14:35:40 by ysaito           ###   ########.fr       */
+/*   Updated: 2021/04/04 11:02:06 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,41 +25,27 @@ void	set_cwd_str(t_env *env, char **cwd_str, char *tmp)
 	}
 }
 
-void	set_cwd_str2(char **cwd_str, char *cd)
+char	*cwd_wrapper(t_env *env, char *fullpath_str)
 {
-	char	*tmp;
-
-	if (ft_strlen(*cwd_str) > 0
-		&& (*cwd_str)[ft_strlen(*cwd_str) - 1] != '/')
+	if (fullpath_str)
 	{
-		tmp = *cwd_str;
-		*cwd_str = ft_strjoin(tmp, "/");
-		free(tmp);
+		if (env->oldpwd_data)
+			free(env->oldpwd_data);
+		if (env->pwd_data)
+			env->oldpwd_data = ft_strdup(env->pwd_data);
+		free(env->pwd_data);
+		env->pwd_data = ft_strdup(fullpath_str);
 	}
-	tmp = *cwd_str;
-	*cwd_str = ft_strjoin(tmp, cd);
-	free(tmp);
-}
-
-char	*cwd_wrapper(t_env *env, char *cd)
-{
-	static char	*cwd_str;
-	char		*tmp;
-
-	tmp = getcwd(NULL, 0);
-	if (tmp)
+	if (env->pwd_data == NULL)
 	{
-		free(cwd_str);
-		cwd_str = tmp;
+		env->pwd_data = getcwd(NULL, 0);
 	}
-	else
+	if (env->pwd_data == NULL)
 	{
-		if (cwd_str == NULL)
-			set_cwd_str(env, &cwd_str, tmp);
-		if (cd)
-			set_cwd_str2(&cwd_str, cd);
+		error_str("No such file or directory");
+		error_str("getcwd: cannot access parent directories: ");
 	}
-	return (cwd_str);
+	return (env->pwd_data);
 }
 
 int		command_pwd(t_env *env)

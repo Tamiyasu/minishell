@@ -6,7 +6,7 @@
 #    By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 15:27:22 by ysaito            #+#    #+#              #
-#    Updated: 2021/04/04 19:17:33 by tmurakam         ###   ########.fr        #
+#    Updated: 2021/04/04 19:21:16 by tmurakam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME		= minishell
 SRC_DIR		= ./srcs
 SRC_FILE	= main.c
 SRC_FILE	+= minishell_utils.c
+SRC_FILE	+= minishell_utils_a.c
 SRC_FILE	+= env_set_data.c
 SRC_FILE	+= env_utils.c
 SRC_FILE	+= signal_handler.c
@@ -43,6 +44,7 @@ SRC_FILE	+= execute/exec_fd.c
 SRC_FILE	+= execute/exec_redirect.c
 SRC_FILE	+= execute/exec_redirect_save.c
 SRC_FILE	+= execute/command_cd.c
+SRC_FILE	+= execute/command_cd_utils.c
 SRC_FILE	+= execute/command_echo.c
 SRC_FILE	+= execute/command_env.c
 SRC_FILE	+= execute/command_execve.c
