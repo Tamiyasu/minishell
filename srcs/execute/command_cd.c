@@ -6,7 +6,7 @@
 /*   By: tmurakam <tmurakam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 20:41:38 by ysaito            #+#    #+#             */
-/*   Updated: 2021/04/03 22:44:21 by tmurakam         ###   ########.fr       */
+/*   Updated: 2021/04/04 10:06:58 by tmurakam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,12 @@ char	*strs_join(char **strs, char *enc, char *f)
 	char *tmp;
 
 	str = ft_strdup(f);
-	tmp = str;
-	str = ft_strjoin(tmp, *(strs++));
-	free(tmp);
+	if(*strs)
+	{
+		tmp = str;
+		str = ft_strjoin(tmp, *(strs++));
+		free(tmp);
+	}
 	while (*strs)
 	{
 		tmp = str;
@@ -194,6 +197,8 @@ void	normalize(char **aim_dir)
 			else
 				free_set(cds_normalized + i, NULL);
 		}
+		else if ((!ft_strcmp(*(cds + j), "..") || !ft_strcmp(*(cds + j), ".")) && *f == '/' && i == 0)
+			;
 		else if (i == 0 || ft_strcmp(*(cds + j), "."))
 			*(cds_normalized + i++) = ft_strdup(*(cds + j));
 		j++;
@@ -214,16 +219,25 @@ void	setup_relativepath(char **path, t_env *env, char *cd_str)
 	normalize(path);
 }
 
+void	fail_with_relativepath(t_env *env, char *cd_str)
+{
+	char *aim_dir;
+	
+	aim_dir = get_aim_dir(env, cd_str);
+	error_str("cannot access parent directories");
+	error_str("error retrieving current directory: getcwd: ");
+	cd_update_envpwd(env, aim_dir);
+	free(aim_dir);
+}
+
 int		command_cd(t_token *token, t_env *env)
 {
-	char		*aim_dir;
 	char		*nom_path;
 
 	token = token->next;
 	if (token == NULL)
 		return (cd_home(env));
-	aim_dir = get_aim_dir(env, token->data);
-	nom_path = ft_strdup(aim_dir);
+	nom_path = get_aim_dir(env, token->data);
 	normalize(&nom_path);
 	if (chdir(nom_path) == -1)
 	{
@@ -232,21 +246,15 @@ int		command_cd(t_token *token, t_env *env)
 		if (check_cd(token->data))
 			error_str(token->data);
 		else
-		{
-			error_str("cannot access parent directories");
-			error_str("error retrieving current directory: getcwd: ");
-			cd_update_envpwd(env, aim_dir);
-		}
+			fail_with_relativepath(env, token->data);
 		output_error("cd", error_str(""));
 		error_str(NULL);
-		free(aim_dir);
 		free(nom_path);
 		return (EXIT_FAILURE);
 	}
-	if (*aim_dir != '/')
+	if (*nom_path != '/')
 		setup_relativepath(&nom_path, env, token->data);
 	cd_update_envpwd(env, nom_path);
-	free(aim_dir);
 	free(nom_path);
 	return (EXIT_SUCCESS);
 }
